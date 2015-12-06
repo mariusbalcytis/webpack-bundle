@@ -1,0 +1,7 @@
+class_name: FunctionalTester
+modules:
+    enabled:
+        - \Helper\Functional:
+            app_path: 'tests/functional/Fixtures/app'
+            var_path: 'tests/functional/Fixtures/app'
+        - Filesystem

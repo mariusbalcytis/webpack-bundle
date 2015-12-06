@@ -1,0 +1,30 @@
+{
+    "name": "maba/webpack-bundle",
+    "description": "Bundle to Integrate Webpack to Symfony",
+    "keywords": ["webpack", "assets", "symfony", "symfony2", "amd", "commonjs"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marius Balčytis",
+            "email": "marius.balcytis@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": "^2.3",
+        "twig/twig": "~1.0",
+        "maba/dependency-injection-extra": "^0.1.0",
+        "symfony/process": "^2.3",
+        "symfony/twig-bundle": "^2.3",
+        "symfony/monolog-bundle": "^2.3"
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Maba\\Bundle\\WebpackBundle\\": "src",
+            "Fixtures\\Maba\\Bundle\\WebpackTestBundle\\": "tests/functional/Fixtures/src"
+        }
+    }
+}

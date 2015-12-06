@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <imports>
+        <import resource="services/providers.xml"/>
+    </imports>
+
+    <services>
+        <service id="maba_webpack.command.compile"
+                 class="Maba\Bundle\WebpackBundle\Command\CompileCommand">
+            <tag name="console.command"/>
+
+            <argument type="service" id="maba_webpack.webpack_compiler"/>
+            <argument type="service" id="logger"/>
+        </service>
+        <service id="maba_webpack.command.dev_server"
+                 class="Maba\Bundle\WebpackBundle\Command\DevServerCommand">
+            <tag name="console.command"/>
+
+            <argument type="service" id="maba_webpack.webpack_compiler"/>
+        </service>
+        <service id="maba_webpack.command.setup"
+                 class="Maba\Bundle\WebpackBundle\Command\SetupCommand">
+            <tag name="console.command"/>
+
+            <argument type="service">
+                <service class="stdClass" factory-service="file_locator" factory-method="locate">
+                    <argument>@MabaWebpackBundle/Resources/defaultConfig/package.json</argument>
+                </service>
+            </argument>
+            <argument type="service">
+                <service class="stdClass" factory-service="file_locator" factory-method="locate">
+                    <argument>@MabaWebpackBundle/Resources/defaultConfig/webpack.config.js</argument>
+                </service>
+            </argument>
+            <argument>%kernel.root_dir%/..</argument>
+            <argument>%kernel.root_dir%/config</argument>
+        </service>
+    </services>
+</container>

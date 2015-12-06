@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    {% set cssUrl = webpack_asset('@MabaWebpackTestBundle/Resources/assets/main.js', 'css') %}
+    {% if cssUrl %}
+    <link rel="stylesheet" href="{{ cssUrl }}"/>
+    {% endif %}
+</head>
+<body>
+<script src="{{ webpack_asset('@MabaWebpackTestBundle/Resources/assets/main.js') }}"></script>
+</body>
+</html>

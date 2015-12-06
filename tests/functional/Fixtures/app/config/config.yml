@@ -1,0 +1,15 @@
+framework:
+    secret: "secret"
+    templating:
+        engines: ['twig']
+    router:
+        resource: "@MabaWebpackTestBundle/Resources/config/routing.xml"
+        strict_requirements: ~
+
+maba_webpack:
+    asset_providers:
+        -
+            type: twig_bundles
+            resource: [MabaWebpackTestBundle]
+    twig:
+        suppress_errors: true

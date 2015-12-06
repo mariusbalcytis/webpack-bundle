@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    {% set cssUrl = my_custom_function('@MabaWebpackTestBundle/Resources/assets/customized.js', 'css') %}
+    {% if cssUrl %}
+    <link rel="stylesheet" href="{{ cssUrl }}"/>
+    {% endif %}
+</head>
+<body>
+<script src="{{ my_custom_function('@MabaWebpackTestBundle/Resources/assets/customized.js') }}"></script>
+</body>
+</html>
