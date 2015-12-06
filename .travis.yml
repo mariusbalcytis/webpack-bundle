@@ -3,7 +3,6 @@ language: php
 sudo: false
 
 php:
-    - 5.3
     - 5.4
     - 5.5
     - 5.6
@@ -12,8 +11,6 @@ php:
 before_script:
     - wget http://getcomposer.org/composer.phar
     - php composer.phar install --dev --no-interaction
-    - curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
-    - sudo apt-get install -y nodejs
 
 script:
     - vendor/bin/codecept run
