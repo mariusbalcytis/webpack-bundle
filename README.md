@@ -248,3 +248,12 @@ to run specific command in the background, but is usually slower. Also at this p
 to integrate it with webpack-dev-server.
 
 It has more tags for twig, like inline scripts or list of scripts to load.
+
+## Running tests
+
+[![Travis status](https://travis-ci.org/mariusbalcytis/webpack-bundle.svg?branch=master)](https://travis-ci.org/mariusbalcytis/webpack-bundle)
+
+```shell
+composer install
+vendor/bin/codecept run
+```
