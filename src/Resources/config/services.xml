@@ -43,6 +43,10 @@
             <argument>%maba_webpack.aliases.additional%</argument>
         </service>
 
+        <service id="maba_webpack.asset_locator" class="Maba\Bundle\WebpackBundle\Service\AssetLocator">
+            <argument type="service" id="maba_webpack.alias_manager"/>
+        </service>
+
         <service id="maba_webpack.asset_name_generator" class="Maba\Bundle\WebpackBundle\Service\AssetNameGenerator"/>
 
         <service id="maba_webpack.manifest_storage" class="Maba\Bundle\WebpackBundle\Service\ManifestStorage">
@@ -73,7 +77,7 @@
             <argument type="service" id="maba_webpack.alias_manager"/>
             <argument type="service" id="maba_webpack.asset_collector"/>
             <argument type="service" id="maba_webpack.config_dumper"/>
-            <argument type="service" id="file_locator"/>
+            <argument type="service" id="maba_webpack.asset_locator"/>
             <argument type="service" id="maba_webpack.asset_name_generator"/>
             <argument type="service" id="maba_webpack.error_handler"/>
         </service>

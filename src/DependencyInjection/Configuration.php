@@ -54,7 +54,7 @@ class Configuration implements ConfigurationInterface
 
         $config = $children->arrayNode('config')->addDefaultsIfNotSet()->children();
         $config->scalarNode('path')->defaultValue('%kernel.root_dir%/config/webpack.config.js');
-        $config->arrayNode('parameters')->treatNullLike(array())->prototype('variable');
+        $config->arrayNode('parameters')->treatNullLike(array())->useAttributeAsKey('name')->prototype('variable');
 
         $aliases = $children->arrayNode('aliases')->addDefaultsIfNotSet()->children();
         $registerBundles = $aliases->arrayNode('register_bundles');
@@ -68,8 +68,8 @@ class Configuration implements ConfigurationInterface
             ->ifNotInArray($availableBundles)
             ->thenInvalid('%s is not a valid bundle.')
         ;
-        $aliases->scalarNode('path_in_bundle')->defaultValue('/Resources/assets');
-        $aliases->arrayNode('additional')->treatNullLike(array())->prototype('variable');
+        $aliases->scalarNode('path_in_bundle')->defaultValue('Resources/assets');
+        $aliases->arrayNode('additional')->treatNullLike(array())->useAttributeAsKey('name')->prototype('scalar');
 
         $bin = $children->arrayNode('bin')->addDefaultsIfNotSet()->children();
         $webpack = $bin->arrayNode('webpack')->addDefaultsIfNotSet()->children();

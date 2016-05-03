@@ -102,7 +102,7 @@ require('./script2.js');
 
 function loadScript3() {
     require.ensure([], function() {
-        require('@AnotherBundle/script3.js');
+        require('@AnotherBundle/Resources/assets/script3.js');
         require('style.css');
     });
 }
@@ -123,6 +123,23 @@ As part of deployment into production environment:
 ```bash
 app/console maba:webpack:compile --env=prod
 ```
+
+Aliases
+----
+
+By default, these aliases are registered:
+
+- `@app`, which points to `%kernel.root_dir%/Resources/assets`
+- `@root`, which points to `%kernel.root_dir%/..` (usually the root of your repository)
+- `@AcmeHelloBundle` or similar for each of your bundles. This points to root of the bundle (where `Bundle` class is), same as when locating resource in Symfony itself
+- `@acme_hello` or similar for each of your bundles. This points to `@AcmeHelloBundle/Resources/assets` by default.
+
+You can also register your own aliases, for example `@bower` or `@npm`
+would be great candidates if you use any of those package managers. Or something like `@vendor`
+if you use composer to install your frontend assets.
+
+Aliases work the same in both twig templates (parameter to `webpack_asset` function) and Javascript files
+(parameter to `require` or similar Webpack provided function).
 
 Configuration
 ----
@@ -154,10 +171,11 @@ maba_webpack:
         register_bundles:               # defaults to all bundles
             - ApplicationBundle
             - AnyOtherBundle
-        path_in_bundle:       /Resources/assets     # this means that require('@ApplicationBundle/a.js')
+        path_in_bundle:       /Resources/assets     # this means that require('@acme_hello/a.js')
                                                     # will include something like
-                                                    # src/Bundles/ApplicationBundle/Resources/assets/a.js
-        additional:           []            # provide any other aliases, prefix (@) is NOT added automatically here
+                                                    # src/Acme/Bundles/AcmeHelloBundle/Resources/assets/a.js
+                                                    # see "Aliases" for more information
+        additional:           []            # provide any other aliases, prefix (@) is always added automatically
     bin:
         webpack:
             executable: # how maba:webpack:compile executes webpack

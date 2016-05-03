@@ -31,7 +31,7 @@ class SetupCommand extends Command
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
-        $target = $this->rootPath . DIRECTORY_SEPARATOR . basename($this->pathToPackage);
+        $target = $this->rootPath . '/' . basename($this->pathToPackage);
         $question = new ConfirmationQuestion(sprintf(
             '<question>File in %s already exists. Replace?</question> [yN] ',
             $target
@@ -50,7 +50,7 @@ class SetupCommand extends Command
             ));
         }
 
-        $target = $this->configPath . DIRECTORY_SEPARATOR . basename($this->pathToWebpackConfig);
+        $target = $this->configPath . '/' . basename($this->pathToWebpackConfig);
         $question = new ConfirmationQuestion(sprintf(
             '<question>File in %s already exists. Replace?</question> [yN] ',
             $target

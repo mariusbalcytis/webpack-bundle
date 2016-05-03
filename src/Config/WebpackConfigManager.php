@@ -5,8 +5,8 @@ namespace Maba\Bundle\WebpackBundle\Config;
 use Maba\Bundle\WebpackBundle\ErrorHandler\ErrorHandlerInterface;
 use Maba\Bundle\WebpackBundle\Service\AliasManager;
 use Maba\Bundle\WebpackBundle\Service\AssetCollector;
+use Maba\Bundle\WebpackBundle\Service\AssetLocator;
 use Maba\Bundle\WebpackBundle\Service\AssetNameGenerator;
-use Symfony\Component\Config\FileLocatorInterface;
 use InvalidArgumentException;
 
 class WebpackConfigManager
@@ -14,7 +14,7 @@ class WebpackConfigManager
     private $aliasManager;
     private $assetCollector;
     private $configDumper;
-    private $fileLocator;
+    private $assetLocator;
     private $assetNameGenerator;
     private $errorHandler;
 
@@ -22,14 +22,14 @@ class WebpackConfigManager
         AliasManager $aliasManager,
         AssetCollector $assetCollector,
         WebpackConfigDumper $configDumper,
-        FileLocatorInterface $fileLocator,
+        AssetLocator $assetLocator,
         AssetNameGenerator $assetNameGenerator,
         ErrorHandlerInterface $errorHandler
     ) {
         $this->aliasManager = $aliasManager;
         $this->assetCollector = $assetCollector;
         $this->configDumper = $configDumper;
-        $this->fileLocator = $fileLocator;
+        $this->assetLocator = $assetLocator;
         $this->assetNameGenerator = $assetNameGenerator;
         $this->errorHandler = $errorHandler;
     }
@@ -48,7 +48,7 @@ class WebpackConfigManager
         foreach ($assetResult->getAssets() as $asset) {
             $assetName = $this->assetNameGenerator->generateName($asset);
             try {
-                $entryPoints[$assetName] = $this->fileLocator->locate($asset);
+                $entryPoints[$assetName] = $this->assetLocator->locateAsset($asset);
             } catch (InvalidArgumentException $exception) {
                 $this->errorHandler->processException($exception);
             }

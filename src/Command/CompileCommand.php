@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
-
 class CompileCommand extends Command
 {
     private $compiler;
@@ -22,7 +21,6 @@ class CompileCommand extends Command
         $this->compiler = $compiler;
         $this->logger = $logger;
     }
-
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {

@@ -25,13 +25,18 @@ class MabaWebpackExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
+        $additionalAliases = $config['aliases']['additional'] + array(
+            'app' => '%kernel.root_dir%/Resources/assets',
+            'root' => '%kernel.root_dir%/..',
+        );
+
         $container->setParameter('maba_webpack.provider_config', $config['asset_providers']);
         $container->setParameter('maba_webpack.twig_function_name', $config['twig']['function_name']);
         $container->setParameter('maba_webpack.webpack_config_path', $config['config']['path']);
         $container->setParameter('maba_webpack.webpack_config_parameters', $config['config']['parameters']);
         $container->setParameter('maba_webpack.aliases.register_bundles', $config['aliases']['register_bundles']);
         $container->setParameter('maba_webpack.aliases.path_in_bundle', $config['aliases']['path_in_bundle']);
-        $container->setParameter('maba_webpack.aliases.additional', $config['aliases']['additional']);
+        $container->setParameter('maba_webpack.aliases.additional', $additionalAliases);
         $container->setParameter('maba_webpack.bin.webpack.executable', $config['bin']['webpack']['executable']);
         $container->setParameter('maba_webpack.bin.webpack.arguments', $config['bin']['webpack']['arguments']);
         $container->setParameter('maba_webpack.bin.dev_server.executable', $config['bin']['dev_server']['executable']);

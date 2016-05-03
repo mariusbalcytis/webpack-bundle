@@ -15,6 +15,7 @@
         "twig/twig": "^1.12",
         "maba/dependency-injection-extra": "^0.1.0",
         "symfony/process": "^2.5",
+        "symfony/dependency-injection": "^2.3",
         "symfony/twig-bundle": "^2.3",
         "symfony/monolog-bundle": "^2.3"
     },
