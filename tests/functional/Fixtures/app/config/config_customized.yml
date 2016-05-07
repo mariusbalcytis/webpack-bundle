@@ -5,6 +5,7 @@ framework:
     router:
         resource: "@MabaWebpackTestBundle/Resources/config/routing.xml"
         strict_requirements: ~
+    profiler: ~
 
 maba_webpack:
     asset_providers:
