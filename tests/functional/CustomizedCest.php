@@ -43,6 +43,7 @@ class CustomizedCest
         $I->seeFileFound(__DIR__ . '/Fixtures/web/assets/' . $matches[1]);
         $I->openFile(__DIR__ . '/Fixtures/web/assets/' . $matches[1]);
         $I->canSeeInThisFile('additional-asset-content');
+        $I->canSeeInThisFile('additional asset B');
         $I->canSeeInThisFile('app-asset-content');
         $I->dontSeeInThisFile('featureA-content');
         $I->dontSeeInThisFile('featureB-content');

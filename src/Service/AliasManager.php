@@ -45,7 +45,7 @@ class AliasManager
 
         $aliases = array();
         foreach ($this->registerBundles as $bundleName) {
-            $aliases['@' . $bundleName] = $this->fileLocator->locate('@' . $bundleName);
+            $aliases['@' . $bundleName] = rtrim($this->fileLocator->locate('@' . $bundleName), '/');
             try {
                 $shortName = $this->getShortNameForBundle($bundleName);
                 $aliases['@' . $shortName] = $this->fileLocator->locate('@' . $bundleName . '/' . $this->pathInBundle);

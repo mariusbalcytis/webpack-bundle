@@ -27,9 +27,9 @@ Additionally, for development environment:
 restarts webpack-dev-server if webpack configuration changes.
 
 More goodies:
-1. Let's you configure webpack config as you want, while still providing needed parameters from Symfony, like
+1. Lets you configure webpack config as you want, while still providing needed parameters from Symfony, like
 entry points, aliases, environment and additional parameters.
-2. Let's you define custom entry point providers if you don't use twig or include scripts in any other way.
+2. Lets you define custom entry point providers if you don't use twig or include scripts in any other way.
 
 Also look at [MabaWebpackMigrationBundle](https://github.com/mariusbalcytis/webpack-migration-bundle) for 
 easier migration from [AsseticBundle](https://github.com/symfony/assetic-bundle) to webpack.
@@ -37,7 +37,7 @@ easier migration from [AsseticBundle](https://github.com/symfony/assetic-bundle)
 How does this compare to assetic?
 ----
 
-Webpack let's you create components, which know their own dependencies.
+Webpack lets you create components, which know their own dependencies.
 
 With assetic, you must explicitly provide all needed javascript and stylesheet files in your templates.
 If you split one of your javascript files into two files, you need to update all templates where that new dependency
@@ -84,7 +84,18 @@ Default configuration was based on
 Some customizations were made for integration. Also `TEST` mode was removed as at this point bundle does not
 let running javascript tests.
 
+Empty string was added to module directories, this allows to 1) require files without
+prefixing them with `./` 2) if file is not found inside same directory, it's searched in descendant directories.
+
 Feel free to modify this configuration file as you'd like - bundle just provides default one as a starting point.
+
+You should add `webpack.config.js` and `package.json` into your repository. You should also add `node_modules` into
+`.gitignore` file and run `npm install` similarly to `composer install` (after cloning repository, after `package.json`
+is updated and as a task in your deployment). Of course, you could just add it to your repository, too.
+
+```bash
+git add package.json app/config/webpack.config.js
+```
 
 Usage
 ----
