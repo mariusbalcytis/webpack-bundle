@@ -97,6 +97,10 @@ is updated and as a task in your deployment). Of course, you could just add it t
 git add package.json app/config/webpack.config.js
 ```
 
+After updating this bundle, you should re-run setup command and review changes in files, merge them with any of
+your own. This bundle **might** make an assumption that all the needed dependencies are installed. As compiling
+is made beforehand as a deployment step, you should notice any errors in your staging environment if there would be any.
+
 Usage
 ----
 
@@ -238,6 +242,16 @@ In your twig template:
 ```
 
 Normally you would only need to load `<script>` tag and all `require()`d styles would be loaded automatically.
+
+ES6, Less and Sass support
+----
+ES6, Less and Sass works out of the box:
+
+- use `.js` or `.jsx` extension to compile from ES6 and ES7 to ES5 using [Babel](https://babeljs.io/);
+- use `.less` extension to compile [Less](http://lesscss.org/) files;
+- use `.scss` extension to compile [Sass](http://sass-lang.com/) files.
+
+If you need any custom loaders, feel free to install them via `npm` and modify `app/config/webpack.config.js` if needed.
 
 Alternatives?
 ----
