@@ -113,6 +113,19 @@ module.exports = function makeWebpackConfig (options) {
     // Add cssLoader to the loader list
     config.module.loaders.push(cssLoader);
 
+    // add less support
+    config.module.loaders.push({
+        test: /\.less$/,
+        loader: ExtractTextPlugin.extract('style', 'css?sourceMap!less?sourceMap')
+    });
+
+    // add sass support
+    config.module.loaders.push({
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract('style', 'css?sourceMap!sass?sourceMap')
+    });
+
+
     /**
      * PostCSS
      * Reference: https://github.com/postcss/autoprefixer-core

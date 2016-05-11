@@ -35,6 +35,10 @@ class CustomizedCest
         $I->openFile(__DIR__ . '/Fixtures/web/assets/' . $matches[1]);
         $I->canSeeInThisFile('.green');
         $I->canSeeInThisFile('.red');
+        $I->amGoingTo('Check if less file was compiled');
+        $I->canSeeInThisFile('color: #123456');
+        $I->amGoingTo('Check if sass file was compiled');
+        $I->canSeeInThisFile('color: #654321');
 
         $I->seeInSource('<script src="/assets/');
         $src = $I->grabAttributeFrom('script', 'src');
