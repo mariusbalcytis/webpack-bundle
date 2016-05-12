@@ -31,6 +31,9 @@ More goodies:
 entry points, aliases, environment and additional parameters.
 2. Lets you define custom entry point providers if you don't use twig or include scripts in any other way.
 
+Look at [Symfony, Webpack and AngularJS Single Page Application Demo](https://github.com/mariusbalcytis/symfony-webpack-angular-demo)
+for usage examples.
+
 Also look at [MabaWebpackMigrationBundle](https://github.com/mariusbalcytis/webpack-migration-bundle) for 
 easier migration from [AsseticBundle](https://github.com/symfony/assetic-bundle) to webpack.
 
