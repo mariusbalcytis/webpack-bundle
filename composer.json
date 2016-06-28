@@ -11,13 +11,13 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "symfony/framework-bundle": "^2.7",
+        "symfony/framework-bundle": "^2.7|^3.0",
         "twig/twig": "^1.12",
         "maba/dependency-injection-extra": "^0.1.0",
-        "symfony/process": "^2.5",
-        "symfony/dependency-injection": "^2.3",
-        "symfony/twig-bundle": "^2.3",
-        "symfony/monolog-bundle": "^2.3"
+        "symfony/process": "^2.5|^3.0",
+        "symfony/dependency-injection": "^2.3|^3.0",
+        "symfony/twig-bundle": "^2.3|^3.0",
+        "symfony/monolog-bundle": "^2.3|^3.0"
     },
     "require-dev": {
         "codeception/codeception": "^2.1.4"
