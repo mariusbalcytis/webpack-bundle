@@ -25,9 +25,8 @@ install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 
 before_script:
-    - phpenv config-rm xdebug.ini
-    - wget http://getcomposer.org/composer.phar
-    - bash -c "php composer.phar update $COMPOSER_ARGS"
+    - phpenv config-rm xdebug.ini || true
+    - bash -c "composer update $COMPOSER_ARGS"
 
 script:
     - vendor/bin/codecept run
