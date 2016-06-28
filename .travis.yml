@@ -10,14 +10,19 @@ php:
     - 7.0
 
 env:
-  - TRAVIS_NODE_VERSION="4"
+  global:
+    - TRAVIS_NODE_VERSION="4"
+    - COMPOSER_NO_INTERACTION="1"
+  matrix:
+    - COMPOSER_ARGS=""
+    - COMPOSER_ARGS="--prefer-lowest"
 
 install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 
 before_script:
     - wget http://getcomposer.org/composer.phar
-    - php composer.phar install --dev --no-interaction
+    - bash -c "php composer.phar update $COMPOSER_ARGS"
 
 script:
     - vendor/bin/codecept run
