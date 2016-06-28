@@ -17,10 +17,15 @@ env:
     - COMPOSER_ARGS=""
     - COMPOSER_ARGS="--prefer-lowest"
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 
 before_script:
+    - phpenv config-rm xdebug.ini
     - wget http://getcomposer.org/composer.phar
     - bash -c "php composer.phar update $COMPOSER_ARGS"
 
