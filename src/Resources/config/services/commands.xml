@@ -27,12 +27,14 @@
             <tag name="console.command"/>
 
             <argument type="service">
-                <service class="stdClass" factory-service="file_locator" factory-method="locate">
+                <service class="stdClass">
+                    <factory service="file_locator" method="locate"/>
                     <argument>@MabaWebpackBundle/Resources/defaultConfig/package.json</argument>
                 </service>
             </argument>
             <argument type="service">
-                <service class="stdClass" factory-service="file_locator" factory-method="locate">
+                <service class="stdClass">
+                    <factory service="file_locator" method="locate"/>
                     <argument>@MabaWebpackBundle/Resources/defaultConfig/webpack.config.js</argument>
                 </service>
             </argument>
