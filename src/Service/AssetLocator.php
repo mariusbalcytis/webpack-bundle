@@ -21,6 +21,13 @@ class AssetLocator
      */
     public function locateAsset($asset)
     {
+        $position = strrpos($asset, '!');
+
+        if ($position !== false) {
+            $loader = substr($asset, 0, $position);
+            $asset = substr($asset, $position + 1);
+        }
+
         if (substr($asset, 0, 1) === '@') {
             $resolvedAsset = $this->resolveAlias($asset);
         } else {
@@ -31,7 +38,7 @@ class AssetLocator
             throw new AssetNotFoundException(sprintf('Asset not found (%s, resolved to %s)', $asset, $resolvedAsset));
         }
 
-        return $resolvedAsset;
+        return isset($loader) ? sprintf('%s!%s', $loader, $resolvedAsset) : $resolvedAsset;
     }
 
     private function resolveAlias($asset)
