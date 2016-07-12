@@ -15,13 +15,13 @@ use Twig_Node_Expression_Function as ExpressionFunction;
 class TwigAssetProvider implements AssetProviderInterface
 {
     private $twig;
-    private $functionName;
+    private $functionPrefix;
     private $errorHandler;
 
-    public function __construct(Environment $twig, $functionName, ErrorHandlerInterface $errorHandler)
+    public function __construct(Environment $twig, $functionPrefix, ErrorHandlerInterface $errorHandler)
     {
         $this->twig = $twig;
-        $this->functionName = $functionName;
+        $this->functionPrefix = $functionPrefix;
         $this->errorHandler = $errorHandler;
     }
 
@@ -79,7 +79,13 @@ class TwigAssetProvider implements AssetProviderInterface
 
         if ($node instanceof ExpressionFunction) {
             $name = $node->getAttribute('name');
-            if ($name === $this->functionName) {
+            $functionNames = array(
+                $this->functionPrefix . 'asset',
+                $this->functionPrefix . 'file_asset',
+                $this->functionPrefix . 'css_asset',
+            );
+
+            if (in_array($name, $functionNames, true)) {
                 $arguments = iterator_to_array($node->getNode('arguments'));
                 if (!is_array($arguments)) {
                     throw new ResourceParsingException('arguments is not an array');
@@ -87,7 +93,7 @@ class TwigAssetProvider implements AssetProviderInterface
                 if (count($arguments) !== 1 && count($arguments) !== 2) {
                     throw new ResourceParsingException(sprintf(
                         'Expected exactly one or two arguments passed to function %s in %s at line %s',
-                        $this->functionName,
+                        $this->functionPrefix,
                         $resource,
                         $node->getLine()
                     ));
@@ -95,12 +101,16 @@ class TwigAssetProvider implements AssetProviderInterface
                 if (!$arguments[0] instanceof ConstantFunction) {
                     throw new ResourceParsingException(sprintf(
                         'Argument passed to function %s must be text node to parse without context. File %s, line %s',
-                        $this->functionName,
+                        $this->functionPrefix,
                         $resource,
                         $node->getLine()
                     ));
                 }
-                $assets[] = $arguments[0]->getAttribute('value');
+                $value = $arguments[0]->getAttribute('value');
+                if ($name === $this->functionPrefix . 'file_asset') {
+                    $value = '!!entry-file!' . $value;
+                }
+                $assets[] = $value;
                 return $assets;
             }
         }

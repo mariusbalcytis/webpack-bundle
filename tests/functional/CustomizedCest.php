@@ -43,6 +43,12 @@ class CustomizedCest
         $I->canSeeInThisFile('color: #654321');
         $I->canSeeInThisFile('-ms-fullscreen a.scss');
 
+        $I->seeInSource('<img src="/assets/');
+        $src = $I->grabAttributeFrom('img', 'src');
+        preg_match('#/assets/(.*)#', $src, $matches);
+        $I->seeFileFound(__DIR__ . '/Fixtures/web/assets/' . $matches[1]);
+        $I->openFile(__DIR__ . '/Fixtures/web/assets/' . $matches[1]);
+
         $I->seeInSource('<script src="/assets/');
         $src = $I->grabAttributeFrom('script', 'src');
 

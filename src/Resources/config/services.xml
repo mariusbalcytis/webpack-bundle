@@ -12,7 +12,7 @@
     <parameters>
         <!-- Set from config.yml: -->
         <parameter key="maba_webpack.provider_config"/>
-        <parameter key="maba_webpack.twig_function_name"/>
+        <parameter key="maba_webpack.twig_function_prefix"/>
         <parameter key="maba_webpack.webpack_config_path"/>
         <parameter key="maba_webpack.webpack_config_parameters"/>
         <parameter key="maba_webpack.aliases.register_bundles"/>
@@ -64,7 +64,7 @@
             <tag name="twig.extension"/>
 
             <argument type="service" id="maba_webpack.asset_manager"/>
-            <argument>%maba_webpack.twig_function_name%</argument>
+            <argument>%maba_webpack.twig_function_prefix%</argument>
         </service>
 
         <service id="maba_webpack.config_dumper" class="Maba\Bundle\WebpackBundle\Config\WebpackConfigDumper">

@@ -27,6 +27,16 @@ class AssetManager
         return isset($manifest[$assetName][$type]) ? $manifest[$assetName][$type] : null;
     }
 
+    public function getAssetUrls($asset)
+    {
+        $manifest = $this->getManifest();
+        $assetName = $this->assetNameGenerator->generateName($asset);
+        if (!isset($manifest[$assetName])) {
+            throw new \RuntimeException('No information in manifest for ' . $asset . ' (key ' . $assetName . ')');
+        }
+        return $manifest[$assetName];
+    }
+
     protected function getManifest()
     {
         if ($this->manifest === null) {
