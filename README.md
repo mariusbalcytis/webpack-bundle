@@ -260,7 +260,7 @@ If you need to provide different port, be sure to put `--port` and the port itse
 If you are experiencing "heap out of memory" error when running `maba:webpack:compile`
 and/or `maba:webpack:dev-server`, try to give more memory for Node.js process:
 
-```
+```yml
 maba_webpack:
     bin:
         webpack:        # same with dev_server
