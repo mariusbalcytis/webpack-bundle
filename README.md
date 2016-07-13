@@ -132,18 +132,20 @@ In development environment (this must always run in the background, similar to `
 app/console maba:webpack:dev-server
 ```
 
-This runs webpack-dev-server as a separate process, it listens on `localhost:8080`. By default, assets in development
-environment are pointed to `http://localhost:8080/compiled/*`. If you run this command inside VM, docker container etc.,
-configure `maba_webpack.config.parameters.public_path` to use correct host in your `config_dev.yml`.
-
 As part of deployment into production environment:
 
 ```bash
 app/console maba:webpack:compile --env=prod
 ```
 
+
 Aliases
 ----
+
+Aliases are prefixed with `@` and point to some specific path.
+
+Aliases work the same in both twig templates (parameter to `webpack_asset` function) and Javascript files
+(parameter to `require` or similar Webpack provided function).
 
 By default, these aliases are registered:
 
@@ -154,10 +156,26 @@ By default, these aliases are registered:
 
 You can also register your own aliases, for example `@bower` or `@npm`
 would be great candidates if you use any of those package managers. Or something like `@vendor`
-if you use composer to install your frontend assets.
+if you use composer to install your frontend assets:
 
-Aliases work the same in both twig templates (parameter to `webpack_asset` function) and Javascript files
-(parameter to `require` or similar Webpack provided function).
+```yml
+maba_webpack:
+    aliases:
+        additional:
+            npm: %kernel.root_dir%/node_modules     # or any other path where assets are installed
+            bower: %kernel.root_dir%/bower
+            vendor: %kernel.root_dir%/../vendor
+```
+
+Inside your JavaScript files:
+
+```js
+var $ = require('@npm/jquery');
+```
+
+Be sure to install dependencies (either npm, bower or any other) on path not directly accessible from web.
+This is not needed by webpack (it compiles them - they can be anywhere on the system) and could cause a security
+flaw (some assets contain backend examples, which could be potentially used in your production environment).
 
 Configuration
 ----
@@ -211,6 +229,45 @@ maba_webpack:
                 - --history-api-fallback
                 - --inline
                 
+```
+
+## Configuring dev-server
+
+`app/console maba:webpack:dev-server` runs webpack-dev-server as a separate process,
+it listens on `localhost:8080`. By default, assets in development
+environment are pointed to `http://localhost:8080/compiled/*`.
+
+If you run this command inside VM, docker container etc., configure `maba_webpack.config.parameters.public_path`
+to use correct host in your `config_dev.yml`. Also, as
+dev-server listens only to localhost connections by default, add this to configuration:
+
+```yml
+maba_webpack:
+    bin:
+        dev_server:
+            arguments:
+                - --hot                     # these are default arguments - leave them if needed
+                - --history-api-fallback
+                - --inline
+                - --host                    # let's add host option
+                - 0.0.0.0                   # each line is escaped, so option comes in it's own line
+```
+
+If you need to provide different port, be sure to put `--port` and the port itself into separate lines.
+
+## Configuring Memory for Node.js
+
+If you are experiencing "heap out of memory" error when running `maba:webpack:compile`
+and/or `maba:webpack:dev-server`, try to give more memory for Node.js process:
+
+```
+maba_webpack:
+    bin:
+        webpack:        # same with dev_server
+            executable:
+                - node
+                - "--max-old-space-size=4096"   # 4GB
+                - node_modules/webpack/bin/webpack.js
 ```
 
 Loading CSS with stylesheets

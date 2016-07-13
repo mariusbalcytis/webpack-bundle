@@ -31,5 +31,5 @@ maba_webpack:
         webpack:
             executable:
                 - node
-                - "--max_old_space_size=8192"
+                - "--max-old-space-size=8192"
                 - node_modules/webpack/bin/webpack.js
