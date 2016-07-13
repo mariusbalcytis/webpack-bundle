@@ -77,11 +77,6 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('executable')
             ->defaultValue(array('node', 'node_modules/webpack/bin/webpack.js'))
             ->prototype('scalar')
-            ->beforeNormalization()
-            ->ifString()
-            ->then(function($value) {
-                return array($value);
-            })
         ;
         $webpack->arrayNode('arguments')->defaultValue(array())->prototype('scalar');
         $devServer = $bin->arrayNode('dev_server')->addDefaultsIfNotSet()->children();
@@ -89,11 +84,6 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('executable')
             ->defaultValue(array('node', 'node_modules/webpack-dev-server/bin/webpack-dev-server.js'))
             ->prototype('scalar')
-            ->beforeNormalization()
-            ->ifString()
-            ->then(function($value) {
-                return array($value);
-            })
         ;
         $devServer->arrayNode('arguments')->defaultValue(array(
             '--hot',
