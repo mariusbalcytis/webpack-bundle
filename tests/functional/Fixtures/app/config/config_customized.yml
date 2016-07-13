@@ -27,3 +27,9 @@ maba_webpack:
         additional:
             'a': %kernel.root_dir%/../src/Resources/assets
             'app': %kernel.root_dir%/Resources/assets
+    bin:
+        webpack:
+            executable:
+                - node
+                - "--max_old_space_size=8192"
+                - node_modules/webpack/bin/webpack.js
