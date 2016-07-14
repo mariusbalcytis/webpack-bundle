@@ -73,7 +73,7 @@ class WebpackCompiler
 
         $processBuilder = new ProcessBuilder();
         $processBuilder->setArguments(array_merge(
-            array('exec'),
+            DIRECTORY_SEPARATOR === '\\' ? array() : array('exec'),
             $this->devServerExecutable,
             array('--config', $config->getConfigPath()),
             $this->devServerArguments
