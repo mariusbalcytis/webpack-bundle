@@ -26,6 +26,24 @@ class SetupCommand extends Command
         $this->configPath = realpath($configPath);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected function configure()
+    {
+        $this
+            ->setName('maba:webpack:setup')
+            ->setDescription('Initial setup for maba webpack bundle')
+            ->setHelp(<<<EOT
+The <info>%command.name%</info> command copies a default <info>webpack.config.js</info> and <info>package.json</info> files and runs <info>npm install</info>. 
+
+After executing this command, you should commit the following files to your repository.
+
+    <info>git add package.json app/config/webpack.config.js</info>
+EOT
+            );
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var QuestionHelper $helper */
