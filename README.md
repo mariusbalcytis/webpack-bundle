@@ -197,6 +197,9 @@ maba_webpack:
         function_name:        webpack_asset     # function name in twig templates
         suppress_errors:      true              # whether files not found or twig parse errors should be ignored
                                                 # defaults to true in dev environment
+                                                # defaults to "ignore_unkwowns" in prod - this option ignores
+                                                #     unknown functions etc., but fails on syntax errors
+                                                # set to false to always fail on any twig error
     config:
         path:                 '%kernel.root_dir%/config/webpack.config.js'
         parameters:           []        # additional parameters passed to webpack config file

@@ -50,7 +50,14 @@ class Configuration implements ConfigurationInterface
 
         $twig = $children->arrayNode('twig')->addDefaultsIfNotSet()->children();
         $twig->scalarNode('function_name')->defaultValue('webpack_asset');
-        $twig->scalarNode('suppress_errors')->defaultValue($this->environment === 'dev');
+        $suppressErrorsNode = $twig->scalarNode('suppress_errors')->defaultValue(
+            $this->environment === 'dev' ? true : 'ignore_unknowns'
+        );
+        $suppressErrorsNode
+            ->validate()
+            ->ifNotInArray([true, false, 'ignore_unknowns'])
+            ->thenInvalid('suppress_errors must be either a boolean or "ignore_unknowns"')
+        ;
 
         $config = $children->arrayNode('config')->addDefaultsIfNotSet()->children();
         $config->scalarNode('path')->defaultValue('%kernel.root_dir%/config/webpack.config.js');

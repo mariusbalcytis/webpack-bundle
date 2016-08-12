@@ -47,4 +47,49 @@ class CompileCest
         $I->canSeeInThisFile('.green');
         $I->canSeeInThisFile('.red');
     }
+
+    public function getErrorWithTwigParseError(FunctionalTester $I)
+    {
+        $I->bootKernelWith('parse_error');
+
+        $I->runCommand('maba_webpack.command.setup');
+        $I->runCommand('maba_webpack.command.compile');
+        $I->seeCommandStatusCode(1);
+    }
+
+    public function getErrorWithTwigParseErrorIfIgnoringUnknowns(FunctionalTester $I)
+    {
+        $I->bootKernelWith('parse_error2');
+
+        $I->runCommand('maba_webpack.command.setup');
+        $I->runCommand('maba_webpack.command.compile');
+        $I->seeCommandStatusCode(1);
+    }
+
+    public function getNoErrorWithTwigParseErrorIfSuppressing(FunctionalTester $I)
+    {
+        $I->bootKernelWith('parse_error_suppress');
+
+        $I->runCommand('maba_webpack.command.setup');
+        $I->runCommand('maba_webpack.command.compile');
+        $I->seeCommandStatusCode(0);
+    }
+
+    public function getErrorWithTwigUnknowns(FunctionalTester $I)
+    {
+        $I->bootKernelWith('unknowns');
+
+        $I->runCommand('maba_webpack.command.setup');
+        $I->runCommand('maba_webpack.command.compile');
+        $I->seeCommandStatusCode(1);
+    }
+
+    public function getNoErrorWithTwigUnknownsIfIgnoring(FunctionalTester $I)
+    {
+        $I->bootKernelWith('unknowns_suppress');
+
+        $I->runCommand('maba_webpack.command.setup');
+        $I->runCommand('maba_webpack.command.compile');
+        $I->seeCommandStatusCode(0);
+    }
 }

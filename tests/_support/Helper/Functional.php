@@ -14,6 +14,11 @@ class Functional extends Symfony2
      */
     protected $commandTester;
 
+    /**
+     * @var int
+     */
+    protected $errorCode;
+
 
     public function _before(\Codeception\TestCase $test)
     {
@@ -69,15 +74,34 @@ class Functional extends Symfony2
 
     public function runCommand($commandServiceId, array $input = array())
     {
+        $this->errorCode = null;
+        $this->commandTester = null;
+
         $command = $this->grabServiceFromContainer($commandServiceId);
 
         $application = new Application($this->kernel);
         $application->add($command);
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(array(
-            'command' => $command->getName(),
-        ) + $input, array('interactive' => false));
+
+        try {
+            $commandTester->execute(array(
+                'command' => $command->getName(),
+            ) + $input, array('interactive' => false));
+        } catch (\Exception $e) {
+            $exitCode = $e->getCode();
+            if (is_numeric($exitCode)) {
+                $exitCode = (int) $exitCode;
+                if (0 === $exitCode) {
+                    $exitCode = 1;
+                }
+            } else {
+                $exitCode = 1;
+            }
+            $this->errorCode = $exitCode;
+            $this->debug((string)$e);
+            return;
+        }
 
         $this->debug($commandTester->getDisplay());
 
@@ -86,7 +110,8 @@ class Functional extends Symfony2
 
     public function seeCommandStatusCode($code)
     {
-        $this->assertEquals($code, $this->commandTester->getStatusCode());
+        $statusCode = $this->errorCode !== null ? $this->errorCode : $this->commandTester->getStatusCode();
+        $this->assertEquals($code, $statusCode);
     }
 
     public function seeInCommandDisplay($substring)

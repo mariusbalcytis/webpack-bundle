@@ -10,7 +10,7 @@ framework:
 maba_webpack:
     asset_providers:
         -
-            type: twig_bundles
-            resource: [MabaWebpackTestBundle]
+            type: twig_directory
+            resource: %kernel.root_dir%/Resources/views-parse-error
     twig:
-        suppress_errors: false
+        suppress_errors: ignore_unknowns

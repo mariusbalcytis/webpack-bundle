@@ -42,10 +42,13 @@ class MabaWebpackExtension extends Extension
         $container->setParameter('maba_webpack.bin.dev_server.executable', $config['bin']['dev_server']['executable']);
         $container->setParameter('maba_webpack.bin.dev_server.arguments', $config['bin']['dev_server']['arguments']);
 
-        $errorHandlerId = $config['twig']['suppress_errors']
-            ? 'maba_webpack.error_handler.suppressing'
-            : 'maba_webpack.error_handler.default'
-        ;
+        if ($config['twig']['suppress_errors'] === true) {
+            $errorHandlerId = 'maba_webpack.error_handler.suppressing';
+        } elseif ($config['twig']['suppress_errors'] === 'ignore_unknowns') {
+            $errorHandlerId = 'maba_webpack.error_handler.ignore_unknowns';
+        } else {
+            $errorHandlerId = 'maba_webpack.error_handler.default';
+        }
         $container->setAlias('maba_webpack.error_handler', $errorHandlerId);
     }
 

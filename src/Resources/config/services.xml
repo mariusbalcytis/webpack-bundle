@@ -101,5 +101,9 @@
                  class="Maba\Bundle\WebpackBundle\ErrorHandler\SuppressingErrorHandler">
             <argument type="service" id="logger"/>
         </service>
+        <service id="maba_webpack.error_handler.ignore_unknowns"
+                 class="Maba\Bundle\WebpackBundle\ErrorHandler\UnknownReferenceIgnoringErrorHandler">
+            <argument type="service" id="logger"/>
+        </service>
     </services>
 </container>
