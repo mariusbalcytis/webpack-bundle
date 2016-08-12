@@ -19,6 +19,22 @@ class DevServerCommand extends Command
         $this->compiler = $compiler;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected function configure()
+    {
+        $this
+            ->setName('maba:webpack:dev-server')
+            ->setDescription('Run a webpack-dev-server as a separate process on localhost:8080')
+            ->setHelp(<<<EOT
+The <info>%command.name%</info> command runs webpack-dev-server as a separate process, it listens on <info>localhost:8080</info>. By default, assets in development environment are pointed to <info>http://localhost:8080/compiled/*</info>.
+
+    <info>%command.full_name%</info>
+EOT
+            );
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->compiler->compileAndWatch(function($type, $buffer) use ($output) {

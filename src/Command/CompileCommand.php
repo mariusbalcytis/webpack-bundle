@@ -22,6 +22,26 @@ class CompileCommand extends Command
         $this->logger = $logger;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected function configure()
+    {
+        $this
+            ->setName('maba:webpack:compile')
+            ->setDescription('Compile webpack assets')
+            ->setHelp(<<<EOT
+The <info>%command.name%</info> command compiles webpack assets.
+
+    <info>%command.full_name%</info>
+
+Pass the --env=prod flag to compile for production.
+
+    <info>%command.full_name% --env=prod</info>
+EOT
+            );
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $logger = $this->logger;
