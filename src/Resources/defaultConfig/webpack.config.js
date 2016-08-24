@@ -5,6 +5,7 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var AssetsPlugin = require('assets-webpack-plugin');
+var DashboardPlugin = require('webpack-dashboard/plugin');
 
 module.exports = function makeWebpackConfig (options) {
     /**
@@ -153,6 +154,8 @@ module.exports = function makeWebpackConfig (options) {
 
     var manifestPathParts = options.manifest_path.split('/');
     config.plugins.push(new AssetsPlugin({filename: manifestPathParts.pop(), path: manifestPathParts.join('/')}));
+
+    config.plugins.push(new DashboardPlugin());
 
     // Add build specific plugins
     if (BUILD) {
