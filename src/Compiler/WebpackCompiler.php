@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\ProcessBuilder;
 use Closure;
 use RuntimeException;
+use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
 
 class WebpackCompiler
 {
@@ -18,8 +19,10 @@ class WebpackCompiler
     private $workingDirectory;
     private $logger;
     private $webpackExecutable;
+    private $webpackTtyPrefix;
     private $webpackArguments;
     private $devServerExecutable;
+    private $devServerTtyPrefix;
     private $devServerArguments;
 
     public function __construct(
@@ -29,8 +32,10 @@ class WebpackCompiler
         $workingDirectory,
         LoggerInterface $logger,
         array $webpackExecutable,
+        array $webpackTtyPrefix,
         array $webpackArguments,
         array $devServerExecutable,
+        array $devServerTtyPrefix,
         array $devServerArguments
     ) {
         $this->webpackConfigManager = $webpackConfigManager;
@@ -39,8 +44,10 @@ class WebpackCompiler
         $this->workingDirectory = $workingDirectory;
         $this->logger = $logger;
         $this->webpackExecutable = $webpackExecutable;
+        $this->webpackTtyPrefix = $webpackTtyPrefix;
         $this->webpackArguments = $webpackArguments;
         $this->devServerExecutable = $devServerExecutable;
+        $this->devServerTtyPrefix = $devServerTtyPrefix;
         $this->devServerArguments = $devServerArguments;
     }
 
@@ -56,7 +63,8 @@ class WebpackCompiler
         ));
         $processBuilder->setWorkingDirectory($this->workingDirectory);
         $processBuilder->setTimeout(3600);
-        $process = $processBuilder->getProcess();
+
+        $process = $this->buildProcess($processBuilder, [], $this->webpackTtyPrefix);
 
         // remove manifest file if exists - keep sure we create new one
         if (file_exists($this->manifestPath)) {
@@ -73,14 +81,16 @@ class WebpackCompiler
 
         $processBuilder = new ProcessBuilder();
         $processBuilder->setArguments(array_merge(
-            DIRECTORY_SEPARATOR === '\\' ? array() : array('exec'),
             $this->devServerExecutable,
             array('--config', $config->getConfigPath()),
             $this->devServerArguments
         ));
         $processBuilder->setWorkingDirectory($this->workingDirectory);
         $processBuilder->setTimeout(0);
-        $process = $processBuilder->getProcess();
+
+        $prefix = DIRECTORY_SEPARATOR === '\\' ? array() : array('exec');
+        $ttyPrefix = array_merge($prefix, $this->devServerTtyPrefix);
+        $process = $this->buildProcess($processBuilder, $prefix, $ttyPrefix);
 
         // remove manifest file if exists - keep sure we create new one
         if (file_exists($this->manifestPath)) {
@@ -140,5 +150,23 @@ class WebpackCompiler
         if (!unlink($this->manifestPath)) {
             throw new RuntimeException('Cannot unlink manifest file at ' . $this->manifestPath);
         }
+    }
+
+    private function buildProcess(ProcessBuilder $processBuilder, $prefix, $ttyPrefix)
+    {
+        // try to set prefix with TTY support
+        $processBuilder->setPrefix($ttyPrefix);
+        $process = $processBuilder->getProcess();
+        try {
+            $process->setTty(true);
+        } catch (ProcessRuntimeException $exception) {
+            // if TTY is not available, fall back to default prefix if it's different
+            if ($prefix !== $ttyPrefix) {
+                $processBuilder->setPrefix($prefix);
+                $process = $processBuilder->getProcess();
+            }
+        }
+
+        return $process;
     }
 }

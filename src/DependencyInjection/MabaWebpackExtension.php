@@ -38,8 +38,10 @@ class MabaWebpackExtension extends Extension
         $container->setParameter('maba_webpack.aliases.path_in_bundle', $config['aliases']['path_in_bundle']);
         $container->setParameter('maba_webpack.aliases.additional', $additionalAliases);
         $container->setParameter('maba_webpack.bin.webpack.executable', $config['bin']['webpack']['executable']);
+        $container->setParameter('maba_webpack.bin.webpack.tty_prefix', $config['bin']['webpack']['tty_prefix']);
         $container->setParameter('maba_webpack.bin.webpack.arguments', $config['bin']['webpack']['arguments']);
         $container->setParameter('maba_webpack.bin.dev_server.executable', $config['bin']['dev_server']['executable']);
+        $container->setParameter('maba_webpack.bin.dev_server.tty_prefix', $config['bin']['dev_server']['tty_prefix']);
         $container->setParameter('maba_webpack.bin.dev_server.arguments', $config['bin']['dev_server']['arguments']);
 
         if ($config['twig']['suppress_errors'] === true) {

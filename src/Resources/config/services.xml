@@ -90,8 +90,10 @@
             <argument>%maba_webpack.root_directory%</argument>
             <argument type="service" id="logger"/>
             <argument>%maba_webpack.bin.webpack.executable%</argument>
+            <argument>%maba_webpack.bin.webpack.tty_prefix%</argument>
             <argument>%maba_webpack.bin.webpack.arguments%</argument>
             <argument>%maba_webpack.bin.dev_server.executable%</argument>
+            <argument>%maba_webpack.bin.dev_server.tty_prefix%</argument>
             <argument>%maba_webpack.bin.dev_server.arguments%</argument>
         </service>
 
