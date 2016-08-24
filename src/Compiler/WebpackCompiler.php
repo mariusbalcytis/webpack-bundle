@@ -57,6 +57,11 @@ class WebpackCompiler
         $processBuilder->setWorkingDirectory($this->workingDirectory);
         $processBuilder->setTimeout(3600);
         $process = $processBuilder->getProcess();
+        try {
+            $process->setTty(true);
+        } catch (\Symfony\Component\Console\Exception\RuntimeException $e) {
+            //intentionally left blank
+        }
 
         // remove manifest file if exists - keep sure we create new one
         if (file_exists($this->manifestPath)) {
@@ -81,6 +86,11 @@ class WebpackCompiler
         $processBuilder->setWorkingDirectory($this->workingDirectory);
         $processBuilder->setTimeout(0);
         $process = $processBuilder->getProcess();
+        try {
+            $process->setTty(true);
+        } catch (\Symfony\Component\Console\Exception\RuntimeException $e) {
+            //intentionally left blank
+        }
 
         // remove manifest file if exists - keep sure we create new one
         if (file_exists($this->manifestPath)) {
