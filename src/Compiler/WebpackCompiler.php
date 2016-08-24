@@ -64,7 +64,7 @@ class WebpackCompiler
         $processBuilder->setWorkingDirectory($this->workingDirectory);
         $processBuilder->setTimeout(3600);
 
-        $process = $this->buildProcess($processBuilder, [], $this->webpackTtyPrefix);
+        $process = $this->buildProcess($processBuilder, array(), $this->webpackTtyPrefix);
 
         // remove manifest file if exists - keep sure we create new one
         if (file_exists($this->manifestPath)) {

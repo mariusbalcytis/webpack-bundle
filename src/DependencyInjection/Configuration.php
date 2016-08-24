@@ -55,7 +55,7 @@ class Configuration implements ConfigurationInterface
         );
         $suppressErrorsNode
             ->validate()
-            ->ifNotInArray([true, false, 'ignore_unknowns'])
+            ->ifNotInArray(array(true, false, 'ignore_unknowns'))
             ->thenInvalid('suppress_errors must be either a boolean or "ignore_unknowns"')
         ;
 

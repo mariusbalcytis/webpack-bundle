@@ -20,7 +20,7 @@ class WebpackExtension extends Extension
     public function getFunctions()
     {
         return array(
-            new SimpleFunction($this->functionName, [$this, 'getAssetUrl']),
+            new SimpleFunction($this->functionName, array($this, 'getAssetUrl')),
         );
     }
 
