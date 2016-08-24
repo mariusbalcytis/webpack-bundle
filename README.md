@@ -221,12 +221,20 @@ maba_webpack:
                         # should be array, for example [webpack]
                 - node
                 - node_modules/webpack/bin/webpack.js
+            tty_prefix: # prefix for command, only in TTY mode. Set to [] to disable dashboard
+                - node
+                - node_modules/webpack-dashboard/bin/webpack-dashboard.js
+                - "--"
             arguments:            []    # additional parameters to pass to webpack
                                         # --config with configuration path is always passed
         dev_server:
             executable: # how maba:webpack:dev-server executes webpack-dev-server
                 - node
                 - node_modules/webpack-dev-server/bin/webpack-dev-server.js
+            tty_prefix: # prefix for command, only in TTY mode. Set to [] to disable dashboard
+                - node
+                - node_modules/webpack-dashboard/bin/webpack-dashboard.js
+                - "--"
             arguments:  # additional parameters to pass to webpack-dev-server; these are default ones
                 - --hot
                 - --history-api-fallback
@@ -257,6 +265,9 @@ maba_webpack:
 ```
 
 If you need to provide different port, be sure to put `--port` and the port itself into separate lines.
+
+When compiling assets, [webpack-dashboard](https://github.com/FormidableLabs/webpack-dashboard)
+is used for more user-friendly experience. You can disable it by setting `tty_prefix` option to `[]`.
 
 ## Configuring Memory for Node.js
 
