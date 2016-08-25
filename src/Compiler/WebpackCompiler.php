@@ -25,6 +25,7 @@ class WebpackCompiler
     private $devServerExecutable;
     private $devServerTtyPrefix;
     private $devServerArguments;
+    private $disableTty;
 
     public function __construct(
         WebpackConfigManager $webpackConfigManager,
@@ -37,7 +38,8 @@ class WebpackCompiler
         array $webpackArguments,
         array $devServerExecutable,
         array $devServerTtyPrefix,
-        array $devServerArguments
+        array $devServerArguments,
+        $disableTty
     ) {
         $this->webpackConfigManager = $webpackConfigManager;
         $this->manifestPath = $manifestPath;
@@ -50,6 +52,7 @@ class WebpackCompiler
         $this->devServerExecutable = $devServerExecutable;
         $this->devServerTtyPrefix = $devServerTtyPrefix;
         $this->devServerArguments = $devServerArguments;
+        $this->disableTty = $disableTty;
     }
 
     public function compile(Closure $callback = null, WebpackConfig $previousConfig = null)
@@ -156,6 +159,11 @@ class WebpackCompiler
 
     private function buildProcess(ProcessBuilder $processBuilder, $prefix, $ttyPrefix)
     {
+        if ($this->disableTty) {
+            $processBuilder->setPrefix($prefix);
+            return $processBuilder->getProcess();
+        }
+
         // try to set prefix with TTY support
         $processBuilder->setPrefix($ttyPrefix);
         $process = $processBuilder->getProcess();

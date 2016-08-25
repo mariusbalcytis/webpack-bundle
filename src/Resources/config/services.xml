@@ -19,8 +19,10 @@
         <parameter key="maba_webpack.aliases.path_in_bundle"/>
         <parameter key="maba_webpack.aliases.additional"/>
         <parameter key="maba_webpack.bin.webpack.executable"/>
+        <parameter key="maba_webpack.bin.webpack.tty_prefix"/>
         <parameter key="maba_webpack.bin.webpack.arguments"/>
         <parameter key="maba_webpack.bin.dev_server.executable"/>
+        <parameter key="maba_webpack.bin.dev_server.tty_prefix"/>
         <parameter key="maba_webpack.bin.dev_server.arguments"/>
 
         <!-- Not configurable from config.yml -->
@@ -28,6 +30,7 @@
         <parameter key="maba_webpack.manifest_file_path">%kernel.cache_dir%/webpack_manifest.php</parameter>
         <parameter key="maba_webpack.json_manifest_file_path">%kernel.cache_dir%/webpack_manifest.json</parameter>
         <parameter key="maba_webpack.root_directory">%kernel.root_dir%/..</parameter>
+        <parameter key="maba_webpack.bin.disable_tty">false</parameter>
     </parameters>
 
     <services>
@@ -95,6 +98,7 @@
             <argument>%maba_webpack.bin.dev_server.executable%</argument>
             <argument>%maba_webpack.bin.dev_server.tty_prefix%</argument>
             <argument>%maba_webpack.bin.dev_server.arguments%</argument>
+            <argument>%maba_webpack.bin.disable_tty%</argument>
         </service>
 
         <service id="maba_webpack.error_handler.default"

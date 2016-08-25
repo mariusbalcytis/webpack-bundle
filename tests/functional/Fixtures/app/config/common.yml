@@ -1,0 +1,11 @@
+framework:
+    secret: "secret"
+    templating:
+        engines: ['twig', 'php']
+    router:
+        resource: "@MabaWebpackTestBundle/Resources/config/routing.xml"
+        strict_requirements: ~
+    profiler: ~
+
+parameters:
+    maba_webpack.bin.disable_tty: true
