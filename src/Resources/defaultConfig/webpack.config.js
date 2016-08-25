@@ -117,13 +117,13 @@ module.exports = function makeWebpackConfig (options) {
     // add less support
     config.module.loaders.push({
         test: /\.less$/,
-        loader: ExtractTextPlugin.extract('style', 'css?sourceMap!less?sourceMap')
+        loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!less?sourceMap')
     });
 
     // add sass support
     config.module.loaders.push({
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style', 'css?sourceMap!sass?sourceMap')
+        loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass?sourceMap')
     });
 
 

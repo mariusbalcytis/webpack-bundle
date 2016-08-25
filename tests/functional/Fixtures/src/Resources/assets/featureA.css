@@ -1,3 +1,6 @@
 .red {
     background: red;
 }
+:fullscreen a.css {
+    color: blue;
+}
