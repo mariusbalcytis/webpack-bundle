@@ -37,7 +37,10 @@ class UnknownReferenceIgnoringErrorHandler implements ErrorHandlerInterface
         $innerException = $exception->getPrevious();
         if (
             $innerException instanceof SyntaxError
-            && strpos($innerException->getMessage(), 'Unknown ') === 0
+            && (
+                strpos($innerException->getMessage(), 'Unknown ') === 0
+                || strpos($innerException->getMessage(), ' does not exist') !== false
+            )
         ) {
             $this->logger->warning((string)$innerException);
         } else {
