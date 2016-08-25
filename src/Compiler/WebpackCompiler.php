@@ -6,6 +6,7 @@ use Maba\Bundle\WebpackBundle\Config\WebpackConfig;
 use Maba\Bundle\WebpackBundle\Config\WebpackConfigManager;
 use Maba\Bundle\WebpackBundle\Service\ManifestStorage;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 use Closure;
 use RuntimeException;
@@ -91,6 +92,7 @@ class WebpackCompiler
         $prefix = DIRECTORY_SEPARATOR === '\\' ? array() : array('exec');
         $ttyPrefix = array_merge($prefix, $this->devServerTtyPrefix);
         $process = $this->buildProcess($processBuilder, $prefix, $ttyPrefix);
+        $this->addEnvironment($process, 'WEBPACK_MODE=watch');
 
         // remove manifest file if exists - keep sure we create new one
         if (file_exists($this->manifestPath)) {
@@ -159,6 +161,7 @@ class WebpackCompiler
         $process = $processBuilder->getProcess();
         try {
             $process->setTty(true);
+            $this->addEnvironment($process, 'TTY_MODE=on');
         } catch (ProcessRuntimeException $exception) {
             // if TTY is not available, fall back to default prefix if it's different
             if ($prefix !== $ttyPrefix) {
@@ -168,5 +171,22 @@ class WebpackCompiler
         }
 
         return $process;
+    }
+
+    /**
+     * Modifies process command to add environment variable
+     * Used instead of setEnv because:
+     *  1) currently practically used only in TTY mode, which is only available in Linux
+     *  2) setEnv resets all other environment variables, like PATH - this breaks things
+     *  3) there is no portable way to get all current environment variables, $_ENV is empty by default
+     *
+     * @param Process $process
+     * @param string $environment
+     */
+    private function addEnvironment(Process $process, $environment)
+    {
+        if (DIRECTORY_SEPARATOR !== '\\') {
+            $process->setCommandLine($environment . ' ' . $process->getCommandLine());
+        }
     }
 }

@@ -78,8 +78,6 @@ class Configuration implements ConfigurationInterface
         $aliases->scalarNode('path_in_bundle')->defaultValue('Resources/assets');
         $aliases->arrayNode('additional')->treatNullLike(array())->useAttributeAsKey('name')->prototype('scalar');
 
-        $defaultTtyPrefix = array('node', 'node_modules/webpack-dashboard/bin/webpack-dashboard.js', '--');
-
         $bin = $children->arrayNode('bin')->addDefaultsIfNotSet()->children();
 
         $webpack = $bin->arrayNode('webpack')->addDefaultsIfNotSet()->children();
@@ -88,7 +86,7 @@ class Configuration implements ConfigurationInterface
             ->defaultValue(array('node', 'node_modules/webpack/bin/webpack.js'))
             ->prototype('scalar')
         ;
-        $webpack->arrayNode('tty_prefix')->defaultValue($defaultTtyPrefix)->prototype('scalar');
+        $webpack->arrayNode('tty_prefix')->defaultValue(array())->prototype('scalar');
         $webpack->arrayNode('arguments')->defaultValue(array())->prototype('scalar');
 
         $devServer = $bin->arrayNode('dev_server')->addDefaultsIfNotSet()->children();
@@ -97,7 +95,10 @@ class Configuration implements ConfigurationInterface
             ->defaultValue(array('node', 'node_modules/webpack-dev-server/bin/webpack-dev-server.js'))
             ->prototype('scalar')
         ;
-        $devServer->arrayNode('tty_prefix')->defaultValue($defaultTtyPrefix)->prototype('scalar');
+        $devServer->arrayNode('tty_prefix')
+            ->defaultValue(array('node', 'node_modules/webpack-dashboard/bin/webpack-dashboard.js', '--'))
+            ->prototype('scalar')
+        ;
         $devServer->arrayNode('arguments')->defaultValue(array(
             '--hot',
             '--history-api-fallback',

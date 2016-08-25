@@ -155,7 +155,9 @@ module.exports = function makeWebpackConfig (options) {
     var manifestPathParts = options.manifest_path.split('/');
     config.plugins.push(new AssetsPlugin({filename: manifestPathParts.pop(), path: manifestPathParts.join('/')}));
 
-    config.plugins.push(new DashboardPlugin());
+    if (process.env.WEBPACK_MODE === 'watch' && process.env.TTY_MODE === 'on') {
+        config.plugins.push(new DashboardPlugin());
+    }
 
     // Add build specific plugins
     if (BUILD) {
