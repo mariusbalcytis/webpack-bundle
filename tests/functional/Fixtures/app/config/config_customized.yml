@@ -11,7 +11,7 @@ maba_webpack:
             public_path: /assets/
             path: %kernel.root_dir%/../web/assets/
     twig:
-        function_name:        my_custom_function
+        function_prefix:      maba_webpack_
         suppress_errors:      false
     aliases:
         register_bundles:

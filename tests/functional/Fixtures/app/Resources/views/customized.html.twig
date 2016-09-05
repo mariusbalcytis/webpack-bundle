@@ -2,12 +2,10 @@
 <html>
 <head>
     <meta charset="utf-8">
-    {% set cssUrl = my_custom_function('@MabaWebpackTestBundle/Resources/assets/customized.js', 'css') %}
-    {% if cssUrl %}
-    <link rel="stylesheet" href="{{ cssUrl }}"/>
-    {% endif %}
+    {{ maba_webpack_css_asset('@MabaWebpackTestBundle/Resources/assets/customized.js') }}
 </head>
 <body>
-<script src="{{ my_custom_function('@MabaWebpackTestBundle/Resources/assets/customized.js') }}"></script>
+    <img src="{{ maba_webpack_file_asset('@MabaWebpackTestBundle/Resources/assets/logo_symfony.png') }}">
+    <script src="{{ maba_webpack_asset('@MabaWebpackTestBundle/Resources/assets/customized.js') }}"></script>
 </body>
 </html>

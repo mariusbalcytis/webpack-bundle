@@ -24,7 +24,7 @@
             <tag name="maba_webpack.asset_provider" type="twig_file"/>
 
             <argument type="service" id="twig"/>
-            <argument>%maba_webpack.twig_function_name%</argument>
+            <argument>%maba_webpack.twig_function_prefix%</argument>
             <argument type="service" id="maba_webpack.error_handler"/>
         </service>
 

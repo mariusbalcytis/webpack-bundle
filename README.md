@@ -194,7 +194,7 @@ maba_webpack:
             type:                 twig_directory # analyses twig templates inside given directory
             resource:             %kernel.root_dir%/Resources/views
     twig:
-        function_name:        webpack_asset     # function name in twig templates
+        function_prefix:      webpack_webpack   # function prefix in twig templates
         suppress_errors:      true              # whether files not found or twig parse errors should be ignored
                                                 # defaults to true in dev environment
                                                 # defaults to "ignore_unkwowns" in prod - this option ignores
@@ -313,7 +313,34 @@ In your twig template:
 </html>
 ```
 
+which is an equivalent of
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    {{ webpack_css_asset('@ApplicationBundle/Resources/assets/main.js') }}
+</head>
+<body>
+    <script src="{{ webpack_asset('@ApplicationBundle/Resources/assets/main.js') }}"></script>
+</body>
+</html>
+```
+
 Normally you would only need to load `<script>` tag and all `require()`d styles would be loaded automatically.
+
+Loading images and other assets through webpack
+----
+You mostly don't need to load images through webpack since it's easier to store them inside `web`
+(or `Resources/public`) directory. But sometimes it can be useful.
+There is `webpack_file_asset` function designed for this.
+When you load assets using this method then all registered loaders in your configuration are ignored thus you need to provide all requested loaders inside the path
+(e.g. `loader!@ApplicationBundle/Resources/assets/logo.png`).
+
+```
+<img src="{{ webpack_file_asset('@ApplicationBundle/Resources/assets/logo.png') }}">
+```
 
 ES6, Less and Sass support
 ----

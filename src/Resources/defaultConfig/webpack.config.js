@@ -6,6 +6,7 @@ var autoprefixer = require('autoprefixer');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var AssetsPlugin = require('assets-webpack-plugin');
 var DashboardPlugin = require('webpack-dashboard/plugin');
+var EntryFilePlugin = require('entry-file-loader/Plugin');
 
 module.exports = function makeWebpackConfig (options) {
     /**
@@ -144,6 +145,7 @@ module.exports = function makeWebpackConfig (options) {
      * List: http://webpack.github.io/docs/list-of-plugins.html
      */
     config.plugins = [
+        new EntryFilePlugin(),
         new ExtractTextPlugin(
             BUILD ? '[name].[hash].css' : '[name].bundle.css',
             {

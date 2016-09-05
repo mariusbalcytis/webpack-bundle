@@ -31,7 +31,7 @@ class MabaWebpackExtension extends Extension
         );
 
         $container->setParameter('maba_webpack.provider_config', $config['asset_providers']);
-        $container->setParameter('maba_webpack.twig_function_name', $config['twig']['function_name']);
+        $container->setParameter('maba_webpack.twig_function_prefix', $config['twig']['function_prefix']);
         $container->setParameter('maba_webpack.webpack_config_path', $config['config']['path']);
         $container->setParameter('maba_webpack.webpack_config_parameters', $config['config']['parameters']);
         $container->setParameter('maba_webpack.aliases.register_bundles', $config['aliases']['register_bundles']);
