@@ -237,6 +237,9 @@ maba_webpack:
                 - --hot
                 - --history-api-fallback
                 - --inline
+        disable_tty: false      # disables TTY setting. Defaults to false in dev environment, true in others.
+                                # TTY is needed to run dashboard and/or to display colors, but does not work
+                                # in some environments like AWS
                 
 ```
 

@@ -24,13 +24,13 @@
         <parameter key="maba_webpack.bin.dev_server.executable"/>
         <parameter key="maba_webpack.bin.dev_server.tty_prefix"/>
         <parameter key="maba_webpack.bin.dev_server.arguments"/>
+        <parameter key="maba_webpack.bin.disable_tty"/>
 
         <!-- Not configurable from config.yml -->
         <parameter key="maba_webpack.webpack_entry_config_path">%kernel.cache_dir%/webpack.config.js</parameter>
         <parameter key="maba_webpack.manifest_file_path">%kernel.cache_dir%/webpack_manifest.php</parameter>
         <parameter key="maba_webpack.json_manifest_file_path">%kernel.cache_dir%/webpack_manifest.json</parameter>
         <parameter key="maba_webpack.root_directory">%kernel.root_dir%/..</parameter>
-        <parameter key="maba_webpack.bin.disable_tty">false</parameter>
     </parameters>
 
     <services>

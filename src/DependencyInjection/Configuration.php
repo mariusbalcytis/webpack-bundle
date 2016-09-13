@@ -109,6 +109,8 @@ class Configuration implements ConfigurationInterface
 
         $bin = $children->arrayNode('bin')->addDefaultsIfNotSet()->children();
 
+        $bin->booleanNode('disable_tty')->defaultValue($this->environment !== 'dev');
+
         $webpack = $bin->arrayNode('webpack')->addDefaultsIfNotSet()->children();
         $webpack
             ->arrayNode('executable')

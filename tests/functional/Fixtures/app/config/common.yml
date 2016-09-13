@@ -6,6 +6,3 @@ framework:
         resource: "@MabaWebpackTestBundle/Resources/config/routing.xml"
         strict_requirements: ~
     profiler: ~
-
-parameters:
-    maba_webpack.bin.disable_tty: true

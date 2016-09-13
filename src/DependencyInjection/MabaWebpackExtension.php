@@ -57,6 +57,7 @@ class MabaWebpackExtension extends Extension
         $container->setParameter('maba_webpack.aliases.path_in_bundle', $config['aliases']['path_in_bundle']);
         $container->setParameter('maba_webpack.aliases.additional', $additionalAliases);
 
+        $container->setParameter('maba_webpack.bin.disable_tty', $config['bin']['disable_tty']);
         $container->setParameter('maba_webpack.bin.webpack.executable', $config['bin']['webpack']['executable']);
         $container->setParameter('maba_webpack.bin.webpack.tty_prefix', $config['bin']['webpack']['tty_prefix']);
         $container->setParameter('maba_webpack.bin.webpack.arguments', $config['bin']['webpack']['arguments']);
