@@ -133,6 +133,9 @@ class WebpackCompiler
                     return;
                 }
                 $process->getOutput();
+
+                // try to save the manifest - output callback is not called in dashboard mode
+                $that->saveManifest(false);
             }
         }
     }
