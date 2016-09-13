@@ -2,13 +2,27 @@
 
 ## TTY prefix
 
-`bin.webpack.tty_prefix` and `bin.dev_server.tty_prefix` were added with
+`bin.dev_server.tty_prefix` was added with
 `['node', 'node_modules/webpack-dashboard/bin/webpack-dashboard.js', '--']`
 default value.
 
-Both `package.json` and `webpack.config.js` were modified for this to work, so either:
- - run `maba:webpack:setup`, replace files and merge changes, then run `npm install`
- (you should always do this anyways after updating this bundle)
- - set both `bin.webpack.tty_prefix` and `bin.dev_server.tty_prefix` to `[]` to disable NASA-like dashboard
- when compiling assets
+This requires changes in `package.json` and `webpack.config.js`.
+
+You can set it to `[]` to disable NASA-like dashboard when compiling assets.
  
+## AssetManager
+
+Second parameter for `AssetManager::getAssetUrl` has been made optional.
+If not provided, it is figured by configuration so that binary files could be loaded with `webpack_asset` twig function.
+
+## Non-Javascript Entry File Support
+
+Now you can use `webpack_asset` on other files than `.js` - for example, for images.
+
+This requires changes in `package.json` and `webpack.config.js`.
+
+You can disable this by setting `entry_file.enabled` to `false` in `config.yml`.
+
+You should always do this procedure after updating this bundle:
+- run `maba:webpack:setup`, replace files and merge changes
+- run `npm install` (this should be done with `composer install` (and) as a step in deployment)

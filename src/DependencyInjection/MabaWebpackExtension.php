@@ -31,12 +31,32 @@ class MabaWebpackExtension extends Extension
         );
 
         $container->setParameter('maba_webpack.provider_config', $config['asset_providers']);
+
         $container->setParameter('maba_webpack.twig_function_name', $config['twig']['function_name']);
+
         $container->setParameter('maba_webpack.webpack_config_path', $config['config']['path']);
         $container->setParameter('maba_webpack.webpack_config_parameters', $config['config']['parameters']);
+
+        if (!$config['entry_file']['enabled']) {
+            // both empty disables the functionality
+            $container->setParameter('maba_webpack.entry_file.disabled_extensions', array());
+            $container->setParameter('maba_webpack.entry_file.enabled_extensions', array());
+        } else {
+            $container->setParameter(
+                'maba_webpack.entry_file.disabled_extensions',
+                $config['entry_file']['disabled_extensions']
+            );
+            $container->setParameter(
+                'maba_webpack.entry_file.enabled_extensions',
+                $config['entry_file']['enabled_extensions']
+            );
+        }
+        $container->setParameter('maba_webpack.entry_file.type_map', $config['entry_file']['type_map']);
+
         $container->setParameter('maba_webpack.aliases.register_bundles', $config['aliases']['register_bundles']);
         $container->setParameter('maba_webpack.aliases.path_in_bundle', $config['aliases']['path_in_bundle']);
         $container->setParameter('maba_webpack.aliases.additional', $additionalAliases);
+
         $container->setParameter('maba_webpack.bin.webpack.executable', $config['bin']['webpack']['executable']);
         $container->setParameter('maba_webpack.bin.webpack.tty_prefix', $config['bin']['webpack']['tty_prefix']);
         $container->setParameter('maba_webpack.bin.webpack.arguments', $config['bin']['webpack']['arguments']);

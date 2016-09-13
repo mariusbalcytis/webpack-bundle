@@ -59,18 +59,6 @@ class AssetLocatorTest extends Test
                 '@aliasName',
                 $dir,
             ),
-            'works with single loader' => array(
-                'loader!' . $dir . '/subdirectory/assetB.txt',
-                'loader!@aliasName/subdirectory/assetB.txt',
-                '@aliasName',
-                $dir,
-            ),
-            'works with multiple loaders' => array(
-                'loader1!loader2!' . $dir . '/subdirectory/assetB.txt',
-                'loader1!loader2!@aliasName/subdirectory/assetB.txt',
-                '@aliasName',
-                $dir,
-            ),
             'throws exception if file not found' => array(
                 new AssetNotFoundException(),
                 $dir . '/non-existent-file'

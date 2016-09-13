@@ -4,10 +4,15 @@
     <meta charset="utf-8">
     {% set cssUrl = my_custom_function('@MabaWebpackTestBundle/Resources/assets/customized.js', 'css') %}
     {% if cssUrl %}
-    <link rel="stylesheet" href="{{ cssUrl }}"/>
+    <link rel="stylesheet" id="css1" href="{{ cssUrl }}"/>
     {% endif %}
+
+    <link rel="stylesheet" id="css2" href="{{ my_custom_function('@MabaWebpackTestBundle/Resources/assets/style.less') }}"/>
 </head>
 <body>
 <script src="{{ my_custom_function('@MabaWebpackTestBundle/Resources/assets/customized.js') }}"></script>
+
+<img src="{{ my_custom_function('@MabaWebpackTestBundle/Resources/assets/cat.png') }}"/>
+
 </body>
 </html>

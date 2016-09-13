@@ -7,6 +7,6 @@ class AssetNameGenerator
 
     public function generateName($asset)
     {
-        return sha1($asset);
+        return sprintf('%s-%s', pathinfo($asset, PATHINFO_FILENAME), sha1($asset));
     }
 }

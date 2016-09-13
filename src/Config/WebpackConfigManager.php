@@ -5,16 +5,16 @@ namespace Maba\Bundle\WebpackBundle\Config;
 use Maba\Bundle\WebpackBundle\ErrorHandler\ErrorHandlerInterface;
 use Maba\Bundle\WebpackBundle\Service\AliasManager;
 use Maba\Bundle\WebpackBundle\Service\AssetCollector;
-use Maba\Bundle\WebpackBundle\Service\AssetLocator;
 use Maba\Bundle\WebpackBundle\Service\AssetNameGenerator;
 use InvalidArgumentException;
+use Maba\Bundle\WebpackBundle\Service\AssetResolver;
 
 class WebpackConfigManager
 {
     private $aliasManager;
     private $assetCollector;
     private $configDumper;
-    private $assetLocator;
+    private $assetResolver;
     private $assetNameGenerator;
     private $errorHandler;
 
@@ -22,14 +22,14 @@ class WebpackConfigManager
         AliasManager $aliasManager,
         AssetCollector $assetCollector,
         WebpackConfigDumper $configDumper,
-        AssetLocator $assetLocator,
+        AssetResolver $assetResolver,
         AssetNameGenerator $assetNameGenerator,
         ErrorHandlerInterface $errorHandler
     ) {
         $this->aliasManager = $aliasManager;
         $this->assetCollector = $assetCollector;
         $this->configDumper = $configDumper;
-        $this->assetLocator = $assetLocator;
+        $this->assetResolver = $assetResolver;
         $this->assetNameGenerator = $assetNameGenerator;
         $this->errorHandler = $errorHandler;
     }
@@ -48,7 +48,7 @@ class WebpackConfigManager
         foreach ($assetResult->getAssets() as $asset) {
             $assetName = $this->assetNameGenerator->generateName($asset);
             try {
-                $entryPoints[$assetName] = $this->assetLocator->locateAsset($asset);
+                $entryPoints[$assetName] = $this->assetResolver->resolveAsset($asset);
             } catch (InvalidArgumentException $exception) {
                 $this->errorHandler->processException($exception);
             }

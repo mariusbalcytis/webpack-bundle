@@ -50,6 +50,17 @@
             <argument type="service" id="maba_webpack.alias_manager"/>
         </service>
 
+        <service id="maba_webpack.asset_resolver" class="Maba\Bundle\WebpackBundle\Service\AssetResolver">
+            <argument type="service" id="maba_webpack.asset_locator"/>
+            <argument type="service" id="maba_webpack.entry_file_manager"/>
+        </service>
+
+        <service id="maba_webpack.entry_file_manager" class="Maba\Bundle\WebpackBundle\Service\EntryFileManager">
+            <argument>%maba_webpack.entry_file.enabled_extensions%</argument>
+            <argument>%maba_webpack.entry_file.disabled_extensions%</argument>
+            <argument>%maba_webpack.entry_file.type_map%</argument>
+        </service>
+
         <service id="maba_webpack.asset_name_generator" class="Maba\Bundle\WebpackBundle\Service\AssetNameGenerator"/>
 
         <service id="maba_webpack.manifest_storage" class="Maba\Bundle\WebpackBundle\Service\ManifestStorage">
@@ -58,6 +69,7 @@
         <service id="maba_webpack.asset_manager" class="Maba\Bundle\WebpackBundle\Service\AssetManager">
             <argument type="service" id="maba_webpack.manifest_storage"/>
             <argument type="service" id="maba_webpack.asset_name_generator"/>
+            <argument type="service" id="maba_webpack.entry_file_manager"/>
         </service>
 
         <service id="maba_webpack.twig_extension" class="Maba\Bundle\WebpackBundle\Twig\WebpackExtension">
@@ -80,7 +92,7 @@
             <argument type="service" id="maba_webpack.alias_manager"/>
             <argument type="service" id="maba_webpack.asset_collector"/>
             <argument type="service" id="maba_webpack.config_dumper"/>
-            <argument type="service" id="maba_webpack.asset_locator"/>
+            <argument type="service" id="maba_webpack.asset_resolver"/>
             <argument type="service" id="maba_webpack.asset_name_generator"/>
             <argument type="service" id="maba_webpack.error_handler"/>
         </service>

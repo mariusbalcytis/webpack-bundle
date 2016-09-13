@@ -123,4 +123,11 @@ class Functional extends Symfony2
     {
         $this->assertNotContains($substring, $this->commandTester->getDisplay());
     }
+
+    public function seeFileIsSmallerThan($smallerFilePath, $largerFilePath)
+    {
+        if (filesize($smallerFilePath) >= filesize($largerFilePath)) {
+            $this->fail("$smallerFilePath is not smaller than $largerFilePath");
+        }
+    }
 }

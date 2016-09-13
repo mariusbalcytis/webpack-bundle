@@ -30,6 +30,7 @@ More goodies:
 1. Lets you configure webpack config as you want, while still providing needed parameters from Symfony, like
 entry points, aliases, environment and additional parameters.
 2. Lets you define custom entry point providers if you don't use twig or include scripts in any other way.
+3. Works with images and css/less/sass files out-of-the-box, if needed.
 
 Look at [Symfony, Webpack and AngularJS Single Page Application Demo](https://github.com/mariusbalcytis/symfony-webpack-angular-demo)
 for usage examples.
@@ -267,7 +268,7 @@ When compiling assets with `webpack-dev-server`, [webpack-dashboard](https://git
 is used for more user-friendly experience. You can disable it by setting `tty_prefix` option to `[]`.
 You can also remove `DashboardPlugin` in such case from `webpack.config.js`.
 
-## Configuring Memory for Node.js
+## Configuring memory for Node.js
 
 If you are experiencing "heap out of memory" error when running `maba:webpack:compile`
 and/or `maba:webpack:dev-server`, try to give more memory for Node.js process:
@@ -295,9 +296,11 @@ maba_webpack:
             extract_css: true
 ```
 
+This is also required if you want to include css/less/sass files directly by `webpack_asset` function.
+
 In your twig template:
 
-```
+```twig
 <!DOCTYPE html>
 <html>
 <head>
@@ -324,6 +327,31 @@ ES6, Less and Sass works out of the box:
 - use `.scss` extension to compile [Sass](http://sass-lang.com/) files.
 
 If you need any custom loaders, feel free to install them via `npm` and modify `app/config/webpack.config.js` if needed.
+
+Loading images
+----
+Images are optimized by default using [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader).
+
+You can include images directly into your twig templates by using the same `webpack_asset` function.
+
+For this to work correctly, loader for image files must remain `file` in your webpack configuration.
+
+```twig
+<img src="{{ webpack_asset('@AcmeHelloBundle/Resources/images/cat.png') }}"/>
+```
+
+Of course, you can use them in your CSS, too:
+
+```css
+.cat {
+    /* cat.png will be optimized and copied to compiled directory with hashed file name */
+    /* URL to generated image file will be in the css output  */
+    background: url("~@AcmeHelloBundle/Resources/images/cat.png")
+}
+```
+
+If you are providing webpack-compatible asset path in CSS, prefix it with `~`. Use relative paths as usual.
+See [css-loader](https://github.com/webpack/css-loader) for more information.
 
 Alternatives?
 ----

@@ -63,6 +63,35 @@ class Configuration implements ConfigurationInterface
         $config->scalarNode('path')->defaultValue('%kernel.root_dir%/config/webpack.config.js');
         $config->arrayNode('parameters')->treatNullLike(array())->useAttributeAsKey('name')->prototype('variable');
 
+        $entryFile = $children->arrayNode('entry_file')->addDefaultsIfNotSet()->children();
+        $entryFile->booleanNode('enabled')->defaultTrue();
+        $entryFile
+            ->arrayNode('disabled_extensions')
+            ->defaultValue(array('js', 'jsx', 'ts', 'coffee', 'es6', 'ls'))
+            ->prototype('scalar')
+            ->info('For these extensions default webpack functionality will be used')
+        ;
+        $entryFile
+            ->arrayNode('enabled_extensions')
+            ->defaultValue(array())
+            ->prototype('scalar')
+            ->info(
+                'For these extensions file itself will be provided (not JS file). '
+                . 'Set to non-empty to override disabled extensions. Empty means all but disabled'
+            )
+        ;
+        $entryFile
+            ->arrayNode('type_map')
+            ->defaultValue(array(
+                'css' => array('less', 'scss', 'sass', 'styl'),
+            ))
+            ->prototype('array')
+            ->info(
+                'What output file type to use for what input file types. Used only for entry files. '
+                . 'Defaults to same file type - needed only when preprocessors are used'
+            )
+        ;
+
         $aliases = $children->arrayNode('aliases')->addDefaultsIfNotSet()->children();
         $registerBundles = $aliases->arrayNode('register_bundles');
         $registerBundles

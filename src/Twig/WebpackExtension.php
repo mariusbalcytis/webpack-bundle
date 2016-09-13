@@ -24,7 +24,7 @@ class WebpackExtension extends Extension
         );
     }
 
-    public function getAssetUrl($resource, $type = AssetManager::TYPE_JS)
+    public function getAssetUrl($resource, $type = null)
     {
         return $this->assetManager->getAssetUrl($resource, $type);
     }

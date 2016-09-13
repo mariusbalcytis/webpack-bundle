@@ -5,9 +5,10 @@ var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var AssetsPlugin = require('assets-webpack-plugin');
+var ExtractFilePlugin = require('extract-file-loader/Plugin');
 var DashboardPlugin = require('webpack-dashboard/plugin');
 
-module.exports = function makeWebpackConfig (options) {
+module.exports = function makeWebpackConfig(options) {
     /**
      * Environment type
      * BUILD is for generating minified builds
@@ -66,16 +67,20 @@ module.exports = function makeWebpackConfig (options) {
      * This handles most of the magic responsible for converting modules
      */
 
-        // Initialize module
+    // Initialize module
     config.module = {
-        preLoaders: [],
+        preLoaders: [{
+            // query string is needed for URLs inside css files, like bootstrap
+            test: /\.(gif|png|jpe?g|svg)(\?.*)?$/i,
+            loader: 'image-webpack'
+        }],
         loaders: [{
             // JS LOADER
             // Reference: https://github.com/babel/babel-loader
             // Transpile .js files using babel-loader
             // Compiles ES6 and ES7 into ES5 code
-            test: /\.jsx?$/,
-            loader: 'babel',
+            test: /\.jsx?$/i,
+            loaders: ['babel'],
             exclude: /node_modules/
         }, {
             // ASSET LOADER
@@ -84,13 +89,17 @@ module.exports = function makeWebpackConfig (options) {
             // Rename the file using the asset hash
             // Pass along the updated reference to your code
             // You can add here any file extension you want to get copied to your output
-            test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-            loader: 'file'
+
+            // query string is needed for URLs inside css files, like bootstrap
+            test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*)?$/i,
+
+            // put original name in the destination filename, too
+            loader: 'file?name=[name].[hash].[ext]'
         }, {
             // HTML LOADER
             // Reference: https://github.com/webpack/raw-loader
             // Allow loading html through js
-            test: /\.html$/,
+            test: /\.html$/i,
             loader: 'raw'
         }]
     };
@@ -102,7 +111,7 @@ module.exports = function makeWebpackConfig (options) {
     // Reference: https://github.com/postcss/postcss-loader
     // Postprocess your css with PostCSS plugins
     var cssLoader = {
-        test: /\.css$/,
+        test: /\.css$/i,
         // Reference: https://github.com/webpack/extract-text-webpack-plugin
         // Extract css files in production builds
         //
@@ -116,13 +125,13 @@ module.exports = function makeWebpackConfig (options) {
 
     // add less support
     config.module.loaders.push({
-        test: /\.less$/,
+        test: /\.less$/i,
         loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!less?sourceMap')
     });
 
     // add sass support
     config.module.loaders.push({
-        test: /\.scss$/,
+        test: /\.scss$/i,
         loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass?sourceMap')
     });
 
@@ -154,6 +163,15 @@ module.exports = function makeWebpackConfig (options) {
 
     var manifestPathParts = options.manifest_path.split('/');
     config.plugins.push(new AssetsPlugin({filename: manifestPathParts.pop(), path: manifestPathParts.join('/')}));
+
+    // needed to use binary files (like images) as entry-points
+    // puts file-loader emitted files into manifest
+    config.plugins.push(new ExtractFilePlugin());
+
+    config.imageWebpackLoader = options.parameters.image_loader_options || {
+            progressive: true,
+            optimizationLevel: 7
+        };
 
     if (process.env.WEBPACK_MODE === 'watch' && process.env.TTY_MODE === 'on') {
         config.plugins.push(new DashboardPlugin());

@@ -21,24 +21,17 @@ class AssetLocator
      */
     public function locateAsset($asset)
     {
-        $position = strrpos($asset, '!');
-
-        if ($position !== false) {
-            $loader = substr($asset, 0, $position);
-            $asset = substr($asset, $position + 1);
-        }
-
         if (substr($asset, 0, 1) === '@') {
-            $resolvedAsset = $this->resolveAlias($asset);
+            $locatedAsset = $this->resolveAlias($asset);
         } else {
-            $resolvedAsset = $asset;
+            $locatedAsset = $asset;
         }
 
-        if (!file_exists($resolvedAsset)) {
-            throw new AssetNotFoundException(sprintf('Asset not found (%s, resolved to %s)', $asset, $resolvedAsset));
+        if (!file_exists($locatedAsset)) {
+            throw new AssetNotFoundException(sprintf('Asset not found (%s, resolved to %s)', $asset, $locatedAsset));
         }
 
-        return isset($loader) ? sprintf('%s!%s', $loader, $resolvedAsset) : $resolvedAsset;
+        return $locatedAsset;
     }
 
     private function resolveAlias($asset)
