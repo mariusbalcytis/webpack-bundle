@@ -26,3 +26,11 @@ You can disable this by setting `entry_file.enabled` to `false` in `config.yml`.
 You should always do this procedure after updating this bundle:
 - run `maba:webpack:setup`, replace files and merge changes
 - run `npm install` (this should be done with `composer install` (and) as a step in deployment)
+
+## Explicit API for semantic versioning
+
+Some interfaces, classes and class methods were marked with `@api`.
+Any other classes or methods can be changed or removed without MAJOR release bump.
+
+Also most of the services marked as private for the same reason - you should only use those that
+are public.

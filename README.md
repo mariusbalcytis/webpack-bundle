@@ -101,10 +101,6 @@ is updated and as a task in your deployment). Of course, you could just add it t
 git add package.json app/config/webpack.config.js
 ```
 
-After updating this bundle, you should re-run setup command and review changes in files, merge them with any of
-your own. This bundle **might** make an assumption that all the needed dependencies are installed. As compiling
-is made beforehand as a deployment step, you should notice any errors in your staging environment if there would be any.
-
 Usage
 ----
 
@@ -355,6 +351,31 @@ Of course, you can use them in your CSS, too:
 
 If you are providing webpack-compatible asset path in CSS, prefix it with `~`. Use relative paths as usual.
 See [css-loader](https://github.com/webpack/css-loader) for more information.
+
+Semantic versioning
+----
+
+This bundle follows [semantic versioning](http://semver.org/spec/v2.0.0.html).
+
+Public API of this bundle (in other words, you should only use these features if you want to easily update
+to new versions):
+- only services that are not marked as `public="false"`
+- only classes, interfaces and class methods that are marked with `@api`
+- twig functions
+- console commands
+- supported tags
+
+For example, if only class method is marked with `@api`, you should not extend that class, as constructor
+could change in any release.
+
+See [Symfony BC rules](http://symfony.com/doc/current/contributing/code/bc.html) for basic information
+about what can be changed and what not in the API. Keep in mind, that in this bundle everything is
+`@internal` by default.
+
+After updating this bundle, you should re-run `maba:webpack:setup` command and review changes in files,
+merge them with any of your own. This bundle **might** make an assumption that all the needed dependencies
+are installed. As compiling is made beforehand as a deployment step, you should notice any errors in
+your staging environment if there would be any.
 
 Alternatives?
 ----

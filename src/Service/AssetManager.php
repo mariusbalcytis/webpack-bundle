@@ -2,6 +2,8 @@
 
 namespace Maba\Bundle\WebpackBundle\Service;
 
+use RuntimeException;
+
 class AssetManager
 {
     const TYPE_JS = 'js';
@@ -22,12 +24,27 @@ class AssetManager
         $this->entryFileManager = $entryFileManager;
     }
 
+    /**
+     * Gets URL for specified asset (usually provided to webpack_asset twig function)
+     * If type not specified, it is guessed
+     *
+     * Exception is thrown if manifest does not exit, asset is not in the manifest or
+     *      type is not provided and cannot be guessed
+     *
+     * @param string      $asset
+     * @param string|null $type   specifies type in manifest, usually "js" or "css"
+     * @return string|null        null is returned if type is provided and missing in manifest
+     *
+     * @throws RuntimeException
+     *
+     * @api
+     */
     public function getAssetUrl($asset, $type = null)
     {
         $manifest = $this->getManifest();
         $assetName = $this->assetNameGenerator->generateName($asset);
         if (!isset($manifest[$assetName])) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'No information in manifest for %s (key %s). %s',
                 $asset,
                 $assetName,
@@ -39,7 +56,7 @@ class AssetManager
             $entryFileType = $this->entryFileManager->getEntryFileType($asset);
             $type = $entryFileType !== null ? $entryFileType : self::TYPE_JS;
             if (!isset($manifest[$assetName][$type])) {
-                throw new \RuntimeException(sprintf(
+                throw new RuntimeException(sprintf(
                     'No information in the manifest for type %s (key %s, asset %s). %s',
                     $type,
                     $assetName,
@@ -54,7 +71,7 @@ class AssetManager
         return isset($manifest[$assetName][$type]) ? $manifest[$assetName][$type] : null;
     }
 
-    protected function getManifest()
+    private function getManifest()
     {
         if ($this->manifest === null) {
             $this->manifest = $this->manifestStorage->getManifest();

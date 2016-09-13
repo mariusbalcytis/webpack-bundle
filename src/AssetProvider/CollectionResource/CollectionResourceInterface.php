@@ -4,6 +4,9 @@ namespace Maba\Bundle\WebpackBundle\AssetProvider\CollectionResource;
 
 use Maba\Bundle\WebpackBundle\Exception\InvalidResourceException;
 
+/**
+ * @api
+ */
 interface CollectionResourceInterface
 {
 

@@ -6,13 +6,13 @@
 
     <services>
         <service id="maba_webpack.asset_provider.dynamic"
-                 class="Maba\Bundle\WebpackBundle\AssetProvider\DynamicAssetProvider">
+                 class="Maba\Bundle\WebpackBundle\AssetProvider\DynamicAssetProvider" public="false">
             <!-- addProvider is called for each service tagged with maba_webpack.asset_provider  -->
         </service>
 
         <!-- Iterates through given resource and gives each element to dynamic provider. Used as root provider -->
         <service id="maba_webpack.asset_provider.dynamic_list"
-                 class="Maba\Bundle\WebpackBundle\AssetProvider\CollectionResourceAssetProvider">
+                 class="Maba\Bundle\WebpackBundle\AssetProvider\CollectionResourceAssetProvider" public="false">
             <argument type="service">
                 <service class="Maba\Bundle\WebpackBundle\AssetProvider\CollectionResource\ArrayCollectionResource"/>
             </argument>
