@@ -1,0 +1,6 @@
+imports: [{resource: 'common.yml'}]
+
+maba_webpack:
+    config:
+        parameters:
+            extract_css: true

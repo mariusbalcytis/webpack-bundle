@@ -49,7 +49,10 @@ class Configuration implements ConfigurationInterface
         $prototypeChildren->variableNode('resource');
 
         $twig = $children->arrayNode('twig')->addDefaultsIfNotSet()->children();
-        $twig->scalarNode('function_name')->defaultValue('webpack_asset');
+        $twig->scalarNode('function_name')
+            ->defaultNull()
+            ->info('Deprecated and will be removed in next version')
+        ;
         $suppressErrorsNode = $twig->scalarNode('suppress_errors')->defaultValue(
             $this->environment === 'dev' ? true : 'ignore_unknowns'
         );

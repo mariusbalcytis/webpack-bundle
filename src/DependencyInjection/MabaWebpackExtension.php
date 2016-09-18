@@ -2,6 +2,7 @@
 
 namespace Maba\Bundle\WebpackBundle\DependencyInjection;
 
+use Maba\Bundle\WebpackBundle\Twig\WebpackExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -32,6 +33,14 @@ class MabaWebpackExtension extends Extension
 
         $container->setParameter('maba_webpack.provider_config', $config['asset_providers']);
 
+        if ($config['twig']['function_name'] !== null) {
+            @trigger_error(
+                'maba_webpack.twig.function_name configuration option is deprecated and will be removed in 0.6',
+                E_USER_DEPRECATED
+            );
+        } else {
+            $config['twig']['function_name'] = WebpackExtension::FUNCTION_NAME;
+        }
         $container->setParameter('maba_webpack.twig_function_name', $config['twig']['function_name']);
 
         $container->setParameter('maba_webpack.webpack_config_path', $config['config']['path']);

@@ -191,7 +191,6 @@ maba_webpack:
             type:                 twig_directory # analyses twig templates inside given directory
             resource:             %kernel.root_dir%/Resources/views
     twig:
-        function_name:        webpack_asset     # function name in twig templates
         suppress_errors:      true              # whether files not found or twig parse errors should be ignored
                                                 # defaults to true in dev environment
                                                 # defaults to "ignore_unkwowns" in prod - this option ignores
@@ -316,6 +315,25 @@ In your twig template:
 ```
 
 Normally you would only need to load `<script>` tag and all `require()`d styles would be loaded automatically.
+
+### `webpack_stylesheets` tag
+
+To avoid setting CSS URL to a temporary variable, you can use `webpack_stylesheets` tag, similarly as in Assetic:
+
+```twig
+{% webpack_stylesheets '@ApplicationBundle/Resources/assets/main.js' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+{% end_webpack_stylesheets %}
+```
+
+You can provide more than one input file in this tag - they will not be merged together,
+the code inside the tag will just be repeated with every generated asset.
+
+There is also `webpack_javascripts` tag (use it only for javascript content) and 
+`webpack_assets` tag (type is guessed for each asset, so might be used for images).
+
+Keep in mind that you must provide hard-coded asset paths here, same as in `webpack_asset`
+function. This is to find all available assets in compile-time.
 
 ES6, Less and Sass support
 ----

@@ -12,4 +12,8 @@
         <default key="_controller">FrameworkBundle:Template:template</default>
         <default key="template">customized.html.twig</default>
     </route>
+    <route id="fixtures_maba_webpack_test_tags" path="/tags">
+        <default key="_controller">FrameworkBundle:Template:template</default>
+        <default key="template">MabaWebpackTestBundle::tags.html.twig</default>
+    </route>
 </routes>

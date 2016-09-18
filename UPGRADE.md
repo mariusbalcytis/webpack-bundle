@@ -34,3 +34,7 @@ Any other classes or methods can be changed or removed without MAJOR release bum
 
 Also most of the services marked as private for the same reason - you should only use those that
 are public.
+
+## Deprecated setting custom twig function
+
+`maba_webpack.twig.function_name` configuration option is deprecated and will be removed in 0.6
