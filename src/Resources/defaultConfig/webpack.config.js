@@ -35,10 +35,12 @@ module.exports = function makeWebpackConfig(options) {
         path: options.parameters.path ? options.parameters.path : __dirname + '/../../web/compiled/',
 
         // Output path from the view of the page
-        // Uses webpack-dev-server in development
         publicPath: options.parameters.public_path
             ? options.parameters.public_path
-            : (BUILD ? '/compiled/' : 'http://localhost:8080/compiled/'),
+            : (BUILD
+              ? '/compiled/' // PROD path compile only
+              : (process.env.WEBPACK_MODE === 'watch' ? 'http://localhost:8080/compiled/' // DEV path webpack-dev-server is run
+                : '/compiled/')), // DEV path compile only
 
         // Filename for entry points
         // Only adds hash in build mode
