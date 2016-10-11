@@ -432,7 +432,8 @@ In development environment, it generates assets on request. This can be more con
 to run specific command in the background, but is usually slower. Also at this point it's kind of hard
 to integrate it with webpack-dev-server.
 
-It has more tags for twig, like inline scripts or list of scripts to load.
+It has more tags for twig, like inline scripts or list of scripts to load. One example is inline splitpoint
+generation which allows you to generate simple splitpoints per file.
 
 ## Running tests
 
