@@ -2,6 +2,8 @@
 
 namespace Maba\Bundle\WebpackBundle\Service;
 
+use Maba\Bundle\WebpackBundle\Exception\AssetNotFoundException;
+
 class AssetResolver
 {
     private $assetLocator;
@@ -15,6 +17,11 @@ class AssetResolver
         $this->entryFileManager = $entryFileManager;
     }
 
+    /**
+     * @param string $asset
+     * @return string
+     * @throws AssetNotFoundException
+     */
     public function resolveAsset($asset)
     {
         $assetParts = array();

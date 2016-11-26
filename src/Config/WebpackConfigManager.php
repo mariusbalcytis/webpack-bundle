@@ -3,10 +3,10 @@
 namespace Maba\Bundle\WebpackBundle\Config;
 
 use Maba\Bundle\WebpackBundle\ErrorHandler\ErrorHandlerInterface;
+use Maba\Bundle\WebpackBundle\Exception\AssetNotFoundException;
 use Maba\Bundle\WebpackBundle\Service\AliasManager;
 use Maba\Bundle\WebpackBundle\Service\AssetCollector;
 use Maba\Bundle\WebpackBundle\Service\AssetNameGenerator;
-use InvalidArgumentException;
 use Maba\Bundle\WebpackBundle\Service\AssetResolver;
 
 class WebpackConfigManager
@@ -49,7 +49,7 @@ class WebpackConfigManager
             $assetName = $this->assetNameGenerator->generateName($asset);
             try {
                 $entryPoints[$assetName] = $this->assetResolver->resolveAsset($asset);
-            } catch (InvalidArgumentException $exception) {
+            } catch (AssetNotFoundException $exception) {
                 $this->errorHandler->processException($exception);
             }
         }
