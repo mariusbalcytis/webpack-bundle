@@ -123,18 +123,24 @@ function loadScript3() {
 }
 ```
 
-In development environment (this must always run in the background, similar to `assetic:watch`):
-
-```bash
-app/console maba:webpack:dev-server
-```
-
 As part of deployment into production environment:
 
 ```bash
 app/console maba:webpack:compile --env=prod
 ```
 
+In development environment (this must always run in the background, similar to `assetic:watch`):
+
+```bash
+app/console maba:webpack:dev-server
+```
+
+Alternatively, if you are not actively developing your frontend, you can compile once and
+forget about it, similarly to production environment:
+
+```bash
+app/console maba:webpack:compile
+```
 
 Aliases
 ----
@@ -199,8 +205,8 @@ maba_webpack:
     config:
         path:                 '%kernel.root_dir%/config/webpack.config.js'
         parameters:           []        # additional parameters passed to webpack config file
-                                        # for example, set public_path to overwrite
-                                            # http://localhost:8080/compiled/ in dev environment
+                                        # for example, set dev_server_public_path and public_path to overwrite
+                                            # http://localhost:8080/compiled/ and /compiled/
                                             # see inside your webpack.config.js for more info
     aliases:                            # allows to set aliases inside require() in your JS files
         register_bundles:               # defaults to all bundles
@@ -244,8 +250,8 @@ maba_webpack:
 it listens on `localhost:8080`. By default, assets in development
 environment are pointed to `http://localhost:8080/compiled/*`.
 
-If you run this command inside VM, docker container etc., configure `maba_webpack.config.parameters.public_path`
-to use correct host in your `config_dev.yml`. Also, as
+If you run this command inside VM, docker container etc., configure
+`maba_webpack.config.parameters.dev_server_public_path` to use correct host. Also, as
 dev-server listens only to localhost connections by default, add this to configuration:
 
 ```yml

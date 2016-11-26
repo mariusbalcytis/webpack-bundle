@@ -14,6 +14,10 @@ module.exports = function makeWebpackConfig(options) {
      * BUILD is for generating minified builds
      */
     var BUILD = options.environment === 'prod';
+    /**
+     * Whether we are running in dev-server mode (versus simple compile)
+     */
+    var DEV_SERVER = process.env.WEBPACK_MODE === 'watch';
 
     /**
      * Config
@@ -30,15 +34,23 @@ module.exports = function makeWebpackConfig(options) {
         modulesDirectories: ['node_modules', '']
     };
 
+    var publicPath;
+    if (options.parameters.dev_server_public_path && DEV_SERVER) {
+        publicPath = options.parameters.dev_server_public_path;
+
+        // this is for both modes to maintain backwards compatibility
+    } else if (options.parameters.public_path) {
+        publicPath = options.parameters.public_path;
+    } else {
+        publicPath = DEV_SERVER ? 'http://localhost:8080/compiled/' : '/compiled/';
+    }
+
     config.output = {
         // Absolute output directory
         path: options.parameters.path ? options.parameters.path : __dirname + '/../../web/compiled/',
 
         // Output path from the view of the page
-        // Uses webpack-dev-server in development
-        publicPath: options.parameters.public_path
-            ? options.parameters.public_path
-            : (BUILD ? '/compiled/' : 'http://localhost:8080/compiled/'),
+        publicPath: publicPath,
 
         // Filename for entry points
         // Only adds hash in build mode

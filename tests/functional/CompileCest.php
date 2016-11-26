@@ -38,10 +38,10 @@ class CompileCest
 
         $I->dontSeeInSource('<link rel="stylesheet"');
 
-        $I->seeInSource('<script src="http://localhost:8080/compiled/');
+        $I->seeInSource('<script src="/compiled/');
         $src = $I->grabAttributeFrom('script', 'src');
 
-        preg_match('#http://localhost:8080/compiled/(.*)#', $src, $matches);
+        preg_match('#/compiled/(.*)#', $src, $matches);
         $I->seeFileFound(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->openFile(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->canSeeInThisFile('.green');
