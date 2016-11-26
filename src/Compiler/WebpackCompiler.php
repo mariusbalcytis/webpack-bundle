@@ -11,6 +11,7 @@ use Symfony\Component\Process\ProcessBuilder;
 use Closure;
 use RuntimeException;
 use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
+use Exception;
 
 class WebpackCompiler
 {
@@ -116,6 +117,16 @@ class WebpackCompiler
         $this->logger->info('Starting process', array($process->getCommandLine()));
         $process->start($processCallback);
 
+        try {
+            $this->loop($process, $config, $processCallback);
+        } catch (Exception $exception) {
+            $process->stop();
+            throw $exception;
+        }
+    }
+
+    private function loop(Process $process, WebpackConfig $config, $processCallback)
+    {
         while (true) {
             sleep(1);
             $this->logger->debug('Dumping webpack configuration');
@@ -135,7 +146,7 @@ class WebpackCompiler
                 $process->getOutput();
 
                 // try to save the manifest - output callback is not called in dashboard mode
-                $that->saveManifest(false);
+                $this->saveManifest(false);
             }
         }
     }
