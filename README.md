@@ -189,13 +189,13 @@ See example with explanations.
 maba_webpack:
     # this configures providers which gives all entry points
     # you can create your own type if you need to provide entry points in any other way
-    asset_providers:    # if you overwrite this, be sure to explicitly provide needed configuration like all bundles
+    asset_providers:    # if you overwrite this, be sure to explicitly provide default configuration if needed
         -
-            type:                 twig_bundles  # analyses twig templates inside given bundles
-            resource:             [ApplicationBundle, AnyOtherBundle] # all by default
+            type:     twig_bundles  # analyses twig templates inside given bundles
+            resource: [ApplicationBundle] # leave empty for all the bundles
         -
-            type:                 twig_directory # analyses twig templates inside given directory
-            resource:             %kernel.root_dir%/Resources/views
+            type:     twig_directory # analyses twig templates inside given directory
+            resource: %kernel.root_dir%/Resources/views
     twig:
         suppress_errors:      true              # whether files not found or twig parse errors should be ignored
                                                 # defaults to true in dev environment

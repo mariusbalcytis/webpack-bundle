@@ -42,6 +42,16 @@ class Configuration implements ConfigurationInterface
             array('type' => 'twig_bundles', 'resource' => $availableBundles),
             array('type' => 'twig_directory', 'resource' => '%kernel.root_dir%/Resources/views')
         ));
+
+        $assetProviders->beforeNormalization()->always(function($value) use ($availableBundles) {
+            foreach ($value as &$item) {
+                if ($item['type'] === 'twig_bundles' && empty($item['resource'])) {
+                    $item['resource'] = $availableBundles;
+                }
+            }
+            return $value;
+        });
+
         /** @var ArrayNodeDefinition $prototype  */
         $prototype = $assetProviders->prototype('array');
         $prototypeChildren = $prototype->children();
