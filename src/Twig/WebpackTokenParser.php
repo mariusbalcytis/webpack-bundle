@@ -10,6 +10,7 @@ use Twig_Node_If as IfNode;
 use Twig_Node_Set as SetNode;
 use Twig_Node_Expression_AssignName as AssignNameExpression;
 use Twig_Node_Expression_Constant as ConstantExpression;
+use Twig_Error_Syntax as SyntaxError;
 
 class WebpackTokenParser extends TokenParser
 {
@@ -39,11 +40,11 @@ class WebpackTokenParser extends TokenParser
                 $inputs[] = $stream->next()->getValue();
             } else {
                 $token = $stream->getCurrent();
-                throw new \Twig_Error_Syntax(sprintf(
+                throw new SyntaxError(sprintf(
                     'Unexpected token "%s" of value "%s"',
                     Token::typeToEnglish($token->getType()),
                     $token->getValue()
-                ), $token->getLine(), $stream->getFilename());
+                ), $token->getLine(), $stream->getSourceContext());
             }
         }
 
@@ -59,7 +60,7 @@ class WebpackTokenParser extends TokenParser
         foreach ($inputs as $input) {
             $nodes[] = $this->createNodeForInput($input, $body, $token->getLine());
         }
-        return new \Twig_Node($nodes);
+        return new Node($nodes);
     }
     
     public function getTag()

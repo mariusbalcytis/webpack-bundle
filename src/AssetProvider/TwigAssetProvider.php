@@ -9,6 +9,7 @@ use Maba\Bundle\WebpackBundle\Exception\ResourceParsingException;
 use Twig_Environment as Environment;
 use Twig_Error_Syntax as SyntaxException;
 use Twig_Node as Node;
+use Twig_Source as Source;
 use Twig_Node_Expression_Constant as ConstantFunction;
 use Twig_Node_Expression_Function as ExpressionFunction;
 
@@ -56,7 +57,7 @@ class TwigAssetProvider implements AssetProviderInterface
         }
 
         try {
-            $tokens = $this->twig->tokenize(file_get_contents($resource), $resource);
+            $tokens = $this->twig->tokenize(new Source(file_get_contents($resource), $resource));
             $node = $this->twig->parse($tokens);
         } catch (SyntaxException $exception) {
             $this->errorHandler->processException(
@@ -89,7 +90,7 @@ class TwigAssetProvider implements AssetProviderInterface
                         'Expected exactly one or two arguments passed to function %s in %s at line %s',
                         $this->functionName,
                         $resource,
-                        $node->getLine()
+                        $node->getTemplateLine()
                     ));
                 }
                 if (!$arguments[0] instanceof ConstantFunction) {
@@ -97,7 +98,7 @@ class TwigAssetProvider implements AssetProviderInterface
                         'Argument passed to function %s must be text node to parse without context. File %s, line %s',
                         $this->functionName,
                         $resource,
-                        $node->getLine()
+                        $node->getTemplateLine()
                     ));
                 }
                 $assets[] = $arguments[0]->getAttribute('value');
