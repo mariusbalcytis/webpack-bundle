@@ -18,7 +18,7 @@ maba_webpack:
             - MabaWebpackTestBundle
         path_in_bundle:       /Resources/additional-assets
         additional:
-            'a': %kernel.root_dir%/../src/Resources/assets
+            'a': %kernel.root_dir%/../src/WebpackTestBundle/Resources/assets
             'app': %kernel.root_dir%/Resources/assets
     bin:
         webpack:

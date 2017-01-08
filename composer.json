@@ -30,8 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Maba\\Bundle\\WebpackBundle\\": "src",
-            "Fixtures\\Maba\\Bundle\\WebpackTestBundle\\": "tests/functional/Fixtures/src"
+            "Maba\\Bundle\\WebpackBundle\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Fixtures\\Maba\\Bundle\\": "tests/functional/Fixtures/src"
         }
     }
 }

@@ -48,6 +48,15 @@ class CompileCest
         $I->canSeeInThisFile('.red');
     }
 
+    public function getErrorFromBundleWithoutErrorSuppressing(FunctionalTester $I)
+    {
+        $I->bootKernelWith('bundle_error');
+
+        $I->runCommand('maba_webpack.command.setup');
+        $I->runCommand('maba_webpack.command.compile');
+        $I->seeCommandStatusCode(1);
+    }
+
     public function getErrorWithTwigParseError(FunctionalTester $I)
     {
         $I->bootKernelWith('parse_error');

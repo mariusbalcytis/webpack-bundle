@@ -69,7 +69,7 @@ class CustomizedCest
         $I->seeFileFound(__DIR__ . '/Fixtures/web/assets/' . $matches[1]);
         $I->seeFileIsSmallerThan(
             __DIR__ . '/Fixtures/web/assets/' . $matches[1],
-            __DIR__ . '/Fixtures/src/Resources/assets/cat.png'
+            __DIR__ . '/Fixtures/src/WebpackTestBundle/Resources/assets/cat.png'
         );
     }
 }
