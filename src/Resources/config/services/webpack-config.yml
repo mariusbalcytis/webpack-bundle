@@ -1,0 +1,23 @@
+services:
+
+    maba_webpack.webpack_config_dumper:
+        class: Maba\Bundle\WebpackBundle\Config\WebpackConfigDumper
+        public: false
+        arguments:
+            - '%maba_webpack.webpack_entry_config_path%'
+            - '%maba_webpack.webpack_config_path%'
+            - '%maba_webpack.json_manifest_file_path%'
+            - '%kernel.environment%'
+            - '%maba_webpack.webpack_config_parameters%'
+
+    maba_webpack.webpack_config_manager:
+        class: Maba\Bundle\WebpackBundle\Config\WebpackConfigManager
+        public: false
+        arguments:
+            - '@maba_webpack.alias_manager'
+            - '@maba_webpack.asset_collector'
+            - '@maba_webpack.webpack_config_dumper'
+            - '@maba_webpack.asset_resolver'
+            - '@maba_webpack.asset_name_generator'
+            - '@maba_webpack.error_handler'
+

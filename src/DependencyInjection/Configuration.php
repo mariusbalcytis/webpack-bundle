@@ -47,6 +47,16 @@ class Configuration implements ConfigurationInterface
         $rootNode->children() // @formatter:off
 
             /**
+             * Root working and cache directories
+             */
+            ->scalarNode('working_dir')
+                ->defaultValue('%kernel.root_dir%/..')
+            ->end()
+            ->scalarNode('cache_dir')
+                ->defaultValue('%kernel.cache_dir%')
+            ->end()
+
+            /**
              * Asset paths
              */
             ->arrayNode('asset_providers')

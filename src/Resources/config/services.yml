@@ -67,7 +67,7 @@ services:
             - '@maba_webpack.webpack_config_manager'
             - '%maba_webpack.json_manifest_file_path%'
             - '@maba_webpack.manifest_storage'
-            - '%maba_webpack.root_directory%'
+            - '%maba_webpack.working_dir%'
             - '@logger'
             - '%maba_webpack.bin.webpack.executable%'
             - '%maba_webpack.bin.webpack.tty_prefix%'

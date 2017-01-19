@@ -18,9 +18,10 @@ parameters:
     maba_webpack.webpack_config_path: ''
     maba_webpack.webpack_config_parameters: ''
 
-    # Not configurable from config.yml
-    maba_webpack.root_directory: '%kernel.root_dir%/..'
-    maba_webpack.webpack_entry_config_path: '%kernel.cache_dir%/webpack.config.js'
-    maba_webpack.manifest_file_path: '%kernel.cache_dir%/webpack_manifest.php'
-    maba_webpack.json_manifest_file_path: '%kernel.cache_dir%/webpack_manifest.json'
+    maba_webpack.working_dir: ''
+    maba_webpack.cache_dir: ''
 
+    # Not configurable from config.yml
+    maba_webpack.webpack_entry_config_path: '%maba_webpack.cache_dir%/webpack.config.js'
+    maba_webpack.manifest_file_path:        '%maba_webpack.cache_dir%/webpack_manifest.php'
+    maba_webpack.json_manifest_file_path:   '%maba_webpack.cache_dir%/webpack_manifest.json'
