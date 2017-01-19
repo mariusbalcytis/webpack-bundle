@@ -26,17 +26,20 @@ class AssetResolverTest extends Test
             ->disableOriginalConstructor()
             ->getMock()
         ;
+
         $assetLocator
             ->expects($this->once())
             ->method('locateAsset')
             ->with($expectedAssetPath)
             ->willReturn($locatedPath)
         ;
+
         /** @var MockObject|EntryFileManager $entryFileManager */
         $entryFileManager = $this->getMockBuilder('Maba\Bundle\WebpackBundle\Service\EntryFileManager')
             ->disableOriginalConstructor()
             ->getMock()
         ;
+
         $entryFileManager
             ->expects($this->once())
             ->method('isEntryFile')
@@ -51,34 +54,70 @@ class AssetResolverTest extends Test
 
     public function resolveAssetProvider()
     {
-        return array(
-            array('/full/path.js', '/full/path.js', '/full/path.js', '/full/path.js', false),
-            array('extract-file-loader?q=%2Ffull%2Fpath.js!', '/full/path.js', '/full/path.js', '/full/path.js', true),
-            array('loader!/full/path.js', 'loader!/full/path.js', '/full/path.js', '/full/path.js', false),
-            array(
-                'extract-file-loader?q=loader%21%2Ffull%2Fpath.js!',
-                'loader!/full/path.js',
-                '/full/path.js',
-                '/full/path.js',
-                true,
-            ),
-            array(
-                'extract-file-loader?q=-%21loader%21%2Ffull%2Fpath.js!',
-                '-!loader!/full/path.js',
-                '/full/path.js',
-                '/full/path.js',
-                true,
-            ),
-            array('/full/path.js', '@alias/path.js', '@alias/path.js', '/full/path.js', false),
-            array('extract-file-loader?q=%2Ffull%2Fpath.js!', '@alias/path.js', '@alias/path.js', '/full/path.js', true),
-            array(
-                'extract-file-loader?q=loader%21%2Ffull%2Fpath.js!',
-                'loader!@alias/path.js',
-                '@alias/path.js',
-                '/full/path.js',
-                true,
-            ),
-            array('loader!/full/path.js', 'loader!@alias/path.js', '@alias/path.js', '/full/path.js', false),
-        );
+        return [ // @formatter:off
+            [
+                /* expected            */  '/full/path.js',
+                /* asset               */  '/full/path.js',
+                /* expected asset path */  '/full/path.js',
+                /* located path        */  '/full/path.js',
+                /* entry file          */  false,
+            ],
+            [
+                /* expected            */  'extract-file-loader?q=%2Ffull%2Fpath.js!',
+                /* asset               */  '/full/path.js',
+                /* expected asset path */  '/full/path.js',
+                /* located path        */  '/full/path.js',
+                /* entry file          */  true,
+            ],
+            [
+                /* expected            */  'loader!/full/path.js',
+                /* asset               */  'loader!/full/path.js',
+                /* expected asset path */  '/full/path.js',
+                /* located path        */  '/full/path.js',
+                /* entry file          */  false,
+            ],
+            [
+                /* expected            */  'extract-file-loader?q=loader%21%2Ffull%2Fpath.js!',
+                /* asset               */  'loader!/full/path.js',
+                /* expected asset path */  '/full/path.js',
+                /* located path        */  '/full/path.js',
+                /* entry file          */  true,
+            ],
+            [
+                /* expected            */  'extract-file-loader?q=-%21loader%21%2Ffull%2Fpath.js!',
+                /* asset               */  '-!loader!/full/path.js',
+                /* expected asset path */  '/full/path.js',
+                /* located path        */  '/full/path.js',
+                /* entry file          */  true,
+            ],
+            [
+                /* expected            */  '/full/path.js',
+                /* asset               */  '@alias/path.js',
+                /* expected asset path */  '@alias/path.js',
+                /* located path        */  '/full/path.js',
+                /* entry file          */  false,
+            ],
+            [
+                /* expected            */  'extract-file-loader?q=%2Ffull%2Fpath.js!',
+                /* asset               */  '@alias/path.js',
+                /* expected asset path */  '@alias/path.js',
+                /* located path        */  '/full/path.js',
+                /* entry file          */  true,
+            ],
+            [
+                /* expected            */  'extract-file-loader?q=loader%21%2Ffull%2Fpath.js!',
+                /* asset               */  'loader!@alias/path.js',
+                /* expected asset path */  '@alias/path.js',
+                /* located path        */  '/full/path.js',
+                /* entry file          */  true,
+            ],
+            [
+                /* expected            */  'loader!/full/path.js',
+                /* asset               */  'loader!@alias/path.js',
+                /* expected asset path */  '@alias/path.js',
+                /* located path        */  '/full/path.js',
+                /* entry file          */  false,
+            ],
+        ];
     }
 }
