@@ -1,0 +1,109 @@
+imports:
+    - { resource: 'parameters.yml' }
+    - { resource: 'services/commands.yml' }
+    - { resource: 'services/error-handlers.yml' }
+    - { resource: 'services/providers.yml' }
+    - { resource: 'services/setup-command.yml' }
+
+services:
+
+    maba_webpack.alias_manager:
+        class: Maba\Bundle\WebpackBundle\Service\AliasManager
+        public: false
+        arguments:
+            - '@file_locator'
+            - '%maba_webpack.aliases.register_bundles%'
+            - '%maba_webpack.aliases.path_in_bundle%'
+            - '%maba_webpack.aliases.additional%'
+
+    maba_webpack.asset_collector:
+        class: Maba\Bundle\WebpackBundle\Service\AssetCollector
+        public: false
+        arguments:
+            - '@maba_webpack.asset_provider.dynamic_list'
+            - '%maba_webpack.provider_config%'
+
+    maba_webpack.asset_locator:
+        class: Maba\Bundle\WebpackBundle\Service\AssetLocator
+        arguments:
+            - '@maba_webpack.alias_manager'
+
+    maba_webpack.asset_name_generator:
+        class: Maba\Bundle\WebpackBundle\Service\AssetNameGenerator
+        public: false
+
+    maba_webpack.asset_manager:
+        class: Maba\Bundle\WebpackBundle\Service\AssetManager
+        arguments:
+            - '@maba_webpack.manifest_storage'
+            - '@maba_webpack.asset_name_generator'
+            - '@maba_webpack.entry_file_manager'
+
+    maba_webpack.asset_resolver:
+        class: Maba\Bundle\WebpackBundle\Service\AssetResolver
+        public: false
+        arguments: 
+            - '@maba_webpack.asset_locator'
+            - '@maba_webpack.entry_file_manager'
+
+    maba_webpack.entry_file_manager:
+        class: Maba\Bundle\WebpackBundle\Service\EntryFileManager
+        public: false
+        arguments: 
+            - '%maba_webpack.entry_file.enabled_extensions%'
+            - '%maba_webpack.entry_file.disabled_extensions%'
+            - '%maba_webpack.entry_file.type_map%'
+
+    maba_webpack.manifest_storage:
+        class: Maba\Bundle\WebpackBundle\Service\ManifestStorage
+        public: false
+        arguments: 
+            - '%maba_webpack.manifest_file_path%'
+
+    maba_webpack.webpack_compiler:
+        class: Maba\Bundle\WebpackBundle\Compiler\WebpackCompiler
+        public: false
+        arguments:
+            - '@maba_webpack.webpack_config_manager'
+            - '%maba_webpack.json_manifest_file_path%'
+            - '@maba_webpack.manifest_storage'
+            - '%maba_webpack.root_directory%'
+            - '@logger'
+            - '%maba_webpack.bin.webpack.executable%'
+            - '%maba_webpack.bin.webpack.tty_prefix%'
+            - '%maba_webpack.bin.webpack.arguments%'
+            - '%maba_webpack.bin.dev_server.executable%'
+            - '%maba_webpack.bin.dev_server.tty_prefix%'
+            - '%maba_webpack.bin.dev_server.arguments%'
+            - '%maba_webpack.bin.disable_tty%'
+
+    maba_webpack.webpack_config_dumper:
+        class: Maba\Bundle\WebpackBundle\Config\WebpackConfigDumper
+        public: false
+        arguments:
+            - '%maba_webpack.webpack_entry_config_path%'
+            - '%maba_webpack.webpack_config_path%'
+            - '%maba_webpack.json_manifest_file_path%'
+            - '%kernel.environment%'
+            - '%maba_webpack.webpack_config_parameters%'
+
+    maba_webpack.webpack_config_manager:
+        class: Maba\Bundle\WebpackBundle\Config\WebpackConfigManager
+        public: false
+        arguments:
+            - '@maba_webpack.alias_manager'
+            - '@maba_webpack.asset_collector'
+            - '@maba_webpack.webpack_config_dumper'
+            - '@maba_webpack.asset_resolver'
+            - '@maba_webpack.asset_name_generator'
+            - '@maba_webpack.error_handler'
+
+    maba_webpack.twig_extension:
+        class: Maba\Bundle\WebpackBundle\Twig\WebpackExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+        arguments:
+            - '@maba_webpack.asset_manager'
+            - '%maba_webpack.twig_function_name%'
+

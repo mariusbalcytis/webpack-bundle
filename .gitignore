@@ -1,5 +1,9 @@
-vendor
+.idea/
+
+vendor/
 composer.phar
 composer.lock
-tests/_output/*
-tests/functional/Fixtures/node_modules
+
+tests/_output/
+tests/functional/Fixtures/app/cache/
+tests/functional/Fixtures/node_modules/
