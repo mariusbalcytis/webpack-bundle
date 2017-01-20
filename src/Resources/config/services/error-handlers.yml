@@ -1,0 +1,17 @@
+services:
+
+    maba_webpack.error_handler.default:
+        class: Maba\Bundle\WebpackBundle\ErrorHandler\DefaultErrorHandler
+        public: false
+
+    maba_webpack.error_handler.suppressing:
+        class: Maba\Bundle\WebpackBundle\ErrorHandler\SuppressingErrorHandler
+        public: false
+        arguments:
+            - '@logger'
+
+    maba_webpack.error_handler.ignore_unknowns:
+        class: Maba\Bundle\WebpackBundle\ErrorHandler\UnknownReferenceIgnoringErrorHandler
+        public: false
+        arguments:
+            - '@logger'

@@ -1,0 +1,24 @@
+services:
+
+    maba_webpack.file.package_json:
+        public: false
+        class: stdClass
+        factory: 'file_locator:locate'
+        arguments: ['@@MabaWebpackBundle/Resources/defaultConfig/package.json']
+
+    maba_webpack.file.webpack_config_js:
+        public: false
+        class: stdClass
+        factory: 'file_locator:locate'
+        arguments: ['@@MabaWebpackBundle/Resources/defaultConfig/webpack.config.js']
+
+    maba_webpack.command.setup:
+        class: Maba\Bundle\WebpackBundle\Command\SetupCommand
+        tags:
+            - { name: console.command }
+        arguments: 
+            - '@maba_webpack.file.package_json'
+            - '@maba_webpack.file.webpack_config_js'
+            - '%kernel.root_dir%/..'
+            - '%kernel.root_dir%/config'
+

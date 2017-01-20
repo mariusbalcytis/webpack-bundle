@@ -24,84 +24,93 @@ class EntryFileManagerTest extends Test
 
     public function dataProvider()
     {
-        return array(
-            'parses simple extension' => array(
-                'css',
-                'style.css',
-                array(),
-                array('js'),
-                array(),
-            ),
-            'parses extension with loaders, aliases and paths' => array(
-                'css',
-                '-!loader?q=a.js&w=r.less!anotherloader!@alias/path/file-name with spaces.css',
-                array(),
-                array('js'),
-                array(),
-            ),
-            'returns null if type disabled' => array(
-                null,
-                'file.js',
-                array(),
-                array('js'),
-                array(),
-            ),
-            'enabled overrides disabled' => array(
-                'js',
-                'file.js',
-                array('js'),
-                array('js'),
-                array(),
-            ),
-            'looks at enabled even if no disabled provided' => array(
-                'js',
-                'file.js',
-                array('js'),
-                array(),
-                array(),
-            ),
-            'returns null if type not enabled' => array(
-                null,
-                'file.js',
-                array('css'),
-                array(),
-                array(),
-            ),
-            'no enabled nor disabled means disabled for all types' => array(
-                null,
-                'file.js',
-                array(),
-                array(),
-                array(),
-            ),
-            'looks at type map' => array(
-                'css',
-                'file.less',
-                array(),
-                array('js'),
-                array('css' => array('less')),
-            ),
-            'looks at enabled before typemap' => array(
-                'css',
-                'file.less',
-                array('less'),
-                array(),
-                array('css' => array('less')),
-            ),
-            'looks at enabled only before typemap' => array(
-                null,
-                'file.less',
-                array('css'),
-                array(),
-                array('css' => array('less')),
-            ),
-            'looks at first found in typemap' => array(
-                'css',
-                'file.less',
-                array(),
-                array('js'),
-                array('js' => array('coffee'), 'css' => array('scss', 'sass', 'less'), 'other' => array('less')),
-            ),
-        );
+        return [ // @formatter:off
+            'parses simple extension' => [
+                /* expected            */  'css',
+                /* asset               */  'style.css',
+                /* enabled extensions  */  [],
+                /* disabled extensions */  ['js'],
+                /* type map            */  [],
+            ],
+            'parses extension with loaders, aliases and paths' => [
+                /* expected            */  'css',
+                /* asset               */  '-!loader?q=a.js&w=r.less!anotherloader!@alias/path/file-name with spaces.css',
+                /* enabled extensions  */  [],
+                /* disabled extensions */  ['js'],
+                /* type map            */  [],
+            ],
+            'returns null if type disabled' => [
+                /* expected            */  null,
+                /* asset               */  'file.js',
+                /* enabled extensions  */  [],
+                /* disabled extensions */  ['js'],
+                /* type map            */  [],
+            ],
+            'enabled overrides disabled' => [
+                /* expected            */  'js',
+                /* asset               */  'file.js',
+                /* enabled extensions  */  ['js'],
+                /* disabled extensions */  ['js'],
+                /* type map            */  [],
+            ],
+            'looks at enabled even if no disabled provided' => [
+                /* expected            */  'js',
+                /* asset               */  'file.js',
+                /* enabled extensions  */  ['js'],
+                /* disabled extensions */  [],
+                /* type map            */  [],
+            ],
+            'returns null if type not enabled' => [
+                /* expected            */  null,
+                /* asset               */  'file.js',
+                /* enabled extensions  */  ['css'],
+                /* disabled extensions */  [],
+                /* type map            */  [],
+            ],
+            'no enabled nor disabled means disabled for all types' => [
+                /* expected            */  null,
+                /* asset               */  'file.js',
+                /* enabled extensions  */  [],
+                /* disabled extensions */  [],
+                /* type map            */  [],
+            ],
+            'looks at type map' => [
+                /* expected            */  'css',
+                /* asset               */  'file.less',
+                /* enabled extensions  */  [],
+                /* disabled extensions */  ['js'],
+                /* type map            */  ['css' => ['less']],
+            ],
+            'looks at enabled before typemap' => [
+                /* expected            */  'css',
+                /* asset               */  'file.less',
+                /* enabled extensions  */  ['less'],
+                /* disabled extensions */  [],
+                /* type map            */  ['css' => ['less']],
+            ],
+            'looks at enabled only before typemap' => [
+                /* expected            */  null,
+                /* asset               */  'file.less',
+                /* enabled extensions  */  ['css'],
+                /* disabled extensions */  [],
+                /* type map            */  ['css' => ['less']],
+            ],
+            'looks at first found in typemap' => [
+                /* expected            */  'css',
+                /* asset               */  'file.less',
+                /* enabled extensions  */  [],
+                /* disabled extensions */  ['js'],
+                /* type map            */
+                [
+                    'js' => ['coffee'],
+                    'css' => [
+                        'scss',
+                        'sass',
+                        'less',
+                    ],
+                    'other' => ['less'],
+                ],
+            ],
+        ];
     }
 }

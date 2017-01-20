@@ -1,0 +1,16 @@
+services:
+
+    maba_webpack.command.compile:
+        class: Maba\Bundle\WebpackBundle\Command\CompileCommand
+        tags:
+            - { name: console.command }
+        arguments: 
+            - '@maba_webpack.webpack_compiler'
+            - '@logger'
+
+    maba_webpack.command.dev_server:
+        class: Maba\Bundle\WebpackBundle\Command\DevServerCommand
+        tags:
+            - { name: console.command }
+        arguments: 
+            - '@maba_webpack.webpack_compiler'

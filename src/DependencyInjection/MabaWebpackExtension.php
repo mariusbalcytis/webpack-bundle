@@ -3,10 +3,10 @@
 namespace Maba\Bundle\WebpackBundle\DependencyInjection;
 
 use Maba\Bundle\WebpackBundle\Twig\WebpackExtension;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -23,13 +23,15 @@ class MabaWebpackExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
 
-        $additionalAliases = $config['aliases']['additional'] + array(
-            'app' => '%kernel.root_dir%/Resources/assets',
+        $additionalAliases = $config['aliases']['additional'] + [
             'root' => '%kernel.root_dir%/..',
-        );
+        ];
+
+        $container->setParameter('maba_webpack.cache_dir', $config['cache_dir']);
+        $container->setParameter('maba_webpack.working_dir', $config['working_dir']);
 
         $container->setParameter('maba_webpack.provider_config', $config['asset_providers']);
 

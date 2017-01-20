@@ -1,0 +1,57 @@
+imports:
+    - { resource: 'parameters.yml' }
+
+services:
+
+    maba_webpack.asset_provider.array_collection_resource:
+        class: Maba\Bundle\WebpackBundle\AssetProvider\CollectionResource\ArrayCollectionResource
+        public: false
+
+    maba_webpack.asset_provider.dynamic:
+        class: Maba\Bundle\WebpackBundle\AssetProvider\DynamicAssetProvider
+        public: false
+
+    maba_webpack.collection_resource.twig_files:
+        class: Maba\Bundle\WebpackBundle\AssetProvider\CollectionResource\DirectoryResource
+        public: false
+        arguments:
+            - '*.twig'
+
+    maba_webpack.collection_resource.twig_bundles:
+        class: Maba\Bundle\WebpackBundle\AssetProvider\CollectionResource\BundlesDirectoriesResource
+        public: false
+        arguments:
+            - '@kernel'
+            - /Resources/views
+
+    maba_webpack.asset_provider.dynamic_list:
+        class: Maba\Bundle\WebpackBundle\AssetProvider\CollectionResourceAssetProvider
+        public: false
+        arguments: 
+            - '@maba_webpack.asset_provider.array_collection_resource'
+            - '@maba_webpack.asset_provider.dynamic'
+
+    maba_webpack.asset_provider.twig_file:
+        class: Maba\Bundle\WebpackBundle\AssetProvider\TwigAssetProvider
+        tags:
+            - { name: maba_webpack.asset_provider, type: twig_file }
+        arguments: 
+            - '@twig'
+            - '%maba_webpack.twig_function_name%'
+            - '@maba_webpack.error_handler'
+
+    maba_webpack.asset_provider.twig_directory:
+        class: Maba\Bundle\WebpackBundle\AssetProvider\CollectionResourceAssetProvider
+        tags:
+            - { name: maba_webpack.asset_provider, type: twig_directory }
+        arguments:
+            - '@maba_webpack.collection_resource.twig_files'
+            - '@maba_webpack.asset_provider.twig_file'
+
+    maba_webpack.asset_provider.twig_bundles:
+        class: Maba\Bundle\WebpackBundle\AssetProvider\CollectionResourceAssetProvider
+        tags:
+            - { name: maba_webpack.asset_provider, type: twig_bundles }
+        arguments:
+            - '@maba_webpack.collection_resource.twig_bundles'
+            - '@maba_webpack.asset_provider.twig_directory'

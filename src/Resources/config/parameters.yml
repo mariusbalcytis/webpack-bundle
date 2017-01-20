@@ -1,0 +1,27 @@
+parameters:
+    maba_webpack.aliases.register_bundles: ''
+    maba_webpack.aliases.path_in_bundle: ''
+    maba_webpack.aliases.additional: ''
+
+    maba_webpack.bin.webpack.executable: ''
+    maba_webpack.bin.webpack.tty_prefix: ''
+    maba_webpack.bin.webpack.arguments: ''
+    maba_webpack.bin.dev_server.executable: ''
+    maba_webpack.bin.dev_server.tty_prefix: ''
+    maba_webpack.bin.dev_server.arguments: ''
+    maba_webpack.bin.disable_tty: ''
+
+    maba_webpack.provider_config: ''
+
+    maba_webpack.twig_function_name: ''
+
+    maba_webpack.webpack_config_path: ''
+    maba_webpack.webpack_config_parameters: ''
+
+    maba_webpack.working_dir: ''
+    maba_webpack.cache_dir: ''
+
+    # Not configurable from config.yml
+    maba_webpack.webpack_entry_config_path: '%maba_webpack.cache_dir%/webpack.config.js'
+    maba_webpack.manifest_file_path:        '%maba_webpack.cache_dir%/webpack_manifest.php'
+    maba_webpack.json_manifest_file_path:   '%maba_webpack.cache_dir%/webpack_manifest.json'
