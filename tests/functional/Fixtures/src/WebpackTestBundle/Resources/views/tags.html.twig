@@ -2,24 +2,24 @@
 <html>
 <head>
     <meta charset="utf-8">
-    {# webpack_stylesheets works as expected #}
-    {% webpack_stylesheets '@maba_webpack_test/indexed/css0.css' %}
+    {# webpack css works as expected #}
+    {% webpack css '@maba_webpack_test/indexed/css0.css' %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% end_webpack_stylesheets %}
+    {% end_webpack %}
 
-    {# webpack_stylesheets works as expected with multiple files #}
-    {% webpack_stylesheets '@MabaWebpackTestBundle/Resources/assets/indexed/css1.css'
+    {# webpack css works as expected with multiple files #}
+    {% webpack css '@MabaWebpackTestBundle/Resources/assets/indexed/css1.css'
                            '@maba_webpack_test/indexed/css2.css' %}
         <link rel="stylesheet" href="{{ asset_url }}"/>
-    {% end_webpack_stylesheets %}
+    {% end_webpack %}
 </head>
 <body>
-    {% webpack_assets '@maba_webpack_test/cat.png' '@maba_webpack_test/cat.png' %}
+    {% webpack '@maba_webpack_test/cat.png' '@maba_webpack_test/cat.png' %}
     <img src="{{ asset_url }}"/>
-    {% end_webpack_assets %}
+    {% end_webpack %}
 
-    {% webpack_javascripts '@maba_webpack_test/indexed/js0.js' '@maba_webpack_test/indexed/js1.js' %}
+    {% webpack js '@maba_webpack_test/indexed/js0.js' '@maba_webpack_test/indexed/js1.js' %}
     <script src="{{ asset_url }}"></script>
-    {% end_webpack_javascripts %}
+    {% end_webpack %}
 </body>
 </html>

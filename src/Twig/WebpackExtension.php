@@ -10,9 +10,6 @@ class WebpackExtension extends Extension
 {
     const FUNCTION_NAME = 'webpack_asset';
     const NAMED_ASSET_FUNCTION_NAME = 'webpack_named_asset';
-    const TAG_NAME_STYLESHEETS = 'webpack_stylesheets';
-    const TAG_NAME_JAVASCRIPTS = 'webpack_javascripts';
-    const TAG_NAME_ASSETS = 'webpack_assets';
 
     protected $assetManager;
     protected $functionName;
@@ -34,9 +31,6 @@ class WebpackExtension extends Extension
     public function getTokenParsers()
     {
         return array(
-            new WebpackConcreteTokenParser(self::TAG_NAME_STYLESHEETS, $this->functionName, 'css'),
-            new WebpackConcreteTokenParser(self::TAG_NAME_JAVASCRIPTS, $this->functionName, 'js'),
-            new WebpackConcreteTokenParser(self::TAG_NAME_ASSETS, $this->functionName, null),
             new WebpackTokenParser($this->functionName, self::NAMED_ASSET_FUNCTION_NAME),
         );
     }

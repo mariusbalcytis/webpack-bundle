@@ -244,7 +244,6 @@ maba_webpack:
         disable_tty: false      # disables TTY setting. Defaults to false in dev environment, true in others.
                                 # TTY is needed to run dashboard and/or to display colors, but does not work
                                 # in some environments like AWS
-                
 ```
 
 ## Configuring dev-server
@@ -325,21 +324,21 @@ In your twig template:
 
 Normally you would only need to load `<script>` tag and all `require()`d styles would be loaded automatically.
 
-### `webpack_stylesheets` tag
+### `webpack` tag
 
-To avoid setting CSS URL to a temporary variable, you can use `webpack_stylesheets` tag, similarly as in Assetic:
+To avoid setting CSS URL to a temporary variable, you can use `webpack` tag:
 
 ```twig
-{% webpack_stylesheets '@ApplicationBundle/Resources/assets/main.js' %}
+{% webpack css '@ApplicationBundle/Resources/assets/main.js' %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
-{% end_webpack_stylesheets %}
+{% end_webpack %}
 ```
 
 You can provide more than one input file in this tag - they will not be merged together,
 the code inside the tag will just be repeated with every generated asset.
 
-There is also `webpack_javascripts` tag (use it only for javascript content) and 
-`webpack_assets` tag (type is guessed for each asset, so might be used for images).
+You can provide `js` instead of `css` to use this for javascript content and leave it out at all to guess the type
+for each asset - this can be used with images.
 
 Keep in mind that you must provide hard-coded asset paths here, same as in `webpack_asset`
 function. This is to find all available assets in compile-time.

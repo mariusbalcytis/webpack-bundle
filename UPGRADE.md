@@ -1,5 +1,38 @@
 # Upgrade from 0.5 to 0.6
 
+Removed `webpack_javascript`, `webpack_stylesheets` and `webpack_assets` twig
+tags - replace them with `webpack` tag and use `js` or `css` token if needed.
+
+Change this:
+```twig
+{% webpack_javascripts '@app/a.js' '@app/b.js' %}
+<script src="{{ asset_url }}"></script>
+{% end_webpack_javascripts %}
+
+{% webpack_stylesheets '@app/a.js' '@app/b.js' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+{% end_webpack_stylesheets %}
+
+{% webpack_assets '@app/a.png' '@app/b.png' %}
+<img src="{{ asset_url }}"/>
+{% end_webpack_assets %}
+```
+
+To this:
+```twig
+{% webpack js '@app/a.js' '@app/b.js' %}
+<script src="{{ asset_url }}"></script>
+{% end_webpack %}
+
+{% webpack css '@app/a.js' '@app/b.js' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+{% end_webpack %}
+
+{% webpack '@app/a.png' '@app/b.png' %}
+<img src="{{ asset_url }}"/>
+{% end_webpack %}
+```
+
 Changed `AssetResult` class - collection of assets are now `AssetItem`
 instances instead of strings. This is important only if you implemented
 `AssetProviderInterface` in your code.
