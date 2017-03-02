@@ -1,9 +1,9 @@
 framework:
-    secret: "secret"
+    secret: 'secret'
     templating:
         engines: ['twig', 'php']
     router:
-        resource: "@MabaWebpackTestBundle/Resources/config/routing.xml"
+        resource: '%kernel.root_dir%/config/routing.yml'
         strict_requirements: ~
     profiler: ~
     translator: ~

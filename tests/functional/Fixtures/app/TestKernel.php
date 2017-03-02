@@ -16,6 +16,7 @@ class TestKernel extends Kernel
             new Maba\Bundle\WebpackBundle\MabaWebpackBundle(),
             new Fixtures\Maba\Bundle\WebpackTestBundle\MabaWebpackTestBundle(),
             new Fixtures\Maba\Bundle\WebpackAnotherTestBundle\MabaWebpackAnotherTestBundle(),
+            new Fixtures\Maba\Bundle\TestCommonsChunkBundle\MabaTestCommonsChunkBundle(),
         );
         return $bundles;
     }

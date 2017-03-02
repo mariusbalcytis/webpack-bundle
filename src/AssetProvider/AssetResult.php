@@ -2,55 +2,58 @@
 
 namespace Maba\Bundle\WebpackBundle\AssetProvider;
 
+/**
+ * @api
+ */
 class AssetResult
 {
     /**
-     * @var array keys are actual result - to avoid array_unique operations
+     * @var AssetItem[]
      */
-    protected $assets = array();
+    private $assets = array();
 
     /**
-     * Context must be json_encode'able (scalar|array)
+     * Context
      *
      * @var mixed
      */
-    protected $context;
+    private $context;
 
     /**
-     * @return array
+     * @return AssetItem[]
      */
     public function getAssets()
     {
-        return array_keys($this->assets);
+        return $this->assets;
     }
 
     /**
-     * @param array $assets
+     * @param array|AssetItem[] $assets
      * @return AssetResult
      */
     public function setAssets(array $assets)
     {
-        $this->assets = array_fill_keys($assets, true);
+        $this->assets = $assets;
         return $this;
     }
 
     /**
-     * @param string $asset
+     * @param AssetItem $asset
      * @return $this
      */
-    public function addAsset($asset)
+    public function addAsset(AssetItem $asset)
     {
-        $this->assets[$asset] = true;
+        $this->assets[] = $asset;
         return $this;
     }
 
     /**
-     * @param array $assets array of strings
+     * @param array|AssetItem[] $assets array of strings
      * @return $this
      */
     public function addAssets(array $assets)
     {
-        $this->assets = array_merge($this->assets, array_fill_keys($assets, true));
+        $this->assets = array_merge($this->assets, $assets);
         return $this;
     }
 
@@ -63,7 +66,7 @@ class AssetResult
     }
 
     /**
-     * @param mixed $context value must be json_encode'able (scalar|array)
+     * @param mixed $context
      * @return AssetResult
      */
     public function setContext($context)

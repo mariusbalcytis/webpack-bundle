@@ -15,6 +15,11 @@ class WebpackConfig
     protected $aliases;
 
     /**
+     * @var array
+     */
+    protected $assetGroups;
+
+    /**
      * @var mixed
      */
     protected $cacheContext;
@@ -63,6 +68,22 @@ class WebpackConfig
     {
         $this->aliases = $aliases;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssetGroups()
+    {
+        return $this->assetGroups;
+    }
+
+    /**
+     * @param array $assetGroups
+     */
+    public function setAssetGroups(array $assetGroups)
+    {
+        $this->assetGroups = $assetGroups;
     }
 
     /**

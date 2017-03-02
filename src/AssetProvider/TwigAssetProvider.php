@@ -19,8 +19,11 @@ class TwigAssetProvider implements AssetProviderInterface
     private $functionName;
     private $errorHandler;
 
-    public function __construct(Environment $twig, $functionName, ErrorHandlerInterface $errorHandler)
-    {
+    public function __construct(
+        Environment $twig,
+        $functionName,
+        ErrorHandlerInterface $errorHandler
+    ) {
         $this->twig = $twig;
         $this->functionName = $functionName;
         $this->errorHandler = $errorHandler;
@@ -76,36 +79,12 @@ class TwigAssetProvider implements AssetProviderInterface
 
     private function loadNode(Node $node, $resource)
     {
-        $assets = array();
-
-        if ($node instanceof ExpressionFunction) {
-            $name = $node->getAttribute('name');
-            if ($name === $this->functionName) {
-                $arguments = iterator_to_array($node->getNode('arguments'));
-                if (!is_array($arguments)) {
-                    throw new ResourceParsingException('arguments is not an array');
-                }
-                if (count($arguments) !== 1 && count($arguments) !== 2) {
-                    throw new ResourceParsingException(sprintf(
-                        'Expected exactly one or two arguments passed to function %s in %s at line %s',
-                        $this->functionName,
-                        $resource,
-                        $node->getTemplateLine()
-                    ));
-                }
-                if (!$arguments[0] instanceof ConstantFunction) {
-                    throw new ResourceParsingException(sprintf(
-                        'Argument passed to function %s must be text node to parse without context. File %s, line %s',
-                        $this->functionName,
-                        $resource,
-                        $node->getTemplateLine()
-                    ));
-                }
-                $assets[] = $arguments[0]->getAttribute('value');
-                return $assets;
-            }
+        if ($this->isFunctionNode($node)) {
+            /** @var ExpressionFunction $node */
+            return $this->parseFunctionNode($node, sprintf('File %s, line %s', $resource, $node->getTemplateLine()));
         }
 
+        $assets = array();
         foreach ($node as $child) {
             if ($child instanceof Node) {
                 $assets = array_merge($assets, $this->loadNode($child, $resource));
@@ -113,5 +92,60 @@ class TwigAssetProvider implements AssetProviderInterface
         }
 
         return $assets;
+    }
+
+    private function isFunctionNode(Node $node)
+    {
+        if ($node instanceof ExpressionFunction) {
+            return $node->getAttribute('name') === $this->functionName;
+        }
+
+        return false;
+    }
+
+    private function parseFunctionNode(ExpressionFunction $functionNode, $context)
+    {
+        $arguments = iterator_to_array($functionNode->getNode('arguments'));
+        if (!is_array($arguments)) {
+            throw new ResourceParsingException('arguments is not an array');
+        }
+
+        if (count($arguments) < 1 || count($arguments) > 3) {
+            throw new ResourceParsingException(sprintf(
+                'Expected one to three arguments passed to function %s. %s',
+                $this->functionName,
+                $context
+            ));
+        }
+
+        $asset = new AssetItem();
+
+        $resourceArgument = isset($arguments[0]) ? $arguments[0] : $arguments['resource'];
+        $asset->setResource($this->getArgumentValue($resourceArgument, $context));
+
+        $groupArgument = null;
+        if (isset($arguments[2])) {
+            $groupArgument = $arguments[2];
+        } elseif (isset($arguments['group'])) {
+            $groupArgument = $arguments['group'];
+        }
+
+        if ($groupArgument !== null) {
+            $asset->setGroup($this->getArgumentValue($groupArgument, $context));
+        }
+
+        return array($asset);
+    }
+
+    private function getArgumentValue(Node $argument, $context)
+    {
+        if (!$argument instanceof ConstantFunction) {
+            throw new ResourceParsingException(sprintf(
+                'Argument passed to function %s must be text node to parse without context. %s',
+                $this->functionName,
+                $context
+            ));
+        }
+        return $argument->getAttribute('value');
     }
 }

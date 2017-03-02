@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    {% webpack css named 'front_commons_chunk' %}
+        <link rel="stylesheet" href="{{ asset_url }}" id="commons-chunk-css"/>
+    {% end_webpack %}
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+
+{% webpack named js 'front_commons_chunk' %}
+    <script src="{{ asset_url }}" id="commons-chunk-js"></script>
+{% end_webpack %}
+
+{% block javascripts %}{% endblock %}
+
+</body>
+</html>

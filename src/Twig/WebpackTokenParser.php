@@ -2,6 +2,7 @@
 
 namespace Maba\Bundle\WebpackBundle\Twig;
 
+use Maba\Bundle\WebpackBundle\Service\AssetManager;
 use Twig_Token as Token;
 use Twig_TokenParser as TokenParser;
 use Twig_Node_Expression_Function as FunctionExpression;
@@ -11,80 +12,128 @@ use Twig_Node_Set as SetNode;
 use Twig_Node_Expression_AssignName as AssignNameExpression;
 use Twig_Node_Expression_Constant as ConstantExpression;
 use Twig_Error_Syntax as SyntaxError;
+use Twig_TokenStream as TokenStream;
 
 class WebpackTokenParser extends TokenParser
 {
-    private $tag;
+    const TAG_NAME = 'webpack';
+
     private $functionName;
-    private $assetType;
+    private $namedAssetFunctionName;
 
     /**
-     * @param string $tag           tag name, for example webpack_stylesheets. End tag is same with "end_" prefix
-     * @param string $functionName  function name to call to get asset, usually webpack_asset
-     * @param string $assetType     type of asset - second argument to pass to webpack_asset. For example "css"
+     * @param string $functionName function name to call to get asset, usually webpack_asset
+     * @param string $namedAssetFunctionName function name to call to get named asset, usually webpack_named_asset
      */
-    public function __construct($tag, $functionName, $assetType)
+    public function __construct($functionName, $namedAssetFunctionName)
     {
-        $this->tag = $tag;
         $this->functionName = $functionName;
-        $this->assetType = $assetType;
+        $this->namedAssetFunctionName = $namedAssetFunctionName;
     }
     
     public function parse(Token $token)
     {
-        $inputs = array();
-        
         $stream = $this->parser->getStream();
-        while (!$stream->test(Token::BLOCK_END_TYPE)) {
-            if ($stream->test(Token::STRING_TYPE)) {
-                $inputs[] = $stream->next()->getValue();
-            } else {
-                $token = $stream->getCurrent();
-                throw new SyntaxError(sprintf(
-                    'Unexpected token "%s" of value "%s"',
-                    Token::typeToEnglish($token->getType()),
-                    $token->getValue()
-                ), $token->getLine(), $stream->getSourceContext());
-            }
-        }
+        $parsedTag = new ParsedTag($stream);
 
+        while (!$stream->test(Token::BLOCK_END_TYPE)) {
+            $this->parseStream($stream, $parsedTag);
+        }
         $stream->expect(Token::BLOCK_END_TYPE);
 
+        $body = $this->parseBody($stream);
+
+        $nodes = $this->createNodesForInputs($parsedTag, $body, $token->getLine());
+
+        return new Node($nodes);
+    }
+
+    private function parseStream(TokenStream $stream, ParsedTag $parsedTag)
+    {
+        if ($stream->test(Token::STRING_TYPE)) {
+            $parsedTag->addInput($stream->next()->getValue());
+
+        } elseif ($stream->test(Token::NAME_TYPE, AssetManager::TYPE_JS)) {
+            $stream->next();
+            $parsedTag->setType(AssetManager::TYPE_JS);
+
+        } elseif ($stream->test(Token::NAME_TYPE, AssetManager::TYPE_CSS)) {
+            $stream->next();
+            $parsedTag->setType(AssetManager::TYPE_CSS);
+
+        } elseif ($stream->test(Token::NAME_TYPE, 'named')) {
+            $stream->next();
+            $parsedTag->markAsNamed();
+
+        } elseif ($stream->test(Token::NAME_TYPE, 'group')) {
+            $stream->next();
+            $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
+            $parsedTag->setGroup($stream->expect(\Twig_Token::STRING_TYPE)->getValue());
+
+        } else {
+            $token = $stream->getCurrent();
+            /** @noinspection PhpInternalEntityUsedInspection */
+            throw new SyntaxError(sprintf(
+                'Unexpected token "%s" of value "%s"',
+                Token::typeToEnglish($token->getType()),
+                $token->getValue()
+            ), $token->getLine(), $stream->getSourceContext());
+        }
+    }
+
+    private function parseBody(TokenStream $stream)
+    {
         $endTag = 'end_' . $this->getTag();
         $body = $this->parser->subparse(function(Token $token) use ($endTag) {
             return $token->test(array($endTag));
         }, true);
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        $nodes = array();
-        foreach ($inputs as $input) {
-            $nodes[] = $this->createNodeForInput($input, $body, $token->getLine());
-        }
-        return new Node($nodes);
-    }
-    
-    public function getTag()
-    {
-        return $this->tag;
+        return $body;
     }
 
-    private function createNodeForInput($input, $body, $lineNo)
+    private function createNodesForInputs(ParsedTag $parsedTag, Node $body, $lineNo)
     {
-        // webpack_asset('path/asset.css', 'css')
-        $valueExpression = new FunctionExpression(
-            $this->functionName,
-            new Node(array(
-                new ConstantExpression($input, $lineNo),
-                new ConstantExpression($this->assetType, $lineNo),
-            )),
-            $lineNo
+        $nodes = array();
+        foreach ($parsedTag->getInputs() as $input) {
+            $valueExpression = $this->createFunctionExpression($input, $parsedTag, $lineNo);
+            $nodes[] = $this->createAssignAndCheckNode($valueExpression, $body, $lineNo);
+        }
+
+        return $nodes;
+    }
+
+    private function createFunctionExpression($input, ParsedTag $parsedTag, $lineNo)
+    {
+        $functionName = $parsedTag->isNamed() ? $this->namedAssetFunctionName : $this->functionName;
+
+        /** @noinspection PhpParamsInspection */
+        $arguments = array(
+            new ConstantExpression($input, $lineNo),
+            new ConstantExpression($parsedTag->getType(), $lineNo),
         );
 
+        if ($parsedTag->getGroup() !== null) {
+            /** @noinspection PhpParamsInspection */
+            $arguments[] = new ConstantExpression($parsedTag->getGroup(), $lineNo);
+        }
+
+        /** @noinspection PhpParamsInspection */
+        return new FunctionExpression(
+            $functionName,
+            new Node($arguments),
+            $lineNo
+        );
+    }
+
+    private function createAssignAndCheckNode(FunctionExpression $functionExpression, $body, $lineNo)
+    {
         // set asset_url = webpack_asset('path/asset.css', 'css')
+        /** @noinspection PhpParamsInspection */
         $assignExpression = new SetNode(
             false,
             new AssignNameExpression('asset_url', $lineNo),
-            $valueExpression,
+            $functionExpression,
             $lineNo,
             $this->getTag()
         );
@@ -96,5 +145,10 @@ class WebpackTokenParser extends TokenParser
         )), null, $lineNo, $this->getTag());
 
         return new Node(array($assignExpression, $ifBlock));
+    }
+
+    public function getTag()
+    {
+        return self::TAG_NAME;
     }
 }

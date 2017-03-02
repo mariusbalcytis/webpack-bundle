@@ -1,0 +1,5 @@
+webpack_test:
+    resource: '@MabaWebpackTestBundle/Resources/config/routing.xml'
+
+commons_chunk_test:
+    resource: '@MabaTestCommonsChunkBundle/Resources/config/routing.xml'

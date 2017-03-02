@@ -379,6 +379,66 @@ Of course, you can use them in your CSS, too:
 If you are providing webpack-compatible asset path in CSS, prefix it with `~`. Use relative paths as usual.
 See [css-loader](https://github.com/webpack/css-loader) for more information.
 
+Using commons chunk
+----
+
+This bundle supports both single and several
+[commons chunks](https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin),
+but you have to configure this explicitly.
+
+In your `webpack.config.js`:
+
+```js
+config.plugins.push(
+    new webpack.optimize.CommonsChunkPlugin({
+        name: 'commons'
+    })
+);
+```
+
+In your base template:
+
+```twig
+{% webpack named css 'commons' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+{% end_webpack %}
+{# ... #}
+{% webpack named js 'commons' %}
+    <script src="{{ asset_url }}"></script>
+{% end_webpack %}
+```
+
+You can also use `webpack_named_asset` twig function instead of `webpack` tags.
+
+
+### Grouped commons chunks
+
+`webpack` tag supports `group` option:
+
+```twig
+{% webpack js '@app/admin-init.js' group='admin' %}
+    <script src="{{ asset_url }}"></script>
+{% end_webpack %}
+```
+
+Name of assets are given in `options.groups`, which is passed to your `webpack.config.js`.
+Assets without group set are assigned to `default` group. Configuration example:
+
+```js
+config.plugins.push(new webpack.optimize.CommonsChunkPlugin({
+    name: 'admin_commons_chunk',
+    chunks: options.groups['admin']
+}));
+config.plugins.push(new webpack.optimize.CommonsChunkPlugin({
+    name: 'front_commons_chunk',
+    chunks: options.groups['default']
+}));
+```
+
+Keep in mind that currently the same entry point cannot belong to several groups,
+even if it's used in different places. This means that you must provide the same
+group for JavaScript and CSS versions of the same asset.
+
 Semantic versioning
 ----
 

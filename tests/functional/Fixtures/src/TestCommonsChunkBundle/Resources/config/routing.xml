@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="fixtures_maba_test_commons_chunk_admin1" path="/commons-chunk/admin-1">
+        <default key="_controller">FrameworkBundle:Template:template</default>
+        <default key="template">MabaTestCommonsChunkBundle::admin1.html.twig</default>
+    </route>
+    <route id="fixtures_maba_test_commons_chunk_admin2" path="/commons-chunk/admin-2">
+        <default key="_controller">FrameworkBundle:Template:template</default>
+        <default key="template">MabaTestCommonsChunkBundle::admin2.html.twig</default>
+    </route>
+    <route id="fixtures_maba_test_commons_chunk_front1" path="/commons-chunk/front-1">
+        <default key="_controller">FrameworkBundle:Template:template</default>
+        <default key="template">MabaTestCommonsChunkBundle::front1.html.twig</default>
+    </route>
+    <route id="fixtures_maba_test_commons_chunk_front2" path="/commons-chunk/front-2">
+        <default key="_controller">FrameworkBundle:Template:template</default>
+        <default key="template">MabaTestCommonsChunkBundle::front2.html.twig</default>
+    </route>
+</routes>

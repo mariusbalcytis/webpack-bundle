@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    {% set cssUrl = webpack_named_asset('admin_commons_chunk', 'css') %}
+    {% if cssUrl %}
+        <link rel="stylesheet" href="{{ cssUrl }}" id="commons-chunk-css"/>
+    {% endif %}
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+
+<script src="{{ webpack_named_asset('admin_commons_chunk') }}" id="commons-chunk-js"></script>
+{% block javascripts %}{% endblock %}
+
+</body>
+</html>

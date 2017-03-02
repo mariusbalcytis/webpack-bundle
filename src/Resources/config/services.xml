@@ -51,6 +51,7 @@
                  public="false">
             <argument type="service" id="maba_webpack.asset_provider.dynamic_list"/>
             <argument>%maba_webpack.provider_config%</argument>
+            <argument type="service" id="maba_webpack.error_handler"/>
         </service>
 
         <service id="maba_webpack.asset_resolver" class="Maba\Bundle\WebpackBundle\Service\AssetResolver"

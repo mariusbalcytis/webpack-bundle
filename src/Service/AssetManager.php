@@ -31,9 +31,10 @@ class AssetManager
      * Exception is thrown if manifest does not exit, asset is not in the manifest or
      *      type is not provided and cannot be guessed
      *
-     * @param string      $asset
-     * @param string|null $type   specifies type in manifest, usually "js" or "css"
-     * @return string|null        null is returned if type is provided and missing in manifest
+     * @param string $asset
+     * @param string|null $type specifies type in manifest, usually "js" or "css"
+     *
+     * @return string|null null is returned if type is provided and missing in manifest
      *
      * @throws RuntimeException
      *
@@ -41,41 +42,82 @@ class AssetManager
      */
     public function getAssetUrl($asset, $type = null)
     {
-        $manifest = $this->getManifest();
         $assetName = $this->assetNameGenerator->generateName($asset);
-        if (!isset($manifest[$assetName])) {
-            throw new RuntimeException(sprintf(
-                'No information in manifest for %s (key %s). %s',
-                $asset,
-                $assetName,
-                'Is maba:webpack:dev-server running in the background?'
-            ));
-        }
+
+        $manifestEntry = $this->getManifestEntry($assetName, sprintf('%s (key %s)', $asset, $assetName));
 
         if ($type === null) {
-            $entryFileType = $this->entryFileManager->getEntryFileType($asset);
-            $type = $entryFileType !== null ? $entryFileType : self::TYPE_JS;
-            if (!isset($manifest[$assetName][$type])) {
-                throw new RuntimeException(sprintf(
-                    'No information in the manifest for type %s (key %s, asset %s). %s',
-                    $type,
-                    $assetName,
-                    $asset,
-                    'Probably extension is unsupported or some misconfiguration issue. '
-                        . 'If this file should compile to javascript, please extend '
-                        . 'entry_file.disabled_extensions in config.yml'
-                ));
-            }
+            $type = $this->guessFileType($assetName, $asset, $manifestEntry);
         }
 
-        return isset($manifest[$assetName][$type]) ? $manifest[$assetName][$type] : null;
+        return isset($manifestEntry[$type]) ? $manifestEntry[$type] : null;
     }
 
-    private function getManifest()
+    /**
+     * Gets URL for specified named asset - should be used for commons chunks
+     *
+     * Exception is thrown if manifest does not exit or asset is not in the manifest
+     *
+     * Type is not guessed as commons chunk only has a name and no path
+     *
+     * @param string $assetName
+     * @param string|null $type specifies type in manifest, usually "js" or "css"
+     *
+     * @return string|null null is returned if type is provided and missing in manifest
+     *
+     * @throws RuntimeException
+     *
+     * @api
+     */
+    public function getNamedAssetUrl($assetName, $type = null)
+    {
+        $manifestEntry = $this->getManifestEntry(
+            $assetName,
+            $assetName,
+            'This is probably a commons chunk - is it configured by this name in webpack.config.js?'
+        );
+
+        if ($type === null) {
+            $type = self::TYPE_JS;
+        }
+
+        return isset($manifestEntry[$type]) ? $manifestEntry[$type] : null;
+    }
+
+    private function getManifestEntry($assetName, $assetDescription, $additionalErrorInfo = '')
     {
         if ($this->manifest === null) {
             $this->manifest = $this->manifestStorage->getManifest();
         }
-        return $this->manifest;
+
+        if (!isset($this->manifest[$assetName])) {
+            $additionalErrorInfo .= ' Is maba:webpack:dev-server running in the background?';
+            throw new RuntimeException(sprintf(
+                'No information in manifest for %s. %s',
+                $assetDescription,
+                trim($additionalErrorInfo)
+            ));
+        }
+
+        return $this->manifest[$assetName];
+    }
+
+    private function guessFileType($assetName, $asset, $manifestEntry)
+    {
+        $entryFileType = $this->entryFileManager->getEntryFileType($asset);
+        $type = $entryFileType !== null ? $entryFileType : self::TYPE_JS;
+        if (!isset($manifestEntry[$type])) {
+            throw new RuntimeException(sprintf(
+                'No information in the manifest for type %s (key %s, asset %s). %s',
+                $type,
+                $assetName,
+                $asset,
+                'Probably extension is unsupported or some misconfiguration issue. '
+                . 'If this file should compile to javascript, please extend '
+                . 'entry_file.disabled_extensions in config.yml'
+            ));
+        }
+
+        return $type;
     }
 }

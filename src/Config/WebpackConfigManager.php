@@ -11,6 +11,8 @@ use Maba\Bundle\WebpackBundle\Service\AssetResolver;
 
 class WebpackConfigManager
 {
+    const DEFAULT_GROUP_NAME = 'default';
+
     private $aliasManager;
     private $assetCollector;
     private $configDumper;
@@ -45,23 +47,29 @@ class WebpackConfigManager
             $previousConfig !== null ? $previousConfig->getCacheContext() : null
         );
         $entryPoints = array();
+        $assetGroups = array();
         foreach ($assetResult->getAssets() as $asset) {
-            $assetName = $this->assetNameGenerator->generateName($asset);
+            $assetName = $this->assetNameGenerator->generateName($asset->getResource());
             try {
-                $entryPoints[$assetName] = $this->assetResolver->resolveAsset($asset);
+                $entryPoints[$assetName] = $this->assetResolver->resolveAsset($asset->getResource());
             } catch (AssetNotFoundException $exception) {
                 $this->errorHandler->processException($exception);
             }
+
+            $groupName = $asset->getGroup() !== null ? $asset->getGroup() : self::DEFAULT_GROUP_NAME;
+            $assetGroups[$groupName][] = $assetName;
         }
 
         $config = new WebpackConfig();
         $config->setAliases($aliases);
+        $config->setAssetGroups($assetGroups);
         $config->setEntryPoints($entryPoints);
         $config->setCacheContext($assetResult->getContext());
 
         if (
             $previousConfig === null
             || $aliases !== $previousConfig->getAliases()
+            || $assetGroups !== $previousConfig->getAssetGroups()
             || $entryPoints !== $previousConfig->getEntryPoints()
             || !file_exists($previousConfig->getConfigPath())
         ) {

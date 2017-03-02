@@ -1,0 +1,12 @@
+{% extends '@MabaTestCommonsChunk/front.html.twig' %}
+
+{% block stylesheets %}
+    {% webpack css '@maba_test_commons_chunk/front-2.js' %}
+        <link rel="stylesheet" href="{{ asset_url }}" id="main-css"/>
+    {% end_webpack %}
+{% endblock %}
+{% block javascripts %}
+    {% webpack js '@maba_test_commons_chunk/front-2.js' %}
+        <script src="{{ asset_url }}" id="main-js"></script>
+    {% end_webpack %}
+{% endblock %}

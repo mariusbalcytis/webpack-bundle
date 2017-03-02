@@ -1,3 +1,9 @@
+# Upgrade from 0.5 to 0.6
+
+Changed `AssetResult` class - collection of assets are now `AssetItem`
+instances instead of strings. This is important only if you implemented
+`AssetProviderInterface` in your code.
+
 # Upgrade from 0.4 to 0.5
 
 ## TTY prefix

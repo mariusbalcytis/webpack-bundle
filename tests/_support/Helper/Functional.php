@@ -61,6 +61,9 @@ class Functional extends Symfony2
         if (file_exists(__DIR__ . '/../../functional/Fixtures/app/config/webpack.config.js')) {
             unlink(__DIR__ . '/../../functional/Fixtures/app/config/webpack.config.js');
         }
+        if (file_exists(__DIR__ . '/../../functional/Fixtures/app/config/default.js')) {
+            unlink(__DIR__ . '/../../functional/Fixtures/app/config/default.js');
+        }
         if (file_exists(__DIR__ . '/../../functional/Fixtures/web/compiled')) {
             $filesystem->cleanDir(__DIR__ . '/../../functional/Fixtures/web/compiled');
         }
@@ -129,5 +132,10 @@ class Functional extends Symfony2
         if (filesize($smallerFilePath) >= filesize($largerFilePath)) {
             $this->fail("$smallerFilePath is not smaller than $largerFilePath");
         }
+    }
+
+    public function moveFile($sourceFilePath, $destinationFilePath)
+    {
+        rename($sourceFilePath, $destinationFilePath);
     }
 }

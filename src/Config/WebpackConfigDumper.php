@@ -38,6 +38,7 @@ class WebpackConfigDumper
             json_encode($this->includeConfigPath),
             json_encode(array(
                 'entry' => $config->getEntryPoints(),
+                'groups' => $config->getAssetGroups(),
                 'alias' => $config->getAliases(),
                 'manifest_path' => $this->manifestPath,
                 'environment' => $this->environment,
