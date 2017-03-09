@@ -58,7 +58,9 @@ class AliasManager
         foreach ($this->additionalAliases as $alias => $path) {
             $realPath = realpath($path);
             if ($realPath === false) {
-                throw new RuntimeException(sprintf('Alias (%s) path not found: %s', $alias, $path));
+                // just skip - allow non-existing aliases, like default ones
+                unset($aliases['@' . $alias]);
+                continue;
             }
             $aliases['@' . $alias] = $realPath;
         }
