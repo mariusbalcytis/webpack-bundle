@@ -1,1 +1,1 @@
-require('@MabaWebpackTestBundle/Resources/additional-assets/assetB.js');
+require('@MabaWebpackTestBundle/Resources/assets/assetB.js');

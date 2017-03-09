@@ -6,6 +6,7 @@ use Maba\Bundle\WebpackBundle\ErrorHandler\ErrorHandlerInterface;
 use Maba\Bundle\WebpackBundle\Exception\InvalidContextException;
 use Maba\Bundle\WebpackBundle\Exception\InvalidResourceException;
 use Maba\Bundle\WebpackBundle\Exception\ResourceParsingException;
+use Maba\Bundle\WebpackBundle\Twig\WebpackExtension;
 use Twig_Environment as Environment;
 use Twig_Error_Syntax as SyntaxException;
 use Twig_Node as Node;
@@ -13,28 +14,25 @@ use Twig_Source as Source;
 use Twig_Node_Expression_Constant as ConstantFunction;
 use Twig_Node_Expression_Function as ExpressionFunction;
 
-class TwigAssetProvider implements AssetProviderInterface
+class TwigAssetProvider
 {
     private $twig;
-    private $functionName;
     private $errorHandler;
 
     public function __construct(
         Environment $twig,
-        $functionName,
         ErrorHandlerInterface $errorHandler
     ) {
         $this->twig = $twig;
-        $this->functionName = $functionName;
         $this->errorHandler = $errorHandler;
     }
 
-    public function getAssets($resource, $previousContext = null)
+    public function getAssets($fileName, $previousContext = null)
     {
-        if (!is_string($resource)) {
-            throw new InvalidResourceException('Expected string filename as resource', $resource);
-        } elseif (!is_file($resource) || !is_readable($resource) || !stream_is_local($resource)) {
-            throw new InvalidResourceException('File not found, not readable or not local', $resource);
+        if (!is_string($fileName)) {
+            throw new InvalidResourceException('Expected string filename as resource', $fileName);
+        } elseif (!is_file($fileName) || !is_readable($fileName) || !stream_is_local($fileName)) {
+            throw new InvalidResourceException('File not found, not readable or not local', $fileName);
         }
 
         if ($previousContext !== null) {
@@ -51,7 +49,7 @@ class TwigAssetProvider implements AssetProviderInterface
                 );
             }
 
-            if ($previousContext['modified_at'] === filemtime($resource)) {
+            if ($previousContext['modified_at'] === filemtime($fileName)) {
                 $assetResult = new AssetResult();
                 $assetResult->setAssets($previousContext['assets']);
                 $assetResult->setContext($previousContext);
@@ -60,7 +58,7 @@ class TwigAssetProvider implements AssetProviderInterface
         }
 
         try {
-            $tokens = $this->twig->tokenize(new Source(file_get_contents($resource), $resource));
+            $tokens = $this->twig->tokenize(new Source(file_get_contents($fileName), $fileName));
             $node = $this->twig->parse($tokens);
         } catch (SyntaxException $exception) {
             $this->errorHandler->processException(
@@ -69,11 +67,11 @@ class TwigAssetProvider implements AssetProviderInterface
             return new AssetResult();
         }
 
-        $assets = $this->loadNode($node, $resource);
+        $assets = $this->loadNode($node, $fileName);
 
         $assetResult = new AssetResult();
         $assetResult->setAssets($assets);
-        $assetResult->setContext(array('modified_at' => filemtime($resource), 'assets' => $assets));
+        $assetResult->setContext(array('modified_at' => filemtime($fileName), 'assets' => $assets));
         return $assetResult;
     }
 
@@ -97,7 +95,7 @@ class TwigAssetProvider implements AssetProviderInterface
     private function isFunctionNode(Node $node)
     {
         if ($node instanceof ExpressionFunction) {
-            return $node->getAttribute('name') === $this->functionName;
+            return $node->getAttribute('name') === WebpackExtension::FUNCTION_NAME;
         }
 
         return false;
@@ -113,7 +111,7 @@ class TwigAssetProvider implements AssetProviderInterface
         if (count($arguments) < 1 || count($arguments) > 3) {
             throw new ResourceParsingException(sprintf(
                 'Expected one to three arguments passed to function %s. %s',
-                $this->functionName,
+                WebpackExtension::FUNCTION_NAME,
                 $context
             ));
         }
@@ -142,7 +140,7 @@ class TwigAssetProvider implements AssetProviderInterface
         if (!$argument instanceof ConstantFunction) {
             throw new ResourceParsingException(sprintf(
                 'Argument passed to function %s must be text node to parse without context. %s',
-                $this->functionName,
+                WebpackExtension::FUNCTION_NAME,
                 $context
             ));
         }

@@ -168,7 +168,7 @@ module.exports = function makeWebpackConfig(options) {
         new ExtractTextPlugin(
             BUILD ? '[name].[hash].css' : '[name].bundle.css',
             {
-                disable: !options.parameters.extract_css
+                disable: options.parameters.extract_css === false
             }
         )
     ];
@@ -185,7 +185,7 @@ module.exports = function makeWebpackConfig(options) {
             optimizationLevel: 7
         };
 
-    if (process.env.WEBPACK_MODE === 'watch' && process.env.TTY_MODE === 'on') {
+    if (process.env.WEBPACK_DASHBOARD === 'enabled') {
         config.plugins.push(new DashboardPlugin());
     }
 

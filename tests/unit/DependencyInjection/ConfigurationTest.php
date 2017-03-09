@@ -21,17 +21,7 @@ class ConfigurationTest extends Test
         $processor = new Processor();
         $result = $processor->processConfiguration($configuration, array($config));
 
-        $found = false;
-        foreach ($result['asset_providers'] as $assetProvider) {
-            if ($assetProvider['type'] === 'twig_bundles') {
-                $found = true;
-                $this->assertSame($expected, $assetProvider['resource']);
-            }
-        }
-
-        if ($expected === null) {
-            $this->assertFalse($found);
-        }
+        $this->assertSame($expected, $result['enabled_bundles']);
     }
 
     public function bundlesResourceDataProvider()
@@ -43,25 +33,15 @@ class ConfigurationTest extends Test
             ),
             array(
                 array('MyFirstBundle', 'MySecondBundle'),
-                array('asset_providers' => array(array('type' => 'twig_bundles', 'resource' => null))),
-            ),
-            array(
-                array('MyFirstBundle', 'MySecondBundle'),
-                array('asset_providers' => array(array('type' => 'twig_bundles', 'resource' => array()))),
+                array('enabled_bundles' => null),
             ),
             array(
                 array('MyFirstBundle'),
-                array('asset_providers' => array(array(
-                    'type' => 'twig_bundles',
-                    'resource' => array('MyFirstBundle'),
-                ))),
+                array('enabled_bundles' => array('MyFirstBundle')),
             ),
             array(
-                null,
-                array('asset_providers' => array(array(
-                    'type' => 'twig_directory',
-                    'resource' => '%kernel.root_dir%/Resources/views',
-                ))),
+                array(),
+                array('enabled_bundles' => array()),
             ),
         );
     }

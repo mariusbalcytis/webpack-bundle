@@ -1,34 +1,32 @@
 <?php
 
-namespace Maba\Bundle\WebpackBundle\AssetProvider\CollectionResource;
+namespace Maba\Bundle\WebpackBundle\AssetProvider\DirectoryProvider;
 
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Translation\Exception\InvalidResourceException;
 
-class BundlesDirectoriesResource implements CollectionResourceInterface
+class BundlesDirectoryProvider implements DirectoryProviderInterface
 {
-    protected $kernel;
-    protected $relativeDirectory;
+    private $kernel;
+    private $relativeDirectory;
+    private $bundles;
 
     /**
      * @param KernelInterface $kernel
      * @param string $relativeDirectory directory path relative to bundle. For example "/Resources/views"
+     * @param array $bundles
      */
-    public function __construct(KernelInterface $kernel, $relativeDirectory)
+    public function __construct(KernelInterface $kernel, $relativeDirectory, array $bundles)
     {
         $this->kernel = $kernel;
         $this->relativeDirectory = $relativeDirectory;
+        $this->bundles = $bundles;
     }
 
-    public function getInternalResources($resource)
+    public function getDirectories()
     {
-        if (!is_array($resource)) {
-            throw new InvalidResourceException('Expected array of bundle names as a resource', $resource);
-        }
-
         $directories = array();
-        foreach ($resource as $bundleName) {
+        foreach ($this->bundles as $bundleName) {
             /** @var BundleInterface $bundle */
             $bundle = $this->kernel->getBundle($bundleName, true);
             $directory = $bundle->getPath() . $this->relativeDirectory;

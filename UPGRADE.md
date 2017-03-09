@@ -1,5 +1,73 @@
 # Upgrade from 0.5 to 0.6
 
+## Configuration changes
+
+Configuration of the bundle was changed so that it would be more clear
+and semantic:
+- `twig.function_name` was removed and is always `webpack_asset`;
+- `asset_providers` was totally removed, use the following instead:
+  - `enabled_bundles` to parse twig templates only in some bundles that you
+  need;
+  - `twig.additional_directories` to parse twig templates in additional provided
+  directories. `%kernel.root_dir%/Resources/views` is always parsed if it exists;
+  - custom asset providers does not need additional configuration and are always
+  called;
+- `aliases.register_bundles` was removed - it's now the same as `enabled_bundles`
+- `bin.webpack.tty_prefix` and `bin.dev_server.tty_prefix` were removed and
+`dashboard` configuration node added instead. This makes the bundle aware of
+`WebpackDashboard` explicitly, so now it passes `WEBPACK_DASHBOARD` environment
+variable into `webpack.config.js` (with value `enabled`) if dashboard is used,
+`TTY_MODE` is no passed.
+This also allows extending functionality if some other changes to dashboard
+would be needed;
+- default `webpack.config.js` configuration extracts CSS by default, so if you
+had `config.parameters.extract_css` set to `true`, you could just remove it.
+If it was not set and you do not need extracting CSS, set `config.parameters.extract_css`
+to `false`;
+- default executables were changed from `[node, node_modules/package/bin/package.js]`
+into `[node_modules/.bin/package]` - this should be backwards compatible.
+
+So, if you had this configuration:
+```yml
+maba_webpack:
+    asset_providers:
+        -
+            type:     twig_bundles
+            resource: [ApplicationBundle]
+        -
+            type:     twig_directory
+            resource: %kernel.root_dir%/Resources/views
+        -
+            type:     twig_directory
+            resource: %kernel.root_dir%/Resources/other-directory
+    aliases:                            # allows to set aliases inside require() in your JS files
+        register_bundles:               # defaults to all bundles
+            - ApplicationBundle
+    bin:
+        webpack:
+            tty_prefix: [/my/path/to/node, node_modules/webpack-dashboard/bin/webpack-dashboard.js]
+        dev_server:
+            tty_prefix: [/my/path/to/node, node_modules/webpack-dashboard/bin/webpack-dashboard.js]
+```
+
+Now it would be like this:
+```yml
+maba_webpack:
+    enabled_bundles:
+        - ApplicationBundle
+    twig:
+        additional_directories:
+            - %kernel.root_dir%/Resources/other-directory
+    config:
+        parameters:
+            extract_css: false
+    dashboard:
+        enabled: always
+        executable: [/my/path/to/node, node_modules/webpack-dashboard/bin/webpack-dashboard.js]
+```
+
+## Changed twig tags
+
 Removed `webpack_javascript`, `webpack_stylesheets` and `webpack_assets` twig
 tags - replace them with `webpack` tag and use `js` or `css` token if needed.
 
@@ -33,9 +101,22 @@ To this:
 {% end_webpack %}
 ```
 
-Changed `AssetResult` class - collection of assets are now `AssetItem`
-instances instead of strings. This is important only if you implemented
-`AssetProviderInterface` in your code.
+This allows extending functionality (like adding `named` for commons chunk assets)
+and still using single tag.
+
+## Asset providers refactored
+
+Asset provider functionality was refactored - this is important only
+if you implemented `AssetProviderInterface` or `CollectionResourceInterface`
+in your code. Changes:
+- changed `AssetResult` class - collection of assets are now `AssetItem`
+instances instead of strings
+- changed `AssetProviderInterface::getAssets` - it does not take `$resource`
+ as an argument anymore
+- removed `CollectionResourceInterface` interface
+- if you implement `AssetProviderInterface` and tag service with
+`maba_webpack.asset_provider`, no further configuration is needed in
+`config.yml` - `getAssets` will be always called and given assets compiled.
 
 # Upgrade from 0.4 to 0.5
 

@@ -11,12 +11,11 @@ use Maba\Bundle\WebpackBundle\Exception\InvalidResourceException;
 interface AssetProviderInterface
 {
     /**
-     * @param mixed $resource value must be json_encode'able (scalar|array)
      * @param mixed|null $previousContext
      * @return AssetResult
      *
      * @throws InvalidResourceException
      * @throws InvalidContextException
      */
-    public function getAssets($resource, $previousContext = null);
+    public function getAssets($previousContext = null);
 }

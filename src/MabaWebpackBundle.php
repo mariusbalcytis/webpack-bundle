@@ -11,10 +11,9 @@ class MabaWebpackBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new AddTaggedCompilerPass(
-            'maba_webpack.asset_provider.dynamic',
+            'maba_webpack.asset_collector',
             'maba_webpack.asset_provider',
-            'addProvider',
-            array('type')
+            'addAssetProvider'
         ));
     }
 }

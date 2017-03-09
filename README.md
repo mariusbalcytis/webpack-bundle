@@ -56,7 +56,7 @@ to do that (for example, you can look at [HearsayRequireJSBundle](https://github
 as an alternative).
 
 webpack-dev-server supports hot-reload of your files, sometimes without page refresh
-(perfect for styling and some JS frameworks).
+(perfect for styling and some JS frameworks, like React).
 
 Installation
 ----
@@ -107,13 +107,28 @@ Usage
 Inside twig templates:
 
 ```twig
-<script src="{{ webpack_asset('@ApplicationBundle/Resources/assets/script.js') }}"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    {% webpack css '@app/bootstrap.less' '@ApplicationBundle/Resources/assets/script.js' %}
+        <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% end_webpack %}
+</head>
+<body>
+    
+    <img src="{{ webpack_asset('@app/funny-kitten.png') }}"/>
+    
+    <script src="{{ webpack_asset('@ApplicationBundle/Resources/assets/script.js') }}"></script>
+</body>
+</html>
 ```
 
 Inside `script.js`:
 
 ```js
 require('./script2.js');
+require('./my-styles.less');
 
 function loadScript3() {
     require.ensure([], function() {
@@ -121,6 +136,7 @@ function loadScript3() {
         require('style.css');
     });
 }
+setTimeout(loadScript3, 1000);
 ```
 
 As part of deployment into production environment:
@@ -141,6 +157,91 @@ forget about it, similarly to production environment:
 ```bash
 app/console maba:webpack:compile
 ```
+
+Twig function and tag
+----
+
+You can choose between `webpack_asset` function and `webpack` tag.
+
+Function:
+```
+webpack_asset(resource, type = null)
+```
+
+`type` is `js` or `css`, leave `null` to guess the type. For `css` this function could return `null` if no CSS would
+be extracted from provided entry point. If you are sure that there will be some CSS, you could just ignore this.
+Otherwise, you could use `webpack` tag as it handles this for you (omits the `<link/>` tag at all in that case).
+
+Tag:
+```twig
+{% webpack [js|css] [named] [group=...] resource [resource, ...] %}
+    Content that will be repeated for each compiled resource.
+    {{ asset_url }} - inside this block this variable holds generated URL for current resource
+{% end_webpack %}
+```
+
+As with function, provide `js`, `css` or leave it out to guess the type.
+
+See usage with `named` and `group` in [Using commons chunk](#using-commons-chunk) section.
+
+Keep in mind that you must provide hard-coded asset paths in both tag and function.
+This is to find all available assets in compile-time.
+
+Stylesheets
+----
+
+By default, [ExtractTextPlugin](https://github.com/webpack-contrib/extract-text-webpack-plugin) is configured. This means
+that if you `require` any file that compiles to CSS (`.css`, `.less`, `.scss`) it is removed from compiled JS file
+and stored into a separate one. So you have to include it explicitly.
+
+Keep in mind that when you are providing entry point - it's still usually `.js` file (see usage example).
+
+If you want to disable this functionality so that CSS would be loaded together with JS in a single request,
+disable `extract_css`:
+
+```yml
+maba_webpack:
+    config:
+        parameters:
+            extract_css: false
+```
+
+This plugin is also needed if you want to require css/less/sass files directly as an entry point.
+
+ES6, Less and Sass support
+----
+ES6, Less and Sass works out of the box:
+
+- use `.js` or `.jsx` extension to compile from ES6 and ES7 to ES5 using [Babel](https://babeljs.io/);
+- use `.less` extension to compile [Less](http://lesscss.org/) files;
+- use `.scss` extension to compile [Sass](http://sass-lang.com/) files.
+
+If you need any custom loaders, feel free to install them via `npm` and modify `app/config/webpack.config.js` if needed.
+
+Loading images
+----
+Images are optimized by default using [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader).
+
+You can include images directly into your twig templates by using the same `webpack_asset` function.
+
+For this to work correctly, loader for image files must remain `file` in your webpack configuration.
+
+```twig
+<img src="{{ webpack_asset('@AcmeHelloBundle/Resources/images/cat.png') }}"/>
+```
+
+Of course, you can use them in your CSS, too:
+
+```css
+.cat {
+    /* cat.png will be optimized and copied to compiled directory with hashed file name */
+    /* URL to generated image file will be in the css output  */
+    background: url("~@AcmeHelloBundle/Resources/images/cat.png")
+}
+```
+
+If you are providing webpack-compatible asset path in CSS, prefix it with `~`. Use relative paths as usual.
+See [css-loader](https://github.com/webpack/css-loader) for more information.
 
 Aliases
 ----
@@ -187,16 +288,11 @@ See example with explanations.
 
 ```yml
 maba_webpack:
-    # this configures providers which gives all entry points
-    # you can create your own type if you need to provide entry points in any other way
-    asset_providers:    # if you overwrite this, be sure to explicitly provide default configuration if needed
-        -
-            type:     twig_bundles  # analyses twig templates inside given bundles
-            resource: [ApplicationBundle] # leave empty for all the bundles
-        -
-            type:     twig_directory # analyses twig templates inside given directory
-            resource: %kernel.root_dir%/Resources/views
+    enabled_bundles:
+        - ApplicationBundle
     twig:
+        additional_directories:
+            - %kernel.root_dir%/Resources/partials
         suppress_errors:      true              # whether files not found or twig parse errors should be ignored
                                                 # defaults to true in dev environment
                                                 # defaults to "ignore_unkwowns" in prod - this option ignores
@@ -212,9 +308,6 @@ maba_webpack:
         manifest_file_path:        '%kernel.cache_dir%/webpack_manifest.php'
 
     aliases:                            # allows to set aliases inside require() in your JS files
-        register_bundles:               # defaults to all bundles
-            - ApplicationBundle
-            - AnyOtherBundle
         path_in_bundle:       /Resources/assets     # this means that require('@acme_hello/a.js')
                                                     # will include something like
                                                     # src/Acme/Bundles/AcmeHelloBundle/Resources/assets/a.js
@@ -223,20 +316,13 @@ maba_webpack:
     bin:
         webpack:
             executable: # how maba:webpack:compile executes webpack
-                        # should be array, for example [webpack]
-                - node
-                - node_modules/webpack/bin/webpack.js
-            tty_prefix: []              # prefix for command, only in TTY mode
+                        # should be array, for example ['/usr/bin/node', 'node_modules/webpack/bin/webpack.js']
+                - node_modules/.bin/webpack
             arguments:            []    # additional parameters to pass to webpack
                                         # --config with configuration path is always passed
         dev_server:
             executable: # how maba:webpack:dev-server executes webpack-dev-server
-                - node
-                - node_modules/webpack-dev-server/bin/webpack-dev-server.js
-            tty_prefix: # prefix for command, only in TTY mode. Set to [] to disable dashboard
-                - node
-                - node_modules/webpack-dashboard/bin/webpack-dashboard.js
-                - "--"
+                - node_modules/.bin/webpack-dev-server
             arguments:  # additional parameters to pass to webpack-dev-server; these are default ones
                 - --hot
                 - --history-api-fallback
@@ -244,6 +330,12 @@ maba_webpack:
         disable_tty: false      # disables TTY setting. Defaults to false in dev environment, true in others.
                                 # TTY is needed to run dashboard and/or to display colors, but does not work
                                 # in some environments like AWS
+        working_directory: %kernel.root_dir%/..
+        
+    dashboard:                  # configuration for dashboard plugin - only works when TTY available
+        enabled: dev_server     # `always` for both compile and dev-server, `false` to disable
+        executable:
+            - node_modules/.bin/webpack-dashboard
 ```
 
 ## Configuring dev-server
@@ -288,95 +380,6 @@ maba_webpack:
                 - "--max-old-space-size=4096"   # 4GB
                 - node_modules/webpack/bin/webpack.js
 ```
-
-Loading CSS with stylesheets
-----
-
-By default, CSS is loaded and applied from inside your javascript code. There are no additional requests to the server,
-but if you want to load CSS instantly from `<link>` tag, enable `ExtractTextPlugin`:
-
-```yml
-maba_webpack:
-    config:
-        parameters:
-            extract_css: true
-```
-
-This is also required if you want to include css/less/sass files directly by `webpack_asset` function.
-
-In your twig template:
-
-```twig
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    {% set cssUrl = webpack_asset('@ApplicationBundle/Resources/assets/main.js', 'css') %}
-    {% if cssUrl %}
-        <link rel="stylesheet" href="{{ cssUrl }}"/>
-    {% endif %}
-</head>
-<body>
-    <script src="{{ webpack_asset('@ApplicationBundle/Resources/assets/main.js') }}"></script>
-</body>
-</html>
-```
-
-Normally you would only need to load `<script>` tag and all `require()`d styles would be loaded automatically.
-
-### `webpack` tag
-
-To avoid setting CSS URL to a temporary variable, you can use `webpack` tag:
-
-```twig
-{% webpack css '@ApplicationBundle/Resources/assets/main.js' %}
-    <link rel="stylesheet" href="{{ asset_url }}"/>
-{% end_webpack %}
-```
-
-You can provide more than one input file in this tag - they will not be merged together,
-the code inside the tag will just be repeated with every generated asset.
-
-You can provide `js` instead of `css` to use this for javascript content and leave it out at all to guess the type
-for each asset - this can be used with images.
-
-Keep in mind that you must provide hard-coded asset paths here, same as in `webpack_asset`
-function. This is to find all available assets in compile-time.
-
-ES6, Less and Sass support
-----
-ES6, Less and Sass works out of the box:
-
-- use `.js` or `.jsx` extension to compile from ES6 and ES7 to ES5 using [Babel](https://babeljs.io/);
-- use `.less` extension to compile [Less](http://lesscss.org/) files;
-- use `.scss` extension to compile [Sass](http://sass-lang.com/) files.
-
-If you need any custom loaders, feel free to install them via `npm` and modify `app/config/webpack.config.js` if needed.
-
-Loading images
-----
-Images are optimized by default using [image-webpack-loader](https://github.com/tcoopman/image-webpack-loader).
-
-You can include images directly into your twig templates by using the same `webpack_asset` function.
-
-For this to work correctly, loader for image files must remain `file` in your webpack configuration.
-
-```twig
-<img src="{{ webpack_asset('@AcmeHelloBundle/Resources/images/cat.png') }}"/>
-```
-
-Of course, you can use them in your CSS, too:
-
-```css
-.cat {
-    /* cat.png will be optimized and copied to compiled directory with hashed file name */
-    /* URL to generated image file will be in the css output  */
-    background: url("~@AcmeHelloBundle/Resources/images/cat.png")
-}
-```
-
-If you are providing webpack-compatible asset path in CSS, prefix it with `~`. Use relative paths as usual.
-See [css-loader](https://github.com/webpack/css-loader) for more information.
 
 Using commons chunk
 ----
@@ -447,9 +450,9 @@ Public API of this bundle (in other words, you should only use these features if
 to new versions):
 - only services that are not marked as `public="false"`
 - only classes, interfaces and class methods that are marked with `@api`
-- twig functions
+- twig functions and tags
 - console commands
-- supported tags
+- supported DIC tags
 
 For example, if only class method is marked with `@api`, you should not extend that class, as constructor
 could change in any release.
@@ -500,7 +503,7 @@ In development environment, it generates assets on request. This can be more con
 to run specific command in the background, but is usually slower. Also at this point it's kind of hard
 to integrate it with webpack-dev-server.
 
-It has more tags for twig, like inline scripts or list of scripts to load. One example is inline splitpoint
+It has more tags for twig, like inline scripts. One example is inline splitpoint
 generation which allows you to generate simple splitpoints per file.
 
 ## Running tests

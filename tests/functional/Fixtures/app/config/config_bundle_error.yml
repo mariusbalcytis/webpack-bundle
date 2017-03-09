@@ -1,9 +1,11 @@
 imports: [{resource: 'common.yml'}]
 
 maba_webpack:
-    asset_providers:
-        -
-            type: twig_bundles
-            resource: [MabaWebpackTestBundle, MabaWebpackAnotherTestBundle]
+    enabled_bundles:
+        - MabaWebpackTestBundle
+        - MabaWebpackAnotherTestBundle
     twig:
         suppress_errors: false
+    config:
+        parameters:
+            extract_css: false

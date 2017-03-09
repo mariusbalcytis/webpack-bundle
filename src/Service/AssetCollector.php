@@ -2,6 +2,7 @@
 
 namespace Maba\Bundle\WebpackBundle\Service;
 
+use ArrayObject;
 use Maba\Bundle\WebpackBundle\AssetProvider\AssetItem;
 use Maba\Bundle\WebpackBundle\AssetProvider\AssetProviderInterface;
 use Maba\Bundle\WebpackBundle\AssetProvider\AssetResult;
@@ -10,18 +11,24 @@ use Maba\Bundle\WebpackBundle\Exception\ResourceParsingException;
 
 class AssetCollector
 {
-    private $assetProvider;
-    private $config;
+    /**
+     * @var AssetProviderInterface[]
+     */
+    private $assetProviders = array();
     private $errorHandler;
 
     public function __construct(
-        AssetProviderInterface $assetProvider,
-        array $config,
         ErrorHandlerInterface $errorHandler
     ) {
-        $this->assetProvider = $assetProvider;
-        $this->config = $config;
         $this->errorHandler = $errorHandler;
+    }
+
+    /**
+     * @param AssetProviderInterface $assetProvider
+     */
+    public function addAssetProvider(AssetProviderInterface $assetProvider)
+    {
+        $this->assetProviders[] = $assetProvider;
     }
 
     /**
@@ -30,10 +37,24 @@ class AssetCollector
      */
     public function getAssets($previousContext = null)
     {
-        $assetResult = $this->assetProvider->getAssets($this->config, $previousContext);
+        $context = array();
+        $groupedAssets = new ArrayObject();
+        foreach ($this->assetProviders as $i => $assetProvider) {
+            $assetResult = $assetProvider->getAssets(isset($previousContext[$i]) ? $previousContext[$i] : null);
+            $context[$i] = $assetResult->getContext();
+            $this->mergeAssets($groupedAssets, $assetResult->getAssets());
+        }
 
-        $groupedAssets = array();
-        foreach ($assetResult->getAssets() as $asset) {
+        return $this->buildResult($groupedAssets, $context);
+    }
+
+    /**
+     * @param ArrayObject $groupedAssets
+     * @param AssetItem[] $assets
+     */
+    private function mergeAssets(ArrayObject $groupedAssets, $assets)
+    {
+        foreach ($assets as $asset) {
             if (isset($groupedAssets[$asset->getResource()])) {
                 $this->checkSameGroup($groupedAssets[$asset->getResource()], $asset);
                 continue;
@@ -41,10 +62,6 @@ class AssetCollector
 
             $groupedAssets[$asset->getResource()] = $asset;
         }
-
-        $assetResult->setAssets(array_values($groupedAssets));
-
-        return $assetResult;
     }
 
     private function checkSameGroup(AssetItem $assetOne, AssetItem $assetTwo)
@@ -59,5 +76,13 @@ class AssetCollector
                 ))
             );
         }
+    }
+
+    private function buildResult(ArrayObject $groupedAssets, $context)
+    {
+        $result = new AssetResult();
+        $result->setAssets(array_values((array)$groupedAssets));
+        $result->setContext($context);
+        return $result;
     }
 }

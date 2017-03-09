@@ -2,17 +2,17 @@
 <html>
 <head>
     <meta charset="utf-8">
-    {% set cssUrl = my_custom_function('@MabaWebpackTestBundle/Resources/assets/customized.js', 'css') %}
+    {% set cssUrl = webpack_asset('@MabaWebpackTestBundle/Resources/assets/customized.js', 'css') %}
     {% if cssUrl %}
     <link rel="stylesheet" id="css1" href="{{ cssUrl }}"/>
     {% endif %}
 
-    <link rel="stylesheet" id="css2" href="{{ my_custom_function('@MabaWebpackTestBundle/Resources/assets/style.less') }}"/>
+    <link rel="stylesheet" id="css2" href="{{ webpack_asset('@MabaWebpackTestBundle/Resources/assets/style.less') }}"/>
 </head>
 <body>
-<script src="{{ my_custom_function('@MabaWebpackTestBundle/Resources/assets/customized.js') }}"></script>
+<script src="{{ webpack_asset('@MabaWebpackTestBundle/Resources/assets/customized.js') }}"></script>
 
-<img src="{{ my_custom_function('@MabaWebpackTestBundle/Resources/assets/cat.png') }}"/>
+<img src="{{ webpack_asset('@MabaWebpackTestBundle/Resources/assets/cat.png') }}"/>
 
 </body>
 </html>

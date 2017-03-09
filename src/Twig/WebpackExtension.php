@@ -12,18 +12,16 @@ class WebpackExtension extends Extension
     const NAMED_ASSET_FUNCTION_NAME = 'webpack_named_asset';
 
     protected $assetManager;
-    protected $functionName;
 
-    public function __construct(AssetManager $assetManager, $functionName = self::FUNCTION_NAME)
+    public function __construct(AssetManager $assetManager)
     {
         $this->assetManager = $assetManager;
-        $this->functionName = $functionName;
     }
 
     public function getFunctions()
     {
         return array(
-            new SimpleFunction($this->functionName, array($this, 'getAssetUrl')),
+            new SimpleFunction(self::FUNCTION_NAME, array($this, 'getAssetUrl')),
             new SimpleFunction(self::NAMED_ASSET_FUNCTION_NAME, array($this, 'getNamedAssetUrl')),
         );
     }
@@ -31,7 +29,7 @@ class WebpackExtension extends Extension
     public function getTokenParsers()
     {
         return array(
-            new WebpackTokenParser($this->functionName, self::NAMED_ASSET_FUNCTION_NAME),
+            new WebpackTokenParser(self::FUNCTION_NAME, self::NAMED_ASSET_FUNCTION_NAME),
         );
     }
 

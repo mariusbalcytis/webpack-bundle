@@ -5,52 +5,48 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="maba_webpack.asset_provider.dynamic"
-                 class="Maba\Bundle\WebpackBundle\AssetProvider\DynamicAssetProvider" public="false">
-            <!-- addProvider is called for each service tagged with maba_webpack.asset_provider  -->
-        </service>
-
-        <!-- Iterates through given resource and gives each element to dynamic provider. Used as root provider -->
-        <service id="maba_webpack.asset_provider.dynamic_list"
-                 class="Maba\Bundle\WebpackBundle\AssetProvider\CollectionResourceAssetProvider" public="false">
-            <argument type="service">
-                <service class="Maba\Bundle\WebpackBundle\AssetProvider\CollectionResource\ArrayCollectionResource"/>
-            </argument>
-            <argument type="service" id="maba_webpack.asset_provider.dynamic"/>
-        </service>
-
         <service id="maba_webpack.asset_provider.twig_file"
-                 class="Maba\Bundle\WebpackBundle\AssetProvider\TwigAssetProvider">
-            <tag name="maba_webpack.asset_provider" type="twig_file"/>
-
+                 class="Maba\Bundle\WebpackBundle\AssetProvider\TwigAssetProvider"
+                 public="false">
             <argument type="service" id="twig"/>
-            <argument>%maba_webpack.twig_function_name%</argument>
             <argument type="service" id="maba_webpack.error_handler"/>
         </service>
 
-        <service id="maba_webpack.asset_provider.twig_directory"
-                 class="Maba\Bundle\WebpackBundle\AssetProvider\CollectionResourceAssetProvider">
-            <tag name="maba_webpack.asset_provider" type="twig_directory"/>
+        <service id="maba_webpack.directory_provider.configured"
+                 class="Maba\Bundle\WebpackBundle\AssetProvider\DirectoryProvider\ConfiguredDirectoryProvider"
+                 public="false">
+            <argument>%maba_webpack.twig_directories%</argument>
+        </service>
+        <service id="maba_webpack.directory_provider.bundles"
+                 class="Maba\Bundle\WebpackBundle\AssetProvider\DirectoryProvider\BundlesDirectoryProvider"
+                 public="false">
+            <argument type="service" id="kernel"/>
+            <argument>/Resources/views</argument>
+            <argument>%maba_webpack.enabled_bundles%</argument>
+        </service>
 
-            <argument type="service">
-                <service class="Maba\Bundle\WebpackBundle\AssetProvider\CollectionResource\DirectoryResource">
-                    <argument>*.twig</argument>
-                </service>
-            </argument>
+        <service id="maba_webpack.asset_provider.twig_directory.base"
+                 class="Maba\Bundle\WebpackBundle\AssetProvider\TwigDirectoryAssetProvider"
+                 abstract="true"
+                 public="false">
             <argument type="service" id="maba_webpack.asset_provider.twig_file"/>
+            <argument>*.twig</argument>
+        </service>
+
+        <service id="maba_webpack.asset_provider.twig_configured_directory"
+                 parent="maba_webpack.asset_provider.twig_directory.base"
+                 public="false">
+            <tag name="maba_webpack.asset_provider"/>
+
+            <argument type="service" id="maba_webpack.directory_provider.configured"/>
         </service>
 
         <service id="maba_webpack.asset_provider.twig_bundles"
-                 class="Maba\Bundle\WebpackBundle\AssetProvider\CollectionResourceAssetProvider">
-            <tag name="maba_webpack.asset_provider" type="twig_bundles"/>
+                 parent="maba_webpack.asset_provider.twig_directory.base"
+                 public="false">
+            <tag name="maba_webpack.asset_provider"/>
 
-            <argument type="service">
-                <service class="Maba\Bundle\WebpackBundle\AssetProvider\CollectionResource\BundlesDirectoriesResource">
-                    <argument type="service" id="kernel"/>
-                    <argument>/Resources/views</argument>
-                </service>
-            </argument>
-            <argument type="service" id="maba_webpack.asset_provider.twig_directory"/>
+            <argument type="service" id="maba_webpack.directory_provider.bundles"/>
         </service>
     </services>
 </container>

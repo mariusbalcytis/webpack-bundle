@@ -1,22 +1,13 @@
 imports: [{resource: 'common.yml'}]
 
 maba_webpack:
-    asset_providers:
-        -
-            type: twig_directory
-            resource: %kernel.root_dir%/Resources/views
+    enabled_bundles:
+        - MabaWebpackTestBundle
     config:
         parameters:
-            extract_css: true
             public_path: /assets/
             path: %kernel.root_dir%/../web/assets/
-    twig:
-        function_name:        my_custom_function
-        suppress_errors:      false
     aliases:
-        register_bundles:
-            - MabaWebpackTestBundle
-        path_in_bundle:       /Resources/additional-assets
         additional:
             'a': %kernel.root_dir%/../src/WebpackTestBundle/Resources/assets
             'app': %kernel.root_dir%/Resources/assets
