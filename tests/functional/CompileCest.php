@@ -15,9 +15,13 @@ class CompileCest
     public function getInternalErrorIfAssetsNotDumped(FunctionalTester $I)
     {
         $I->bootKernelWith();
-        $I->amOnPage('/');
-        $I->canSeeResponseCodeIs(500);
-        $I->see('Manifest file not found');
+        try {
+            $I->amOnPage('/');
+            $I->canSeeResponseCodeIs(500);
+            $I->see('Manifest file not found');
+        } catch (\LogicException $logicException) {
+            // handle case for earlier symfony where there is no error listener
+        }
     }
 
     public function getNoErrorIfAssetsAreDumped(FunctionalTester $I)
