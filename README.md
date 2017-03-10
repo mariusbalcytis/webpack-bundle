@@ -209,10 +209,7 @@ maba_webpack:
                                             # http://localhost:8080/compiled/ and /compiled/
                                             # see inside your webpack.config.js for more info
         # set location of cached manifests. Useful for deploy, when you don't want to include your cache directory
-        json_manifest_file_path:   '%kernel.cache_dir%/webpack_manifest.json'
         manifest_file_path:        '%kernel.cache_dir%/webpack_manifest.php'
-        root_directory:            '%kernel.root_dir%/..'
-        webpack_entry_config_path: '%kernel.cache_dir%/webpack.config.js'
 
     aliases:                            # allows to set aliases inside require() in your JS files
         register_bundles:               # defaults to all bundles

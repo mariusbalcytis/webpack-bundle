@@ -25,10 +25,12 @@
         <parameter key="maba_webpack.bin.dev_server.tty_prefix"/>
         <parameter key="maba_webpack.bin.dev_server.arguments"/>
         <parameter key="maba_webpack.bin.disable_tty"/>
-        <parameter key="maba_webpack.config.webpack_entry_config_path"/>
         <parameter key="maba_webpack.config.manifest_file_path"/>
-        <parameter key="maba_webpack.config.json_manifest_file_path"/>
-        <parameter key="maba_webpack.config.root_directory"/>
+
+        <!-- Not configurable from config.yml -->
+        <parameter key="maba_webpack.webpack_entry_config_path">%kernel.cache_dir%/webpack.config.js</parameter>
+        <parameter key="maba_webpack.json_manifest_file_path">%kernel.cache_dir%/webpack_manifest.json</parameter>
+        <parameter key="maba_webpack.root_directory">%kernel.root_dir%/..</parameter>
     </parameters>
 
     <services>
@@ -85,9 +87,9 @@
         <service id="maba_webpack.webpack_compiler"
                  class="Maba\Bundle\WebpackBundle\Compiler\WebpackCompiler" public="false">
             <argument type="service" id="maba_webpack.webpack_config_manager"/>
-            <argument>%maba_webpack.config.json_manifest_file_path%</argument>
+            <argument>%maba_webpack.json_manifest_file_path%</argument>
             <argument type="service" id="maba_webpack.manifest_storage"/>
-            <argument>%maba_webpack.config.root_directory%</argument>
+            <argument>%maba_webpack.root_directory%</argument>
             <argument type="service" id="logger"/>
             <argument>%maba_webpack.bin.webpack.executable%</argument>
             <argument>%maba_webpack.bin.webpack.tty_prefix%</argument>
@@ -105,9 +107,9 @@
 
         <service id="maba_webpack.config_dumper" class="Maba\Bundle\WebpackBundle\Config\WebpackConfigDumper"
                  public="false">
-            <argument>%maba_webpack.config.webpack_entry_config_path%</argument>
+            <argument>%maba_webpack.webpack_entry_config_path%</argument>
             <argument>%maba_webpack.webpack_config_path%</argument>
-            <argument>%maba_webpack.config.json_manifest_file_path%</argument>
+            <argument>%maba_webpack.json_manifest_file_path%</argument>
             <argument>%kernel.environment%</argument>
             <argument>%maba_webpack.webpack_config_parameters%</argument>
         </service>
