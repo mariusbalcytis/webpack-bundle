@@ -68,8 +68,10 @@ module.exports = function makeWebpackConfig(options) {
          * Reference: https://webpack.js.org/configuration/dev-server/
          */
         devServer: {
-            warnings: false,
-            errors: true
+            overlay: {
+                warnings: false,
+                errors: true
+            }
         }
     };
 
