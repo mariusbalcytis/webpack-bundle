@@ -84,7 +84,8 @@ class WebpackProcessBuilder
             $this->addDashboard($process);
         }
 
-        if (DIRECTORY_SEPARATOR !== '\\') {
+        // from symfony 3.3 exec is added automatically
+        if (DIRECTORY_SEPARATOR !== '\\' && substr($process->getCommandLine(), 0, 5) !== 'exec ') {
             $process->setCommandLine('exec ' . $process->getCommandLine());
         }
 

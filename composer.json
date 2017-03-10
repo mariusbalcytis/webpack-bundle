@@ -37,5 +37,6 @@
         "psr-4": {
             "Fixtures\\Maba\\Bundle\\": "tests/functional/Fixtures/src"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
