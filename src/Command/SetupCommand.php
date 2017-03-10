@@ -3,6 +3,7 @@
 namespace Maba\Bundle\WebpackBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -60,6 +61,8 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->addStylesConfiguration($output);
+
         $useWebpackV1 = $input->getOption('useWebpackV1');
         $pathToPackage = $useWebpackV1 ? $this->pathToPackageV1 : $this->pathToPackageV2;
         $pathToWebpackConfig = $useWebpackV1 ? $this->pathToWebpackConfigV1 : $this->pathToWebpackConfigV2;
@@ -114,25 +117,38 @@ EOT
 
     private function installNodeModules(InputInterface $input, OutputInterface $output)
     {
-        $process = new Process('npm install', $this->rootDirectory);
-        $question = new ConfirmationQuestion(
-            sprintf('<question>Should I install node dependencies?</question> (%s) [Yn] ', $process->getCommandLine()),
-            true
-        );
-        if ($this->ask($input, $output, $question)) {
-            $process->setTimeout(600);
-            $process->run(function($type, $buffer) use ($output) {
-                $output->write($buffer);
-            });
-        } else {
-            $output->writeln('Please update dependencies manually before compiling webpack assets');
+        $process = new Process('yarn --version');
+        $yarnInstalled = $process->run() === 0;
+        $process = new Process('npm --version');
+        $npmInstalled = $process->run() === 0;
+
+        if (!$yarnInstalled && !$npmInstalled) {
+            $this->outputDependenciesError($output);
+            return;
         }
-        $output->writeln(
-            'Run <bg=white;fg=black>maba:webpack:compile</> to compile assets when deploying'
-        );
-        $output->writeln(
-            'Always run <bg=white;fg=black>maba:webpack:dev-server</> in dev environment'
-        );
+
+        if (!$yarnInstalled) {
+            $this->outputYarnSuggestion($output);
+        }
+
+        $process = new Process($yarnInstalled ? 'yarn install' : 'npm install', $this->rootDirectory);
+        if (!$this->askIfInstallNeeded($input, $output, $process)) {
+            return;
+        }
+
+        $this->runProcess($process, $output);
+
+        $filesForGit = array('package.json', 'app/config/webpack.config.js');
+        if ($yarnInstalled) {
+            $filesForGit[] = 'yarn.lock';
+        }
+        $this->outputAdditionalActions($output, $filesForGit);
+    }
+
+    private function addStylesConfiguration(OutputInterface $output)
+    {
+        $output->getFormatter()->setStyle('code', new OutputFormatterStyle('white', 'black', array('bold')));
+        $output->getFormatter()->setStyle('bold', new OutputFormatterStyle(null, null, array('bold')));
     }
 
     private function ask(InputInterface $input, OutputInterface $output, Question $question)
@@ -140,5 +156,86 @@ EOT
         /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
         return $helper->ask($input, $output, $question);
+    }
+
+    private function outputDependenciesError(OutputInterface $output)
+    {
+        $notice = <<<'NOTICE'
+            
+<error>Dependencies needed</error>
+Neither <bold>yarn</bold> nor <bold>npm</bold> was found on the system.
+I'd really suggest to install <bold>yarn</bold> - it's faster and more reliable.
+See https://yarnpkg.com/ for more information.
+You can re-run this command after installing or run <code>yarn install</code> in root directory.
+
+NOTICE;
+        $output->writeln($notice);
+    }
+
+    private function outputYarnSuggestion(OutputInterface $output)
+    {
+        $notice = <<<'NOTICE'
+            
+<error>Consider installing yarn</error>
+<bold>npm</bold> was found on the system, but <bold>yarn</bold> was not.
+I'd really suggest to install it - it's faster and more reliable.
+See https://yarnpkg.com/ for more information.
+
+NOTICE;
+        $output->writeln($notice);
+    }
+
+    private function askIfInstallNeeded(InputInterface $input, OutputInterface $output, Process $process)
+    {
+        $question = new ConfirmationQuestion(sprintf(
+            '<question>Should I install node_modules now?</question> (<code>%s</code>) [Yn] ',
+            $process->getCommandLine()
+        ), true);
+
+        if (!$this->ask($input, $output, $question)) {
+            $output->writeln(sprintf(
+                'Please run <code>%s</code> in root directory before compiling webpack assets',
+                $process->getCommandLine()
+            ));
+            return false;
+        }
+
+        return true;
+    }
+
+    private function runProcess(Process $process, OutputInterface $output)
+    {
+        $process->setTimeout(600);
+        $process->run(function($type, $buffer) use ($output) {
+            $output->write($buffer);
+        });
+
+        if (!$process->isSuccessful()) {
+            $error = <<<'ERROR'
+            
+<error>Error running %s (exit code %s)! Please look at the log for errors and re-run command.</error>
+
+ERROR;
+            $output->writeln(sprintf($error, $process->getCommandLine(), $process->getExitCode()));
+        }
+    }
+
+    private function outputAdditionalActions(OutputInterface $output, array $filesForGit)
+    {
+        $notice = <<<'NOTICE'
+        
+<bold>Additional actions needed</bold>
+
+I would suggest to add the following into your git repository:
+<code>git add %s</code>
+
+I would also suggest to add <code>node_modules</code> directory into <code>.gitignore</code>:
+<code>echo "node_modules" >> .gitignore</code>
+
+Run <code>maba:webpack:compile</code> to compile assets when deploying.
+
+Always run <code>maba:webpack:dev-server</code> in dev environment.
+NOTICE;
+        $output->writeln(sprintf($notice, implode(' ', $filesForGit)));
     }
 }

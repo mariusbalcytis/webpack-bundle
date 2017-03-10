@@ -11,7 +11,7 @@ php:
 
 env:
   global:
-    - TRAVIS_NODE_VERSION="4"
+    - TRAVIS_NODE_VERSION="6"
     - COMPOSER_NO_INTERACTION="1"
   matrix:
     - COMPOSER_ARGS=""
@@ -21,9 +21,12 @@ cache:
   directories:
     - $HOME/.composer/cache
     - $HOME/.npm
+  yarn: true
 
 install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH=$HOME/.yarn/bin:$PATH
 
 before_script:
     - phpenv config-rm xdebug.ini || true
