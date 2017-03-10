@@ -208,6 +208,9 @@ maba_webpack:
                                         # for example, set dev_server_public_path and public_path to overwrite
                                             # http://localhost:8080/compiled/ and /compiled/
                                             # see inside your webpack.config.js for more info
+        # set location of cached manifests. Useful for deploy, when you don't want to include your cache directory
+        manifest_file_path:        '%kernel.cache_dir%/webpack_manifest.php'
+
     aliases:                            # allows to set aliases inside require() in your JS files
         register_bundles:               # defaults to all bundles
             - ApplicationBundle

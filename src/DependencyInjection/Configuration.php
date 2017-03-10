@@ -75,7 +75,7 @@ class Configuration implements ConfigurationInterface
         $config = $children->arrayNode('config')->addDefaultsIfNotSet()->children();
         $config->scalarNode('path')->defaultValue('%kernel.root_dir%/config/webpack.config.js');
         $config->arrayNode('parameters')->treatNullLike(array())->useAttributeAsKey('name')->prototype('variable');
-
+        $config->scalarNode('manifest_file_path')->defaultValue('%kernel.cache_dir%/webpack_manifest.php');
         $entryFile = $children->arrayNode('entry_file')->addDefaultsIfNotSet()->children();
         $entryFile->booleanNode('enabled')->defaultTrue();
         $entryFile

@@ -73,6 +73,7 @@ class MabaWebpackExtension extends Extension
         $container->setParameter('maba_webpack.bin.dev_server.executable', $config['bin']['dev_server']['executable']);
         $container->setParameter('maba_webpack.bin.dev_server.tty_prefix', $config['bin']['dev_server']['tty_prefix']);
         $container->setParameter('maba_webpack.bin.dev_server.arguments', $config['bin']['dev_server']['arguments']);
+        $container->setParameter("maba_webpack.config.manifest_file_path", $config['config']['manifest_file_path']);
 
         if ($config['twig']['suppress_errors'] === true) {
             $errorHandlerId = 'maba_webpack.error_handler.suppressing';
