@@ -52,6 +52,10 @@ class TwigDirectoryAssetProvider implements AssetProviderInterface
      */
     private function createFinder($resource)
     {
+        if (!is_dir($resource)) {
+            return array();
+        }
+
         $finder = new Finder();
         $finder->in($resource)->followLinks()->files()->name($this->pattern);
         return $finder;
