@@ -1,2 +1,2 @@
-require('featureA.js');
-require('featureB.js');
+require('./featureA.js');
+require('./featureB.js');

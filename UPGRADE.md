@@ -104,6 +104,37 @@ To this:
 This allows extending functionality (like adding `named` for commons chunk assets)
 and still using single tag.
 
+## Migrating to Webpack 2
+
+This bundle was already compatible with Webpack 2 if custom `webpack.config.js` was used - 
+this configuration and your assets themselves are affected by Webpack version.
+
+From this version, default `webpack.config.js` was added for Webpack 2 -
+`maba:webpack:setup` command installs Webpack 2 by default.
+
+If you want to keep Webpack 1, update configuration file by providing command line option:
+```bash
+app/console maba:webpack:setup --useWebpackV1
+```
+
+Configuration itself kept all the loaders and plugins as they were in previous version.
+One notable (and backwards incompatible) change is that `''` is no longer in `resolve.modules`.
+Webpack just does not allow it anymore. This affects your codebase if you `require`d relative
+assets without `./` or `../` prefix.
+
+If you have something like this:
+```js
+require('asset1.js');   // asset1.js is in the same directory
+require('styles.css');  // styles.css is in parent directory
+```
+
+You'll have to provide relative paths explicitly:
+
+```js
+require('./asset1.js');
+require('../styles.css');
+```
+
 ## Asset providers refactored
 
 Asset provider functionality was refactored - this is important only

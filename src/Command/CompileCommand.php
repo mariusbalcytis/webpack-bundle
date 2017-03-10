@@ -22,13 +22,9 @@ class CompileCommand extends Command
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configure()
     {
         $this
-            ->setName('maba:webpack:compile')
             ->setDescription('Compile webpack assets')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command compiles webpack assets.

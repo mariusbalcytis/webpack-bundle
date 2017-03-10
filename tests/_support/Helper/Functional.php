@@ -58,6 +58,12 @@ class Functional extends Symfony2
         if (file_exists(__DIR__ . '/../../functional/Fixtures/package.json')) {
             unlink(__DIR__ . '/../../functional/Fixtures/package.json');
         }
+        if (file_exists(__DIR__ . '/../../functional/Fixtures/root_v1/package.json')) {
+            unlink(__DIR__ . '/../../functional/Fixtures/root_v1/package.json');
+        }
+        if (file_exists(__DIR__ . '/../../functional/Fixtures/root_v1/config.js')) {
+            unlink(__DIR__ . '/../../functional/Fixtures/root_v1/config.js');
+        }
         if (file_exists(__DIR__ . '/../../functional/Fixtures/app/config/webpack.config.js')) {
             unlink(__DIR__ . '/../../functional/Fixtures/app/config/webpack.config.js');
         }

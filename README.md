@@ -1,7 +1,7 @@
 Bundle to Integrate Webpack into Symfony
 ====
 
-Symfony bundle to help integrating [webpack](https://webpack.github.io/) into Symfony project.
+Symfony bundle to help integrating [webpack](https://webpack.js.org/) into Symfony project.
 
 What is webpack?
 ----
@@ -9,9 +9,6 @@ What is webpack?
 Module bundler and CommonJS / AMD dependency manager.
 
 For me, it replaces both grunt/gulp and RequireJS.
-
-See [what is webpack?](http://webpack.github.io/docs/what-is-webpack.html)
-and [it's documentation](http://webpack.github.io/docs/) for more information.
 
 What does this bundle do?
 ----
@@ -22,7 +19,7 @@ What does this bundle do?
 
 Additionally, for development environment:
 
-1. Runs [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html), which serves and regenerates assets if they are changed.
+1. Runs [webpack-dev-server](https://webpack.js.org/configuration/dev-server/), which serves and regenerates assets if they are changed.
 2. Watches twig templates for changes, updates entry points and
 restarts webpack-dev-server if webpack configuration changes.
 
@@ -31,6 +28,7 @@ More goodies:
 entry points, aliases, environment and additional parameters.
 2. Lets you define custom entry point providers if you don't use twig or include scripts in any other way.
 3. Works with images and css/less/sass files out-of-the-box, if needed.
+4. Supports both Webpack 2 (by default) and Webpack 1.
 
 Look at [Symfony, Webpack and AngularJS Single Page Application Demo](https://github.com/mariusbalcytis/symfony-webpack-angular-demo)
 for usage examples.
@@ -45,9 +43,9 @@ Webpack lets you create components, which know their own dependencies.
 
 With assetic, you must explicitly provide all needed javascript and stylesheet files in your templates.
 If you split one of your javascript files into two files, you need to update all templates where that new dependency
-is required. With webpack, your could just `require('newFile.js');` inside the javascript file and you're done.
+is required. With webpack, your could just `require('./newFile.js');` inside the javascript file and you're done.
 
-Moreover, from javascript your can require CSS files as easily as other javascripts - `require('styles.css');`
+Moreover, from javascript your can require CSS files as easily as other javascripts - `require('./styles.css');`
 and you're set to go.
 
 If your application is frontend-based, sooner or later you're gonna need to load your assets asynchronously.
@@ -83,14 +81,6 @@ If any of the files already exists, you'll be asked if you'd like to overwrite t
 
 `webpack.config.js` must export a function that takes `options` as an argument and returns webpack config.
 
-Default configuration was based on
-[Foxandxss/angular-webpack-workflow](https://github.com/Foxandxss/angular-webpack-workflow).
-Some customizations were made for integration. Also `TEST` mode was removed as at this point bundle does not
-let running javascript tests.
-
-Empty string was added to module directories, this allows to 1) require files without
-prefixing them with `./` 2) if file is not found inside same directory, it's searched in descendant directories.
-
 Feel free to modify this configuration file as you'd like - bundle just provides default one as a starting point.
 
 You should add `webpack.config.js` and `package.json` into your repository. You should also add `node_modules` into
@@ -100,6 +90,8 @@ is updated and as a task in your deployment). Of course, you could just add it t
 ```bash
 git add package.json app/config/webpack.config.js
 ```
+
+If you want to use Webpack 1 for some reason, pass `--useWebpack1` as a command line option to `setup` command.
 
 Usage
 ----
@@ -133,7 +125,7 @@ require('./my-styles.less');
 function loadScript3() {
     require.ensure([], function() {
         require('@AnotherBundle/Resources/assets/script3.js');
-        require('style.css');
+        require('./style.css');
     });
 }
 setTimeout(loadScript3, 1000);
@@ -385,7 +377,7 @@ Using commons chunk
 ----
 
 This bundle supports both single and several
-[commons chunks](https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin),
+[commons chunks](https://webpack.js.org/plugins/commons-chunk-plugin/),
 but you have to configure this explicitly.
 
 In your `webpack.config.js`:

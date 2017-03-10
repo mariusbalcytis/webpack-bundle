@@ -29,17 +29,29 @@
             <argument type="service">
                 <service class="stdClass">
                     <factory service="file_locator" method="locate"/>
-                    <argument>@MabaWebpackBundle/Resources/defaultConfig/package.json</argument>
+                    <argument>@MabaWebpackBundle/Resources/defaultConfig/v1/package.json</argument>
                 </service>
             </argument>
             <argument type="service">
                 <service class="stdClass">
                     <factory service="file_locator" method="locate"/>
-                    <argument>@MabaWebpackBundle/Resources/defaultConfig/webpack.config.js</argument>
+                    <argument>@MabaWebpackBundle/Resources/defaultConfig/v1/webpack.config.js</argument>
                 </service>
             </argument>
-            <argument>%kernel.root_dir%/..</argument>
-            <argument>%kernel.root_dir%/config</argument>
+            <argument type="service">
+                <service class="stdClass">
+                    <factory service="file_locator" method="locate"/>
+                    <argument>@MabaWebpackBundle/Resources/defaultConfig/v2/package.json</argument>
+                </service>
+            </argument>
+            <argument type="service">
+                <service class="stdClass">
+                    <factory service="file_locator" method="locate"/>
+                    <argument>@MabaWebpackBundle/Resources/defaultConfig/v2/webpack.config.js</argument>
+                </service>
+            </argument>
+            <argument>%maba_webpack.bin.working_directory%</argument>
+            <argument>%maba_webpack.webpack_config_path%</argument>
         </service>
     </services>
 </container>

@@ -1,2 +1,2 @@
 console.log('vendor-2.js');
-require('vendor-2.css');
+require('./vendor-2.css');

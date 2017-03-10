@@ -1,2 +1,2 @@
-require('featureA.css');
+require('./featureA.css');
 console.log('featureA-content');

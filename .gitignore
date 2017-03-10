@@ -3,3 +3,4 @@ composer.phar
 composer.lock
 tests/_output/*
 tests/functional/Fixtures/node_modules
+tests/functional/Fixtures/root_v1/node_modules

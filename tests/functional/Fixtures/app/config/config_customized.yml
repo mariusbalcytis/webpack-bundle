@@ -11,6 +11,9 @@ maba_webpack:
         additional:
             'a': %kernel.root_dir%/../src/WebpackTestBundle/Resources/assets
             'app': %kernel.root_dir%/Resources/assets
+    twig:
+        additional_directories:
+            - %kernel.root_dir%/Resources/views-customized
     bin:
         webpack:
             executable:
