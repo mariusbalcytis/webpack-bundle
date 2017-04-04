@@ -131,7 +131,7 @@ function loadScript3() {
 setTimeout(loadScript3, 1000);
 ```
 
-As part of deployment into production environment:
+As part of deployment into production environment, after clearing the cache:
 
 ```bash
 app/console maba:webpack:compile --env=prod
