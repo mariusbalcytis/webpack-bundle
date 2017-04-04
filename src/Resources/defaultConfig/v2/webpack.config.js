@@ -255,7 +255,7 @@ module.exports = function makeWebpackConfig(options) {
              * Only emit files when there are no errors
              * Reference: https://github.com/webpack/docs/wiki/list-of-plugins#noerrorsplugin
              */
-            new webpack.NoErrorsPlugin(),
+            new webpack.NoEmitOnErrorsPlugin(),
 
             /**
              * Minify all javascript, switch loaders to minimizing mode
