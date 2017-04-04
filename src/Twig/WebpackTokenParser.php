@@ -30,7 +30,7 @@ class WebpackTokenParser extends TokenParser
         $this->functionName = $functionName;
         $this->namedAssetFunctionName = $namedAssetFunctionName;
     }
-    
+
     public function parse(Token $token)
     {
         $stream = $this->parser->getStream();
@@ -52,27 +52,22 @@ class WebpackTokenParser extends TokenParser
     {
         if ($stream->test(Token::STRING_TYPE)) {
             $parsedTag->addInput($stream->next()->getValue());
-
         } elseif ($stream->test(Token::NAME_TYPE, AssetManager::TYPE_JS)) {
             $stream->next();
             $parsedTag->setType(AssetManager::TYPE_JS);
-
         } elseif ($stream->test(Token::NAME_TYPE, AssetManager::TYPE_CSS)) {
             $stream->next();
             $parsedTag->setType(AssetManager::TYPE_CSS);
-
         } elseif ($stream->test(Token::NAME_TYPE, 'named')) {
             $stream->next();
             $parsedTag->markAsNamed();
-
         } elseif ($stream->test(Token::NAME_TYPE, 'group')) {
             $stream->next();
             $stream->expect(\Twig_Token::OPERATOR_TYPE, '=');
             $parsedTag->setGroup($stream->expect(\Twig_Token::STRING_TYPE)->getValue());
-
         } else {
             $token = $stream->getCurrent();
-            /** @noinspection PhpInternalEntityUsedInspection */
+            /* @noinspection PhpInternalEntityUsedInspection */
             throw new SyntaxError(sprintf(
                 'Unexpected token "%s" of value "%s"',
                 Token::typeToEnglish($token->getType()),
@@ -84,7 +79,7 @@ class WebpackTokenParser extends TokenParser
     private function parseBody(TokenStream $stream)
     {
         $endTag = 'end_' . $this->getTag();
-        $body = $this->parser->subparse(function(Token $token) use ($endTag) {
+        $body = $this->parser->subparse(function (Token $token) use ($endTag) {
             return $token->test(array($endTag));
         }, true);
         $stream->expect(Token::BLOCK_END_TYPE);
@@ -114,11 +109,11 @@ class WebpackTokenParser extends TokenParser
         );
 
         if ($parsedTag->getGroup() !== null) {
-            /** @noinspection PhpParamsInspection */
+            /* @noinspection PhpParamsInspection */
             $arguments[] = new ConstantExpression($parsedTag->getGroup(), $lineNo);
         }
 
-        /** @noinspection PhpParamsInspection */
+        /* @noinspection PhpParamsInspection */
         return new FunctionExpression(
             $functionName,
             new Node($arguments),

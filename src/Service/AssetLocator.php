@@ -15,7 +15,7 @@ class AssetLocator
     }
 
     /**
-     * Locates asset - resolves alias if provided. Does not support assets with loaders
+     * Locates asset - resolves alias if provided. Does not support assets with loaders.
      *
      * @param string $asset path of an asset, possibly with alias prefix
      * @return string resolved asset path

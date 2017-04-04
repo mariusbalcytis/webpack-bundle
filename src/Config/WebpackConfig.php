@@ -30,7 +30,7 @@ class WebpackConfig
     protected $configPath;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $fileDumped = false;
 
@@ -121,7 +121,7 @@ class WebpackConfig
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function wasFileDumped()
     {
@@ -129,7 +129,7 @@ class WebpackConfig
     }
 
     /**
-     * @param boolean $fileDumped
+     * @param bool $fileDumped
      */
     public function setFileDumped($fileDumped)
     {

@@ -2,21 +2,37 @@ language: php
 
 sudo: false
 
-php:
-    - 5.4
-    - 5.5
-    - 5.6
-    - hhvm
-    - 7.0
-    - 7.1
-
 env:
   global:
     - TRAVIS_NODE_VERSION="6"
     - COMPOSER_NO_INTERACTION="1"
-  matrix:
-    - COMPOSER_ARGS=""
-    - COMPOSER_ARGS="--prefer-lowest"
+
+matrix:
+  include:
+    - php: 5.4
+      env: COMPOSER_ARGS=""
+    - php: 5.5
+      env: COMPOSER_ARGS=""
+    - php: 5.6
+      env: COMPOSER_ARGS=""
+    - php: hhvm
+      env: COMPOSER_ARGS=""
+    - php: 7.0
+      env: COMPOSER_ARGS=""
+    - php: 7.1
+      env: COMPOSER_ARGS="" WITH_CS="true"
+    - php: 5.4
+      env: COMPOSER_ARGS="--prefer-lowest"
+    - php: 5.5
+      env: COMPOSER_ARGS="--prefer-lowest"
+    - php: 5.6
+      env: COMPOSER_ARGS="--prefer-lowest"
+    - php: hhvm
+      env: COMPOSER_ARGS="--prefer-lowest"
+    - php: 7.0
+      env: COMPOSER_ARGS="--prefer-lowest"
+    - php: 7.1
+      env: COMPOSER_ARGS="--prefer-lowest"
 
 cache:
   directories:
@@ -28,6 +44,7 @@ install:
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH=$HOME/.yarn/bin:$PATH
+  - IFS=$'\n'; COMMIT_SCA_FILES=($(git diff --name-only --diff-filter=ACMRTUXB "${TRAVIS_COMMIT_RANGE}")); unset IFS
 
 before_script:
     - phpenv config-rm xdebug.ini || true
@@ -35,3 +52,4 @@ before_script:
 
 script:
     - vendor/bin/codecept run
+    - if [[ "$WITH_CS" == "true" ]]; then vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --path-mode=intersection "${COMMIT_SCA_FILES[@]}"; fi

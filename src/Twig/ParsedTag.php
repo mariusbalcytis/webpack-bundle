@@ -99,7 +99,7 @@ class ParsedTag
     private function throwException($description)
     {
         $token = $this->stream->getCurrent();
-        /** @noinspection PhpInternalEntityUsedInspection */
+        /* @noinspection PhpInternalEntityUsedInspection */
         throw new SyntaxError($description, $token->getLine(), $this->stream->getSourceContext());
     }
 

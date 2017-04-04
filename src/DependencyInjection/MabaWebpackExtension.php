@@ -3,7 +3,6 @@
 namespace Maba\Bundle\WebpackBundle\DependencyInjection;
 
 use Maba\Bundle\WebpackBundle\Compiler\WebpackProcessBuilder;
-use Maba\Bundle\WebpackBundle\Twig\WebpackExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -16,7 +15,7 @@ class MabaWebpackExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         $container->setParameter('maba_webpack.enabled_bundles', $config['enabled_bundles']);
@@ -56,7 +55,7 @@ class MabaWebpackExtension extends Extension
     {
         $container->setParameter('maba_webpack.webpack_config_path', $config['config']['path']);
         $container->setParameter('maba_webpack.webpack_config_parameters', $config['config']['parameters']);
-        $container->setParameter("maba_webpack.config.manifest_file_path", $config['config']['manifest_file_path']);
+        $container->setParameter('maba_webpack.config.manifest_file_path', $config['config']['manifest_file_path']);
     }
 
     private function configureAliases(ContainerBuilder $container, $config)

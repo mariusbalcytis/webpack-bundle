@@ -62,7 +62,7 @@ class WebpackCompiler
 
         $that = $this;
         $logger = $this->logger;
-        $processCallback = function($type, $buffer) use ($that, $callback, $logger) {
+        $processCallback = function ($type, $buffer) use ($that, $callback, $logger) {
             $that->saveManifest(false);
             $logger->info('Processing callback from process', array($type, $buffer));
             if ($callback !== null) {

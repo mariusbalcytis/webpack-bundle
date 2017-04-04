@@ -9,10 +9,10 @@ use Twig_Error_Syntax as SyntaxError;
 
 /**
  * This class ignores twig syntax exceptions that designate "Unknowns":
- * - unknown function
- * - unknown filter
- * - unknown tag
- * - unknown test
+ * - unknown function;
+ * - unknown filter;
+ * - unknown tag;
+ * - unknown test.
  *
  * It still rethrows the exception if asset path is incorrect or any other twig syntax error is found.
  *

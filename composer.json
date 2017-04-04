@@ -27,7 +27,8 @@
         "codeception/codeception": "~2.1.4",
         "symfony/translation": "^2.7|^3.0",
         "symfony/asset": "^2.7|^3.0",
-        "doctrine/annotations": "^1.0"
+        "doctrine/annotations": "^1.0",
+        "friendsofphp/php-cs-fixer": "^2.2"
     },
     "autoload": {
         "psr-4": {
