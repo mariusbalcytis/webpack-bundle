@@ -16,11 +16,12 @@ matrix:
     - php: 5.6
       env: COMPOSER_ARGS=""
     - php: hhvm
-      env: COMPOSER_ARGS=""
+      env: COMPOSER_ARGS="--ignore-platform-reqs"
     - php: 7.0
       env: COMPOSER_ARGS=""
     - php: 7.1
       env: COMPOSER_ARGS="" WITH_CS="true"
+      
     - php: 5.4
       env: COMPOSER_ARGS="--prefer-lowest"
     - php: 5.5
@@ -28,7 +29,7 @@ matrix:
     - php: 5.6
       env: COMPOSER_ARGS="--prefer-lowest"
     - php: hhvm
-      env: COMPOSER_ARGS="--prefer-lowest"
+      env: COMPOSER_ARGS="--prefer-lowest --ignore-platform-reqs"
     - php: 7.0
       env: COMPOSER_ARGS="--prefer-lowest"
     - php: 7.1
@@ -45,6 +46,7 @@ install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH=$HOME/.yarn/bin:$PATH
   - IFS=$'\n'; COMMIT_SCA_FILES=($(git diff --name-only --diff-filter=ACMRTUXB "${TRAVIS_COMMIT_RANGE}")); unset IFS
+  - if [[ "$TRAVIS_PHP_VERSION" != "hhvm" ]]; then phpenv config-rm xdebug.ini; fi
 
 before_script:
     - phpenv config-rm xdebug.ini || true
@@ -52,4 +54,4 @@ before_script:
 
 script:
     - vendor/bin/codecept run
-    - if [[ "$WITH_CS" == "true" ]]; then vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no --path-mode=intersection "${COMMIT_SCA_FILES[@]}"; fi
+    - if [[ "$WITH_CS" == "true" ]]; then vendor/bin/php-cs-fixer fix --config=.php_cs -v --dry-run --stop-on-violation --using-cache=no --path-mode=intersection "${COMMIT_SCA_FILES[@]}"; fi
