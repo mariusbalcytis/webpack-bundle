@@ -149,6 +149,11 @@ forget about it, similarly to production environment:
 ```bash
 app/console maba:webpack:compile
 ```
+If you are running functional tests on your app, make sure to compile once for test environment to generate manifest file for test environment:
+
+```bash
+app/console maba:webpack:compile --env=test
+```
 
 Twig function and tag
 ----
