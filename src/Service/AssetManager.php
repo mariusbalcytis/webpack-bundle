@@ -25,11 +25,11 @@ class AssetManager
     }
 
     /**
-     * Gets URL for specified asset (usually provided to webpack_asset twig function)
-     * If type not specified, it is guessed
+     * Gets URL for specified asset (usually provided to webpack_asset twig function).
+     * If type not specified, it is guessed.
      *
      * Exception is thrown if manifest does not exit, asset is not in the manifest or
-     *      type is not provided and cannot be guessed
+     *      type is not provided and cannot be guessed.
      *
      * @param string $asset
      * @param string|null $type specifies type in manifest, usually "js" or "css"
@@ -54,11 +54,11 @@ class AssetManager
     }
 
     /**
-     * Gets URL for specified named asset - should be used for commons chunks
+     * Gets URL for specified named asset - should be used for commons chunks.
      *
-     * Exception is thrown if manifest does not exit or asset is not in the manifest
+     * Exception is thrown if manifest does not exit or asset is not in the manifest.
      *
-     * Type is not guessed as commons chunk only has a name and no path
+     * Type is not guessed as commons chunk only has a name and no path.
      *
      * @param string $assetName
      * @param string|null $type specifies type in manifest, usually "js" or "css"

@@ -34,10 +34,10 @@ CONTENTS;
 
         $I->bootKernelWith('commons_chunk');
         $I->runCommand('maba_webpack.command.setup');
-        $I->seeFileFound(__DIR__.'/Fixtures/package.json');
-        $I->seeFileFound(__DIR__.'/Fixtures/app/config/webpack.config.js');
-        $I->moveFile(__DIR__.'/Fixtures/app/config/webpack.config.js', __DIR__.'/Fixtures/app/config/default.js');
-        $I->writeToFile(__DIR__.'/Fixtures/app/config/webpack.config.js', $configContents);
+        $I->seeFileFound(__DIR__ . '/Fixtures/package.json');
+        $I->seeFileFound(__DIR__ . '/Fixtures/app/config/webpack.config.js');
+        $I->moveFile(__DIR__ . '/Fixtures/app/config/webpack.config.js', __DIR__ . '/Fixtures/app/config/default.js');
+        $I->writeToFile(__DIR__ . '/Fixtures/app/config/webpack.config.js', $configContents);
 
         $I->runCommand('maba_webpack.command.compile');
         $I->seeCommandStatusCode(0);
@@ -56,30 +56,30 @@ CONTENTS;
 
         $url = $I->grabAttributeFrom('link[rel=stylesheet]#commons-chunk-css', 'href');
         preg_match('#/compiled/(.*)#', $url, $matches);
-        $I->seeFileFound(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
-        $I->openFile(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
+        $I->seeFileFound(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
+        $I->openFile(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->canSeeInThisFile('vendor-1');
         $I->canSeeInThisFile('vendor-2');
 
         $url = $I->grabAttributeFrom('link[rel=stylesheet]#main-css', 'href');
         preg_match('#/compiled/(.*)#', $url, $matches);
-        $I->seeFileFound(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
-        $I->openFile(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
+        $I->seeFileFound(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
+        $I->openFile(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->dontSeeInThisFile('vendor-1');
         $I->dontSeeInThisFile('vendor-2');
         $I->canSeeInThisFile('main-1');
 
         $url = $I->grabAttributeFrom('script#commons-chunk-js', 'src');
         preg_match('#/compiled/(.*)#', $url, $matches);
-        $I->seeFileFound(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
-        $I->openFile(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
+        $I->seeFileFound(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
+        $I->openFile(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->canSeeInThisFile('vendor-1');
         $I->canSeeInThisFile('vendor-2');
 
         $url = $I->grabAttributeFrom('script#main-js', 'src');
         preg_match('#/compiled/(.*)#', $url, $matches);
-        $I->seeFileFound(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
-        $I->openFile(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
+        $I->seeFileFound(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
+        $I->openFile(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->dontSeeInThisFile('vendor-1');
         $I->dontSeeInThisFile('vendor-2');
         $I->canSeeInThisFile('main-1');
@@ -93,27 +93,27 @@ CONTENTS;
 
         $url = $I->grabAttributeFrom('link[rel=stylesheet]#commons-chunk-css', 'href');
         preg_match('#/compiled/(.*)#', $url, $matches);
-        $I->seeFileFound(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
-        $I->openFile(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
+        $I->seeFileFound(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
+        $I->openFile(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->canSeeInThisFile('vendor-1');
 
         $url = $I->grabAttributeFrom('link[rel=stylesheet]#main-css', 'href');
         preg_match('#/compiled/(.*)#', $url, $matches);
-        $I->seeFileFound(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
-        $I->openFile(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
+        $I->seeFileFound(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
+        $I->openFile(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->dontSeeInThisFile('vendor-1');
         $I->canSeeInThisFile('main-1');
 
         $url = $I->grabAttributeFrom('script#commons-chunk-js', 'src');
         preg_match('#/compiled/(.*)#', $url, $matches);
-        $I->seeFileFound(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
-        $I->openFile(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
+        $I->seeFileFound(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
+        $I->openFile(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->canSeeInThisFile('vendor-1');
 
         $url = $I->grabAttributeFrom('script#main-js', 'src');
         preg_match('#/compiled/(.*)#', $url, $matches);
-        $I->seeFileFound(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
-        $I->openFile(__DIR__.'/Fixtures/web/compiled/'.$matches[1]);
+        $I->seeFileFound(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
+        $I->openFile(__DIR__ . '/Fixtures/web/compiled/' . $matches[1]);
         $I->dontSeeInThisFile('vendor-1');
         $I->canSeeInThisFile('main-1');
     }

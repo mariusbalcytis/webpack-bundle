@@ -77,7 +77,7 @@ class WebpackProcessBuilder
 
         $dashboardEnabled = in_array($this->dashboardMode, array(
             self::DASHBOARD_MODE_ENABLED_ALWAYS,
-            self::DASHBOARD_MODE_ENABLED_ON_DEV_SERVER
+            self::DASHBOARD_MODE_ENABLED_ON_DEV_SERVER,
         ), true);
 
         if ($dashboardEnabled) {
@@ -116,7 +116,7 @@ class WebpackProcessBuilder
             return;
         }
 
-        $prefix = implode(' ', array_map(function($part) {
+        $prefix = implode(' ', array_map(function ($part) {
             return ProcessUtils::escapeArgument($part);
         }, $this->dashboardExecutable));
 

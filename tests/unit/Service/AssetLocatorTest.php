@@ -61,7 +61,7 @@ class AssetLocatorTest extends Test
             ),
             'throws exception if file not found' => array(
                 new AssetNotFoundException(),
-                $dir . '/non-existent-file'
+                $dir . '/non-existent-file',
             ),
             'throws exception if file not found via alias' => array(
                 new AssetNotFoundException(),

@@ -26,7 +26,7 @@ class CompileCommand extends Command
     {
         $this
             ->setDescription('Compile webpack assets')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 The <info>%command.name%</info> command compiles webpack assets.
 
     <info>%command.full_name%</info>
@@ -41,7 +41,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $logger = $this->logger;
-        $this->compiler->compile(function($type, $buffer) use ($output, $logger) {
+        $this->compiler->compile(function ($type, $buffer) use ($output, $logger) {
             if (Process::ERR === $type) {
                 $logger->error($buffer);
                 $output->write('<error>' . $buffer . '</error>');

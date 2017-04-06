@@ -37,12 +37,12 @@ class WebpackConfigDumper
             $configTemplate,
             json_encode($this->includeConfigPath),
             json_encode(array(
-                'entry' => $config->getEntryPoints(),
-                'groups' => $config->getAssetGroups(),
-                'alias' => $config->getAliases(),
+                'entry' => (object)$config->getEntryPoints(),
+                'groups' => (object)$config->getAssetGroups(),
+                'alias' => (object)$config->getAliases(),
                 'manifest_path' => $this->manifestPath,
                 'environment' => $this->environment,
-                'parameters' => $this->parameters,
+                'parameters' => (object)$this->parameters,
             ))
         );
 

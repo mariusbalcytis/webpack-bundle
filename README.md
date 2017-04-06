@@ -43,7 +43,7 @@ Webpack lets you create components, which know their own dependencies.
 
 With assetic, you must explicitly provide all needed javascript and stylesheet files in your templates.
 If you split one of your javascript files into two files, you need to update all templates where that new dependency
-is required. With webpack, your could just `require('./newFile.js');` inside the javascript file and you're done.
+is required. With webpack, you could just `require('./newFile.js');` inside the javascript file and you're done.
 
 Moreover, from javascript your can require CSS files as easily as other javascripts - `require('./styles.css');`
 and you're set to go.
@@ -131,7 +131,7 @@ function loadScript3() {
 setTimeout(loadScript3, 1000);
 ```
 
-As part of deployment into production environment:
+As part of deployment into production environment, after clearing the cache:
 
 ```bash
 app/console maba:webpack:compile --env=prod
@@ -162,7 +162,7 @@ webpack_asset(resource, type = null)
 
 `type` is `js` or `css`, leave `null` to guess the type. For `css` this function could return `null` if no CSS would
 be extracted from provided entry point. If you are sure that there will be some CSS, you could just ignore this.
-Otherwise, you could use `webpack` tag as it handles this for you (omits the `<link/>` tag at all in that case).
+Otherwise, you could use `webpack` tag as it handles this for you (omits the `<link/>` tag entirely in that case).
 
 Tag:
 ```twig

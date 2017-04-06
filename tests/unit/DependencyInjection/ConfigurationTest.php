@@ -8,7 +8,6 @@ use Symfony\Component\Config\Definition\Processor;
 
 class ConfigurationTest extends Test
 {
-
     /**
      * @param array|null $expected
      * @param array $config
@@ -29,7 +28,7 @@ class ConfigurationTest extends Test
         return array(
             array(
                 array('MyFirstBundle', 'MySecondBundle'),
-                array()
+                array(),
             ),
             array(
                 array('MyFirstBundle', 'MySecondBundle'),

@@ -13,8 +13,6 @@ class AssetResult
     private $assets = array();
 
     /**
-     * Context
-     *
      * @var mixed
      */
     private $context;

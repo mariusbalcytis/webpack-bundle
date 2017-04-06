@@ -78,7 +78,7 @@ class TwigAssetProvider
     private function loadNode(Node $node, $resource)
     {
         if ($this->isFunctionNode($node)) {
-            /** @var ExpressionFunction $node */
+            /* @var ExpressionFunction $node */
             return $this->parseFunctionNode($node, sprintf('File %s, line %s', $resource, $node->getTemplateLine()));
         }
 

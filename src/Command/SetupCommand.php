@@ -49,7 +49,7 @@ class SetupCommand extends Command
                 'If default configuration for webpack v1 should be used'
             )
             ->setDescription('Initial setup for maba webpack bundle')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 The <info>%command.name%</info> command copies a default <info>webpack.config.js</info> and <info>package.json</info> files and runs <info>npm install</info>. 
 
 After executing this command, you should commit the following files to your repository.
@@ -206,7 +206,7 @@ NOTICE;
     private function runProcess(Process $process, OutputInterface $output)
     {
         $process->setTimeout(600);
-        $process->run(function($type, $buffer) use ($output) {
+        $process->run(function ($type, $buffer) use ($output) {
             $output->write($buffer);
         });
 
