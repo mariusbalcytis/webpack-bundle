@@ -120,7 +120,11 @@ class WebpackProcessBuilder
             return ProcessUtils::escapeArgument($part);
         }, $this->dashboardExecutable));
 
-        $process->setCommandLine($prefix . ' -- ' . $process->getCommandLine());
+        $commandLine = $process->getCommandLine();
+        if (substr($commandLine, 0, 5) === 'exec ') {
+            $commandLine = substr($commandLine, 5);
+        }
+        $process->setCommandLine($prefix . ' -- ' . $commandLine);
 
         $process->setEnv(array('WEBPACK_DASHBOARD' => 'enabled') + $process->getEnv());
     }
