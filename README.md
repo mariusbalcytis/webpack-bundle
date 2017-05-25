@@ -350,11 +350,16 @@ maba_webpack:
     bin:
         dev_server:
             arguments:
-                - --hot                     # these are default arguments - leave them if needed
+                - --hot                     # these are default options - leave them if needed
                 - --history-api-fallback
                 - --inline
                 - --host                    # let's add host option
                 - 0.0.0.0                   # each line is escaped, so option comes in it's own line
+                - --public                  # this is also needed from webpack-dev-server 2.4.3
+                - dev-server-host.dev:8080  # change to whatever host you are using
+    config:
+        parameters:                         # this is where the assets will be loaded from
+            dev_server_public_path: http://dev-server-host.dev:8080/compiled/
 ```
 
 If you need to provide different port, be sure to put `--port` and the port itself into separate lines.

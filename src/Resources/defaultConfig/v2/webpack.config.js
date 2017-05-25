@@ -64,14 +64,17 @@ module.exports = function makeWebpackConfig(options) {
         },
 
         /**
-         * Options for webpack-dev-server. Enables overlay inside the page if any error occurs when compiling
+         * Options for webpack-dev-server.
+         * Enables overlay inside the page if any error occurs when compiling.
+         * Enables CORS headers to allow hot reload from other domain / port.
          * Reference: https://webpack.js.org/configuration/dev-server/
          */
         devServer: {
             overlay: {
                 warnings: false,
                 errors: true
-            }
+            },
+            headers: { "Access-Control-Allow-Origin": "*" }
         }
     };
 
