@@ -69,13 +69,13 @@ module.exports = function makeWebpackConfig(options) {
          * Enables CORS headers to allow hot reload from other domain / port.
          * Reference: https://webpack.js.org/configuration/dev-server/
          */
-        devServer: {
+        devServer: Object.assign({
             overlay: {
                 warnings: false,
                 errors: true
             },
             headers: { "Access-Control-Allow-Origin": "*" }
-        }
+        }, options.parameters.dev_server || {})
     };
 
 

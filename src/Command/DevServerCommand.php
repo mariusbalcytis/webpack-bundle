@@ -24,7 +24,7 @@ class DevServerCommand extends Command
         $this
             ->setDescription('Run a webpack-dev-server as a separate process on localhost:8080')
             ->setHelp(<<<'EOT'
-The <info>%command.name%</info> command runs webpack-dev-server as a separate process, it listens on <info>localhost:8080</info>. By default, assets in development environment are pointed to <info>http://localhost:8080/compiled/*</info>.
+The <info>%command.name%</info> command runs webpack-dev-server as a separate process, it listens on <info>localhost:8080</info>. By default, assets in development environment are pointed to <info>//localhost:8080/compiled/*</info>.
 
     <info>%command.full_name%</info>
 EOT

@@ -299,7 +299,7 @@ maba_webpack:
         path:                 '%kernel.root_dir%/config/webpack.config.js'
         parameters:           []        # additional parameters passed to webpack config file
                                         # for example, set dev_server_public_path and public_path to overwrite
-                                            # http://localhost:8080/compiled/ and /compiled/
+                                            # //localhost:8080/compiled/ and /compiled/
                                             # see inside your webpack.config.js for more info
         # set location of cached manifests. Useful for deploy, when you don't want to include your cache directory
         manifest_file_path:        '%kernel.cache_dir%/webpack_manifest.php'
@@ -339,7 +339,7 @@ maba_webpack:
 
 `app/console maba:webpack:dev-server` runs webpack-dev-server as a separate process,
 it listens on `localhost:8080`. By default, assets in development
-environment are pointed to `http://localhost:8080/compiled/*`.
+environment are pointed to `//localhost:8080/compiled/*`.
 
 If you run this command inside VM, docker container etc., configure
 `maba_webpack.config.parameters.dev_server_public_path` to use correct host. Also, as
@@ -359,7 +359,8 @@ maba_webpack:
                 - dev-server-host.dev:8080  # change to whatever host you are using
     config:
         parameters:                         # this is where the assets will be loaded from
-            dev_server_public_path: http://dev-server-host.dev:8080/compiled/
+            dev_server_public_path: //dev-server-host.dev:8080/compiled/
+            dev_server: {}                  # any additional parameters to pass to `devServer` configuration
 ```
 
 If you need to provide different port, be sure to put `--port` and the port itself into separate lines.
@@ -459,7 +460,7 @@ to new versions):
 For example, if only class method is marked with `@api`, you should not extend that class, as constructor
 could change in any release.
 
-See [Symfony BC rules](http://symfony.com/doc/current/contributing/code/bc.html) for basic information
+See [Symfony BC rules](https://symfony.com/doc/current/contributing/code/bc.html) for basic information
 about what can be changed and what not in the API. Keep in mind, that in this bundle everything is
 `@internal` by default.
 
