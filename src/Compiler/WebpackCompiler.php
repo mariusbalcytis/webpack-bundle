@@ -4,6 +4,7 @@ namespace Maba\Bundle\WebpackBundle\Compiler;
 
 use Maba\Bundle\WebpackBundle\Config\WebpackConfig;
 use Maba\Bundle\WebpackBundle\Config\WebpackConfigManager;
+use Maba\Bundle\WebpackBundle\Exception\NoEntryPointsException;
 use Maba\Bundle\WebpackBundle\Service\ManifestStorage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
@@ -35,14 +36,17 @@ class WebpackCompiler
 
     public function compile(Closure $callback = null, WebpackConfig $previousConfig = null)
     {
-        $config = $this->webpackConfigManager->dump($previousConfig);
+        // remove manifest file if exists - keep sure we create new one
+        $this->removeManifestFile();
+
+        try {
+            $config = $this->webpackConfigManager->dump($previousConfig);
+        } catch (NoEntryPointsException $exception) {
+            $this->outputNoEntryPointsNotice($callback);
+            return;
+        }
 
         $process = $this->webpackProcessBuilder->buildWebpackProcess($config);
-
-        // remove manifest file if exists - keep sure we create new one
-        if (file_exists($this->manifestPath)) {
-            unlink($this->manifestPath);
-        }
 
         $process->mustRun($callback);
         $this->saveManifest();
@@ -50,15 +54,17 @@ class WebpackCompiler
 
     public function compileAndWatch(Closure $callback = null)
     {
-        $config = $this->webpackConfigManager->dump();
+        // remove manifest file if exists - keep sure we create new one
+        $this->removeManifestFile();
+
+        try {
+            $config = $this->webpackConfigManager->dump();
+        } catch (NoEntryPointsException $exception) {
+            $this->outputNoEntryPointsNotice($callback);
+            return;
+        }
 
         $process = $this->webpackProcessBuilder->buildDevServerProcess($config);
-
-        // remove manifest file if exists - keep sure we create new one
-        if (file_exists($this->manifestPath)) {
-            $this->logger->info('Deleting manifest file', array($this->manifestPath));
-            unlink($this->manifestPath);
-        }
 
         $that = $this;
         $logger = $this->logger;
@@ -74,19 +80,27 @@ class WebpackCompiler
         $process->start($processCallback);
 
         try {
-            $this->loop($process, $config, $processCallback);
+            $this->loop($process, $config, $processCallback, $callback);
         } catch (Exception $exception) {
             $process->stop();
             throw $exception;
         }
     }
 
-    private function loop(Process $process, WebpackConfig $config, $processCallback)
+    private function loop(Process $process, WebpackConfig $previousConfig, $processCallback, $callback)
     {
         while (true) {
             sleep(1);
-            $this->logger->debug('Dumping webpack configuration');
-            $config = $this->webpackConfigManager->dump($config);
+            $this->logger->debug('Dumping webpack configuration', array($process->getPid()));
+
+            try {
+                $config = $this->webpackConfigManager->dump($previousConfig);
+            } catch (NoEntryPointsException $exception) {
+                $process->stop();
+                $this->outputNoEntryPointsNotice($callback);
+                return;
+            }
+
             if ($config->wasFileDumped()) {
                 $this->logger->info(
                     'File was dumped (configuration changed) - restarting process',
@@ -94,6 +108,7 @@ class WebpackCompiler
                 );
                 $process->stop();
                 $process = $process->restart($processCallback);
+                $previousConfig = $config;
             } else {
                 if (!$process->isRunning()) {
                     $this->logger->info('Process has shut down - returning');
@@ -124,6 +139,21 @@ class WebpackCompiler
 
         if (!unlink($this->manifestPath)) {
             throw new RuntimeException('Cannot unlink manifest file at ' . $this->manifestPath);
+        }
+    }
+
+    private function removeManifestFile()
+    {
+        if (file_exists($this->manifestPath)) {
+            $this->logger->info('Deleting manifest file', array($this->manifestPath));
+            unlink($this->manifestPath);
+        }
+    }
+
+    private function outputNoEntryPointsNotice(Closure $callback = null)
+    {
+        if ($callback !== null) {
+            $callback(Process::OUT, 'No entry points found - not running webpack' . PHP_EOL);
         }
     }
 }

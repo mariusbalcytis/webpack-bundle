@@ -4,6 +4,7 @@ namespace Maba\Bundle\WebpackBundle\Config;
 
 use Maba\Bundle\WebpackBundle\ErrorHandler\ErrorHandlerInterface;
 use Maba\Bundle\WebpackBundle\Exception\AssetNotFoundException;
+use Maba\Bundle\WebpackBundle\Exception\NoEntryPointsException;
 use Maba\Bundle\WebpackBundle\Service\AliasManager;
 use Maba\Bundle\WebpackBundle\Service\AssetCollector;
 use Maba\Bundle\WebpackBundle\Service\AssetNameGenerator;
@@ -58,6 +59,10 @@ class WebpackConfigManager
 
             $groupName = $asset->getGroup() !== null ? $asset->getGroup() : self::DEFAULT_GROUP_NAME;
             $assetGroups[$groupName][] = $assetName;
+        }
+
+        if (count($entryPoints) === 0) {
+            throw new NoEntryPointsException();
         }
 
         $config = new WebpackConfig();
