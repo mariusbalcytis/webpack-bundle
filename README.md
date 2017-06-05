@@ -177,7 +177,7 @@ Tag:
 {% end_webpack %}
 ```
 
-As with function, provide `js`, `css` or leave it out to guess the type.
+As with `webpack_asset` function, provide `js`, `css` or leave it out to guess the type.
 
 See usage with `named` and `group` in [Using commons chunk](#using-commons-chunk) section.
 
