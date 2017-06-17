@@ -29,7 +29,7 @@
         "symfony/translation": "^2.7|^3.0",
         "symfony/asset": "^2.7|^3.0",
         "doctrine/annotations": "^1.0",
-        "doctrine/cache": "^1.6"
+        "doctrine/cache": "^1.5"
     },
     "autoload": {
         "psr-4": {
