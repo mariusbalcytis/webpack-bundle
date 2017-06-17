@@ -2,10 +2,10 @@ imports: [{resource: 'config_customized.yml'}]
 
 maba_webpack:
     bin:
-        working_directory: %kernel.root_dir%/../root_v1
+        working_directory: '%kernel.root_dir%/../root_v1'
     config:
         path:
-            %kernel.root_dir%/../root_v1/config.js
+            '%kernel.root_dir%/../root_v1/config.js'
 
 parameters:
-    maba_webpack.webpack_entry_config_path: %kernel.root_dir%/../root_v1/webpack.config.js
+    maba_webpack.webpack_entry_config_path: '%kernel.root_dir%/../root_v1/webpack.config.js'

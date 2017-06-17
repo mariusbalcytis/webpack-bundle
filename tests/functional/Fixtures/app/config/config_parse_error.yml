@@ -6,4 +6,4 @@ maba_webpack:
     twig:
         suppress_errors: false
         additional_directories:
-            - %kernel.root_dir%/Resources/views-parse-error
+            - '%kernel.root_dir%/Resources/views-parse-error'

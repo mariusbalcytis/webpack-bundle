@@ -6,14 +6,14 @@ maba_webpack:
     config:
         parameters:
             public_path: /assets/
-            path: %kernel.root_dir%/../web/assets/
+            path: '%kernel.root_dir%/../web/assets/'
     aliases:
         additional:
-            'a': %kernel.root_dir%/../src/WebpackTestBundle/Resources/assets
-            'app': %kernel.root_dir%/Resources/assets
+            'a': '%kernel.root_dir%/../src/WebpackTestBundle/Resources/assets'
+            'app': '%kernel.root_dir%/Resources/assets'
     twig:
         additional_directories:
-            - %kernel.root_dir%/Resources/views-customized
+            - '%kernel.root_dir%/Resources/views-customized'
     bin:
         webpack:
             executable:

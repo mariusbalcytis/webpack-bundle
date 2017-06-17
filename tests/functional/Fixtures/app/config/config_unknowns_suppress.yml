@@ -6,4 +6,4 @@ maba_webpack:
     twig:
         suppress_errors: ignore_unknowns
         additional_directories:
-            - %kernel.root_dir%/Resources/views-unknowns
+            - '%kernel.root_dir%/Resources/views-unknowns'
