@@ -1,0 +1,6 @@
+imports: [{resource: 'common.yml'}]
+
+maba_webpack:
+    enabled_bundles:
+        - MabaTestParentBundle
+        - MabaTestChildBundle

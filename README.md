@@ -444,6 +444,17 @@ Keep in mind that currently the same entry point cannot belong to several groups
 even if it's used in different places. This means that you must provide the same
 group for JavaScript and CSS versions of the same asset.
 
+### Note on bundle inheritance
+
+If you use bundles with inheritance, there are a few things you should keep in mind:
+
+- it's enough to include parent bundle in `enabled_bundles` configuration option (if used),
+extended bundles will be also parsed for entry points;
+- unfortunately, as the assets themselves are usually resolved in different context (in webpack itself),
+assets pointing to parent bundle (by it's aliases) will actually point to child bundle. This allows you
+to override any of the assets in the parent bundle, but requires to copy all of them, as they will not be
+looked in parent bundle's directory at all.
+
 Semantic versioning
 ----
 
