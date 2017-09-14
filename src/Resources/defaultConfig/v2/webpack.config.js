@@ -74,6 +74,7 @@ module.exports = function makeWebpackConfig(options) {
                 warnings: false,
                 errors: true
             },
+            disableHostCheck: true,
             headers: { "Access-Control-Allow-Origin": "*" }
         }, options.parameters.dev_server || {})
     };
