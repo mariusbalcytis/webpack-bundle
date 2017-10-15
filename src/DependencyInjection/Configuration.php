@@ -132,7 +132,7 @@ class Configuration implements ConfigurationInterface
         $entryFile->booleanNode('enabled')->defaultTrue();
         $entryFile
             ->arrayNode('disabled_extensions')
-            ->defaultValue(array('js', 'jsx', 'ts', 'coffee', 'es6', 'ls'))
+            ->defaultValue(array('js', 'jsx', 'ts', 'tsx', 'coffee', 'es6', 'ls'))
             ->prototype('scalar')
             ->info('For these extensions default webpack functionality will be used')
         ;
