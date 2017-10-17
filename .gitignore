@@ -6,3 +6,4 @@ tests/_support/_generated
 tests/functional/Fixtures/node_modules
 tests/functional/Fixtures/root_v1/node_modules
 .php_cs.cache
+.idea
