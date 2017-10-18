@@ -6,6 +6,10 @@
     {% if cssUrl %}
     <link rel="stylesheet" href="{{ cssUrl }}"/>
     {% endif %}
+
+    <!-- Test if compiles asets with spaces: {{ webpack_asset(
+        '@MabaWebpackTestBundle/Resources/assets/directory with space/asset name with space.css'
+    ) }}" -->
 </head>
 <body>
 <script src="{{ webpack_asset('@MabaWebpackTestBundle/Resources/assets/main.js') }}"></script>
