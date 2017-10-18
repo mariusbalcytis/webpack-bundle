@@ -41,7 +41,7 @@ class AssetResolver
         $resolvedAsset = implode('!', $assetParts);
 
         if ($this->entryFileManager->isEntryFile($locatedAsset)) {
-            $resolvedAsset = 'extract-file-loader?q=' . urlencode($resolvedAsset) . '!';
+            $resolvedAsset = 'extract-file-loader?q=' . rawurlencode($resolvedAsset) . '!';
         }
 
         return $resolvedAsset;

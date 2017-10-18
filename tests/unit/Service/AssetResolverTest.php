@@ -53,7 +53,9 @@ class AssetResolverTest extends Test
     {
         return array(
             array('/full/path.js', '/full/path.js', '/full/path.js', '/full/path.js', false),
+            array('/full/path with space.js', '/full/path with space.js', '/full/path with space.js', '/full/path with space.js', false),
             array('extract-file-loader?q=%2Ffull%2Fpath.js!', '/full/path.js', '/full/path.js', '/full/path.js', true),
+            array('extract-file-loader?q=%2Ffull%2Fpath%20with%20space.js!', '/full/path with space.js', '/full/path with space.js', '/full/path with space.js', true),
             array('loader!/full/path.js', 'loader!/full/path.js', '/full/path.js', '/full/path.js', false),
             array(
                 'extract-file-loader?q=loader%21%2Ffull%2Fpath.js!',
@@ -71,6 +73,8 @@ class AssetResolverTest extends Test
             ),
             array('/full/path.js', '@alias/path.js', '@alias/path.js', '/full/path.js', false),
             array('extract-file-loader?q=%2Ffull%2Fpath.js!', '@alias/path.js', '@alias/path.js', '/full/path.js', true),
+            array('extract-file-loader?q=%2Ffull%2Fpath%20with%20space.js!', '@alias/path with space.js', '@alias/path with space.js', '/full/path with space.js', true),
+            array('extract-file-loader?q=%2Falias%20path%20with%2Fspace.js!', '@alias/space.js', '@alias/space.js', '/alias path with/space.js', true),
             array(
                 'extract-file-loader?q=loader%21%2Ffull%2Fpath.js!',
                 'loader!@alias/path.js',
