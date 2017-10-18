@@ -8,6 +8,8 @@
     {% endif %}
 
     <link rel="stylesheet" id="css2" href="{{ webpack_asset('@MabaWebpackTestBundle/Resources/assets/style.less') }}"/>
+
+    <!-- Test filenames with spaces: {{ webpack_asset('@app/directory with space/asset name with space.css') }}" -->
 </head>
 <body>
 <script src="{{ webpack_asset('@MabaWebpackTestBundle/Resources/assets/customized.js') }}"></script>
