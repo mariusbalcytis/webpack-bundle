@@ -10,7 +10,7 @@
     </route>
     <route id="fixtures_maba_webpack_test_customized" path="/customized">
         <default key="_controller">FrameworkBundle:Template:template</default>
-        <default key="template">%kernel.root_dir%/Resources/views-customized/customized.html.twig</default>
+        <default key="template">@app_resources/views-customized/customized.html.twig</default>
     </route>
     <route id="fixtures_maba_webpack_test_tags" path="/tags">
         <default key="_controller">FrameworkBundle:Template:template</default>

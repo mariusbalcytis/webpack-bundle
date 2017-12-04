@@ -251,7 +251,9 @@ Aliases work the same in both twig templates (parameter to `webpack_asset` funct
 By default, these aliases are registered:
 
 - `@app`, which points to `%kernel.root_dir%/Resources/assets`
-- `@root`, which points to `%kernel.root_dir%/..` (usually the root of your repository)
+- `@root`, which points to `%kernel.project_dir%` (usually the root of your repository)
+- `@templates`, which points to `%kernel.project_dir%/templates`
+- `@assets`, which points to `%kernel.project_dir%/assets`
 - `@AcmeHelloBundle` or similar for each of your bundles. This points to root of the bundle (where `Bundle` class is), same as when locating resource in Symfony itself
 - `@acme_hello` or similar for each of your bundles. This points to `@AcmeHelloBundle/Resources/assets` by default.
 
@@ -446,14 +448,10 @@ group for JavaScript and CSS versions of the same asset.
 
 ### Note on bundle inheritance
 
-If you use bundles with inheritance, there are a few things you should keep in mind:
-
-- it's enough to include parent bundle in `enabled_bundles` configuration option (if used),
-extended bundles will be also parsed for entry points;
-- unfortunately, as the assets themselves are usually resolved in different context (in webpack itself),
-assets pointing to parent bundle (by it's aliases) will actually point to child bundle. This allows you
-to override any of the assets in the parent bundle, but requires to copy all of them, as they will not be
-looked in parent bundle's directory at all.
+If you use bundles with inheritance, keep in mind, that the assets themselves are usually
+resolved in different context (in webpack itself), assets pointing to parent bundle (by it's aliases)
+will actually point to child bundle. This allows you to override any of the assets in the parent bundle,
+but requires to copy all of them, as they will not be looked in parent bundle's directory at all.
 
 Semantic versioning
 ----

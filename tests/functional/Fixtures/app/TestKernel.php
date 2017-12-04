@@ -15,8 +15,6 @@ class TestKernel extends Kernel
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Maba\Bundle\WebpackBundle\MabaWebpackBundle(),
             new Fixtures\Maba\Bundle\WebpackTestBundle\MabaWebpackTestBundle(),
-            new Fixtures\Maba\Bundle\TestParentBundle\MabaTestParentBundle(),
-            new Fixtures\Maba\Bundle\TestChildBundle\MabaTestChildBundle(),
             new Fixtures\Maba\Bundle\WebpackAnotherTestBundle\MabaWebpackAnotherTestBundle(),
             new Fixtures\Maba\Bundle\TestCommonsChunkBundle\MabaTestCommonsChunkBundle(),
         );

@@ -2,6 +2,7 @@
 
 var webpack = require('webpack');
 var path = require('path');
+var fs = require('fs');
 var autoprefixer = require('autoprefixer');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var AssetsPlugin = require('assets-webpack-plugin');
@@ -34,6 +35,31 @@ module.exports = function makeWebpackConfig(options) {
         publicPath = DEV_SERVER ? 'http://localhost:8080/compiled/' : '/compiled/';
     }
 
+    var outputPath;
+    if (options.parameters.path) {
+        outputPath = options.parameters.path;
+    } else {
+        const findPublicDirectory = function(currentDirectory, fallback) {
+            var parentDirectory = path.dirname(currentDirectory);
+            if (parentDirectory === currentDirectory) {
+                return fallback;
+            }
+
+            var publicDirectory = parentDirectory + '/public';
+            if (fs.existsSync(publicDirectory)) {
+                return publicDirectory;
+            }
+
+            var webDirectory = parentDirectory + '/web';
+            if (fs.existsSync(webDirectory)) {
+                return webDirectory;
+            }
+
+            return findPublicDirectory(parentDirectory, fallback);
+        };
+        outputPath = findPublicDirectory(__dirname, __dirname + '../../web') + '/compiled/';
+    }
+
     /**
      * Config
      * Reference: https://webpack.js.org/concepts/
@@ -49,7 +75,7 @@ module.exports = function makeWebpackConfig(options) {
 
         output: {
             // Absolute output directory
-            path: options.parameters.path ? options.parameters.path : __dirname + '/../../web/compiled/',
+            path: outputPath,
 
             // Output path from the view of the page
             publicPath: publicPath,

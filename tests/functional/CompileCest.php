@@ -27,11 +27,11 @@ class CompileCest
     public function getNoErrorIfAssetsAreDumped(FunctionalTester $I)
     {
         $I->bootKernelWith();
-        $I->runCommand('maba_webpack.command.setup');
+        $I->runCommand('maba:webpack:setup');
         $I->seeFileFound(__DIR__ . '/Fixtures/package.json');
         $I->seeFileFound(__DIR__ . '/Fixtures/app/config/webpack.config.js');
 
-        $I->runCommand('maba_webpack.command.compile');
+        $I->runCommand('maba:webpack:compile');
         $I->seeCommandStatusCode(0);
         $I->seeInCommandDisplay('webpack');
         $I->dontSeeInCommandDisplay('error');
@@ -56,8 +56,8 @@ class CompileCest
     {
         $I->bootKernelWith('bundle_error');
 
-        $I->runCommand('maba_webpack.command.setup');
-        $I->runCommand('maba_webpack.command.compile');
+        $I->runCommand('maba:webpack:setup');
+        $I->runCommand('maba:webpack:compile');
         $I->seeCommandStatusCode(1);
     }
 
@@ -65,8 +65,8 @@ class CompileCest
     {
         $I->bootKernelWith('parse_error');
 
-        $I->runCommand('maba_webpack.command.setup');
-        $I->runCommand('maba_webpack.command.compile');
+        $I->runCommand('maba:webpack:setup');
+        $I->runCommand('maba:webpack:compile');
         $I->seeCommandStatusCode(1);
     }
 
@@ -74,8 +74,8 @@ class CompileCest
     {
         $I->bootKernelWith('parse_error2');
 
-        $I->runCommand('maba_webpack.command.setup');
-        $I->runCommand('maba_webpack.command.compile');
+        $I->runCommand('maba:webpack:setup');
+        $I->runCommand('maba:webpack:compile');
         $I->seeCommandStatusCode(1);
     }
 
@@ -83,8 +83,8 @@ class CompileCest
     {
         $I->bootKernelWith('parse_error_suppress');
 
-        $I->runCommand('maba_webpack.command.setup');
-        $I->runCommand('maba_webpack.command.compile');
+        $I->runCommand('maba:webpack:setup');
+        $I->runCommand('maba:webpack:compile');
         $I->seeCommandStatusCode(0);
     }
 
@@ -92,8 +92,8 @@ class CompileCest
     {
         $I->bootKernelWith('unknowns');
 
-        $I->runCommand('maba_webpack.command.setup');
-        $I->runCommand('maba_webpack.command.compile');
+        $I->runCommand('maba:webpack:setup');
+        $I->runCommand('maba:webpack:compile');
         $I->seeCommandStatusCode(1);
     }
 
@@ -101,8 +101,8 @@ class CompileCest
     {
         $I->bootKernelWith('unknowns_suppress');
 
-        $I->runCommand('maba_webpack.command.setup');
-        $I->runCommand('maba_webpack.command.compile');
+        $I->runCommand('maba:webpack:setup');
+        $I->runCommand('maba:webpack:compile');
         $I->seeCommandStatusCode(0);
     }
 }

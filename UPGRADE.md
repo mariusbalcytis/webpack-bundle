@@ -1,3 +1,29 @@
+# Upgrade from 0.6 to 1.0
+
+## Directory structure changes
+
+Default location of `webpack.config.js` changed to be compatible with new Symfony 4 structure. It's not stored
+in `config` folder of your project directory.
+
+To keep previous behaviour, provide this configuration:
+
+```yaml
+maba_webpack:
+    config:
+        path:
+          %kernel.root_dir%/config/webpack.config.js
+```
+
+Also, to support `/public` directory in Symfony4 out of the box, default `webpack.config.js` scans parent directories
+until it finds either `/public` or `/web` directory and uses that for dumping assets into.
+
+## Bundle inheritance unsupported
+
+If bundle inheritance is used, assets will be searched only in the first bundle.
+Configure additional assets directory for extended bundles if needed.
+
+This change was done to be compatible with Symfony4, which drops support for bundle inheritance.
+
 # Upgrade from 0.5 to 0.6
 
 ## Configuration changes

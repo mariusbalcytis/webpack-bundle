@@ -68,7 +68,7 @@ class Configuration implements ConfigurationInterface
     private function configureConfig(NodeBuilder $rootChildren)
     {
         $config = $rootChildren->arrayNode('config')->addDefaultsIfNotSet()->children();
-        $config->scalarNode('path')->defaultValue('%kernel.root_dir%/config/webpack.config.js');
+        $config->scalarNode('path')->defaultValue('%kernel.project_dir%/config/webpack.config.js');
         $config->arrayNode('parameters')->treatNullLike(array())->useAttributeAsKey('name')->prototype('variable');
         $config->scalarNode('manifest_file_path')->defaultValue('%kernel.cache_dir%/webpack_manifest.php');
     }

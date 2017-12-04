@@ -4,9 +4,8 @@ namespace Maba\Bundle\WebpackBundle\Compiler;
 
 use Maba\Bundle\WebpackBundle\Config\WebpackConfig;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
-use Symfony\Component\Process\ProcessUtils;
+use Symfony\Component\Process\ProcessBuilder;
 
 class WebpackProcessBuilder
 {
@@ -45,44 +44,43 @@ class WebpackProcessBuilder
 
     public function buildWebpackProcess(WebpackConfig $config)
     {
-        $processBuilder = new ProcessBuilder();
-        $processBuilder->setArguments(array_merge(
+        $arguments = array_merge(
             $this->webpackExecutable,
             array('--config', $config->getConfigPath()),
             $this->webpackArguments
-        ));
-        $processBuilder->setTimeout(3600);
+        );
+        $environment = array();
 
-        $process = $this->buildProcess($processBuilder);
-
-        if ($this->dashboardMode === self::DASHBOARD_MODE_ENABLED_ALWAYS) {
-            $this->addDashboard($process);
+        if ($this->dashboardMode === self::DASHBOARD_MODE_ENABLED_ALWAYS && $this->isTtyAvailable()) {
+            $this->addDashboard($arguments, $environment);
         }
+
+        $process = $this->buildProcess($arguments, $environment);
+        $process->setTimeout(3600);
 
         return $process;
     }
 
     public function buildDevServerProcess(WebpackConfig $config)
     {
-        $processBuilder = new ProcessBuilder();
-        $processBuilder->setArguments(array_merge(
+        $arguments = array_merge(
             $this->devServerExecutable,
             array('--config', $config->getConfigPath()),
             $this->devServerArguments
-        ));
-        $processBuilder->setTimeout(0);
-        $processBuilder->setEnv('WEBPACK_MODE', 'watch');
-
-        $process = $this->buildProcess($processBuilder);
+        );
+        $environment = array('WEBPACK_MODE' => 'watch');
 
         $dashboardEnabled = in_array($this->dashboardMode, array(
             self::DASHBOARD_MODE_ENABLED_ALWAYS,
             self::DASHBOARD_MODE_ENABLED_ON_DEV_SERVER,
         ), true);
 
-        if ($dashboardEnabled) {
-            $this->addDashboard($process);
+        if ($dashboardEnabled && $this->isTtyAvailable()) {
+            $this->addDashboard($arguments, $environment);
         }
+
+        $process = $this->buildProcess($arguments, $environment);
+        $process->setTimeout(0);
 
         // from symfony 3.3 exec is added automatically
         if (DIRECTORY_SEPARATOR !== '\\' && substr($process->getCommandLine(), 0, 5) !== 'exec ') {
@@ -92,13 +90,50 @@ class WebpackProcessBuilder
         return $process;
     }
 
-    private function buildProcess(ProcessBuilder $processBuilder)
+    private function addDashboard(&$arguments, &$environment)
     {
-        $processBuilder->setWorkingDirectory($this->workingDirectory);
+        $arguments = array_merge(
+            $this->dashboardExecutable,
+            array('--'),
+            $arguments
+        );
+        $environment = array('WEBPACK_DASHBOARD' => 'enabled') + $environment;
+    }
 
-        $process = $processBuilder->getProcess();
+    private function buildProcess($arguments, $environment)
+    {
+        if (class_exists('Symfony\Component\Process\ProcessBuilder')) {
+            $builder = new ProcessBuilder($arguments);
+            $builder->addEnvironmentVariables($environment);
+            $builder->setWorkingDirectory($this->workingDirectory);
+            $builder->inheritEnvironmentVariables();
+            $process = $builder->getProcess();
+        } else {
+            // if ProcessBuilder is unavailable, this means that arguments can be array
+            //    and Process class has `inheritEnvironmentVariables` (^4.x)
+
+            $process = new Process($arguments);
+            $process->setEnv($environment);
+            $process->setWorkingDirectory($this->workingDirectory);
+            $process->inheritEnvironmentVariables();
+        }
+
+        $this->configureTty($process);
+
+        return $process;
+    }
+
+    private function isTtyAvailable()
+    {
+        $process = new Process('ls');
+        $this->configureTty($process);
+        return $process->isTty();
+    }
+
+    private function configureTty(Process $process)
+    {
         if ($this->disableTty) {
-            return $process;
+            return;
         }
 
         try {
@@ -106,26 +141,5 @@ class WebpackProcessBuilder
         } catch (ProcessRuntimeException $exception) {
             // thrown if TTY is not available - just ignore
         }
-
-        return $process;
-    }
-
-    private function addDashboard(Process $process)
-    {
-        if (!$process->isTty()) {
-            return;
-        }
-
-        $prefix = implode(' ', array_map(function ($part) {
-            return ProcessUtils::escapeArgument($part);
-        }, $this->dashboardExecutable));
-
-        $commandLine = $process->getCommandLine();
-        if (substr($commandLine, 0, 5) === 'exec ') {
-            $commandLine = substr($commandLine, 5);
-        }
-        $process->setCommandLine($prefix . ' -- ' . $commandLine);
-
-        $process->setEnv(array('WEBPACK_DASHBOARD' => 'enabled') + $process->getEnv());
     }
 }

@@ -11,20 +11,20 @@
     <services>
         <service id="maba_webpack.command.compile"
                  class="Maba\Bundle\WebpackBundle\Command\CompileCommand">
-            <tag name="console.command"/>
+            <tag name="console.command" command="maba:webpack:compile"/>
 
             <argument type="service" id="maba_webpack.webpack_compiler"/>
             <argument type="service" id="logger"/>
         </service>
         <service id="maba_webpack.command.dev_server"
                  class="Maba\Bundle\WebpackBundle\Command\DevServerCommand">
-            <tag name="console.command"/>
+            <tag name="console.command" command="maba:webpack:dev-server"/>
 
             <argument type="service" id="maba_webpack.webpack_compiler"/>
         </service>
         <service id="maba_webpack.command.setup"
                  class="Maba\Bundle\WebpackBundle\Command\SetupCommand">
-            <tag name="console.command"/>
+            <tag name="console.command" command="maba:webpack:setup"/>
 
             <argument type="service">
                 <service class="stdClass">

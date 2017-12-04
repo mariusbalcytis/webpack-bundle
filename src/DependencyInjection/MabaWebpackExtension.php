@@ -40,7 +40,11 @@ class MabaWebpackExtension extends Extension
     {
         $twigDirectories = $config['twig']['additional_directories'];
         $twigDirectories[] = '%kernel.root_dir%/Resources/views';
+        if ($container->hasParameter('kernel.project_dir')) {
+            $twigDirectories[] = '%kernel.project_dir%/templates';
+        }
         $container->setParameter('maba_webpack.twig_directories', $twigDirectories);
+
         if ($config['twig']['suppress_errors'] === true) {
             $errorHandlerId = 'maba_webpack.error_handler.suppressing';
         } elseif ($config['twig']['suppress_errors'] === 'ignore_unknowns') {
@@ -53,6 +57,15 @@ class MabaWebpackExtension extends Extension
 
     private function configureConfig(ContainerBuilder $container, $config)
     {
+        if (
+            strpos($config['config']['path'], '%kernel.project_dir%') !== false
+            && !$container->hasParameter('kernel.project_dir')
+        ) {
+            $config['config']['path'] = strtr($config['config']['path'], array(
+                '%kernel.project_dir%' => '%kernel.root_dir%/..',
+            ));
+        }
+
         $container->setParameter('maba_webpack.webpack_config_path', $config['config']['path']);
         $container->setParameter('maba_webpack.webpack_config_parameters', $config['config']['parameters']);
         $container->setParameter('maba_webpack.config.manifest_file_path', $config['config']['manifest_file_path']);
@@ -60,10 +73,20 @@ class MabaWebpackExtension extends Extension
 
     private function configureAliases(ContainerBuilder $container, $config)
     {
-        $additionalAliases = $config['aliases']['additional'] + array(
-                'app' => '%kernel.root_dir%/Resources/assets',
-                'root' => '%kernel.root_dir%/..',
-            );
+        $defaultAliases = array(
+            'app' => '%kernel.root_dir%/Resources/assets',
+        );
+        if ($container->hasParameter('kernel.project_dir')) {
+            $defaultAliases['root'] = '%kernel.project_dir%';
+            $defaultAliases['templates'] = '%kernel.project_dir%/templates';
+            $defaultAliases['assets'] = '%kernel.project_dir%/assets';
+        } else {
+            $defaultAliases['root'] = '%kernel.root_dir%/..';
+            $defaultAliases['templates'] = '%kernel.root_dir%/../templates';
+            $defaultAliases['assets'] = '%kernel.root_dir%/../assets';
+        }
+
+        $additionalAliases = $config['aliases']['additional'] + $defaultAliases;
         $container->setParameter('maba_webpack.aliases.additional', $additionalAliases);
         $container->setParameter('maba_webpack.aliases.path_in_bundle', $config['aliases']['path_in_bundle']);
     }

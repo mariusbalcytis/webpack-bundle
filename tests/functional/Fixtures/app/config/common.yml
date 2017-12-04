@@ -5,5 +5,14 @@ framework:
     router:
         resource: '%kernel.root_dir%/config/routing.yml'
         strict_requirements: ~
-    profiler: ~
+    profiler:
+      enabled: false
     translator: ~
+
+twig:
+    paths:
+        "%kernel.root_dir%/Resources": app_resources
+
+maba_webpack:
+    config:
+        path: '%kernel.root_dir%/config/webpack.config.js'

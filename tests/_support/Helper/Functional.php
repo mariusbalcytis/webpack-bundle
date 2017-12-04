@@ -2,12 +2,14 @@
 namespace Helper;
 
 use Codeception\Module\Filesystem;
-use Codeception\Module\Symfony2;
+use Codeception\Module\Symfony;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Tester\CommandTester;
-use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
+use Codeception\Lib\Connector\Symfony as SymfonyConnector;
 
-class Functional extends Symfony2
+class Functional extends Symfony
 {
     /**
      * @var CommandTester
@@ -19,10 +21,21 @@ class Functional extends Symfony2
      */
     protected $errorCode;
 
+    public function _initialize()
+    {
+        // do nothing - kernel is initialized with custom method, as configuration is passed
+    }
 
-    public function _before(\Codeception\TestCase $test)
+
+    public function _before(\Codeception\TestInterface $test)
     {
         // do nothing
+    }
+
+    protected function getKernelClass()
+    {
+        require_once __DIR__ . '/../../functional/Fixtures/app/TestKernel.php';
+        return \TestKernel::class;
     }
 
     protected function bootKernel($configFile = null)
@@ -45,7 +58,7 @@ class Functional extends Symfony2
         $this->kernel = null;
         $this->bootKernel($configFile);
         $this->container = $this->kernel->getContainer();
-        $this->client = new Symfony2Connector($this->kernel);
+        $this->client = new SymfonyConnector($this->kernel);
         $this->client->followRedirects(true);
     }
 
@@ -90,15 +103,14 @@ class Functional extends Symfony2
         }
     }
 
-    public function runCommand($commandServiceId, array $input = array())
+    public function runCommand($commandName, array $input = array())
     {
         $this->errorCode = null;
         $this->commandTester = null;
 
-        $command = $this->grabServiceFromContainer($commandServiceId);
-
         $application = new Application($this->kernel);
-        $application->add($command);
+        $application->doRun(new ArrayInput([]), new NullOutput());
+        $command = $application->get($commandName);
 
         $commandTester = new CommandTester($command);
 

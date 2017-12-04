@@ -15,7 +15,7 @@ class CustomizedCest
     public function getNoErrorIfAssetsAreDumped(FunctionalTester $I)
     {
         $I->bootKernelWith('customized');
-        $I->runCommand('maba_webpack.command.setup');
+        $I->runCommand('maba:webpack:setup');
 
         $I->seeFileFound(__DIR__ . '/Fixtures/package.json');
         $I->seeFileFound(__DIR__ . '/Fixtures/app/config/webpack.config.js');
@@ -26,7 +26,7 @@ class CustomizedCest
     public function getNoErrorIfAssetsAreDumpedWithWebpack1(FunctionalTester $I)
     {
         $I->bootKernelWith('customized_v1');
-        $I->runCommand('maba_webpack.command.setup', array('--useWebpackV1' => null));
+        $I->runCommand('maba:webpack:setup', array('--useWebpackV1' => null));
 
         $I->seeFileFound(__DIR__ . '/Fixtures/root_v1/package.json');
         $I->seeFileFound(__DIR__ . '/Fixtures/root_v1/config.js');
@@ -36,7 +36,7 @@ class CustomizedCest
 
     protected function assertCompilationSuccessful(FunctionalTester $I)
     {
-        $I->runCommand('maba_webpack.command.compile');
+        $I->runCommand('maba:webpack:compile');
         $I->seeCommandStatusCode(0);
         $I->seeInCommandDisplay('webpack');
         $I->dontSeeInCommandDisplay('error');

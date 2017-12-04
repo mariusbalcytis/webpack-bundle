@@ -2,7 +2,6 @@
 
 namespace Maba\Bundle\WebpackBundle\AssetProvider\DirectoryProvider;
 
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class BundlesDirectoryProvider implements DirectoryProviderInterface
@@ -27,13 +26,10 @@ class BundlesDirectoryProvider implements DirectoryProviderInterface
     {
         $directories = array();
         foreach ($this->bundles as $bundleName) {
-            /** @var BundleInterface[] $bundles */
-            $bundles = $this->kernel->getBundle($bundleName, false);
-            foreach ($bundles as $bundle) {
-                $directory = $bundle->getPath() . $this->relativeDirectory;
-                if (file_exists($directory)) {
-                    $directories[$directory] = true;
-                }
+            $bundle = $this->kernel->getBundle($bundleName);
+            $directory = $bundle->getPath() . $this->relativeDirectory;
+            if (file_exists($directory)) {
+                $directories[$directory] = true;
             }
         }
 

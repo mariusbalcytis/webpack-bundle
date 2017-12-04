@@ -36,13 +36,13 @@
     </parameters>
 
     <services>
-        <service id="maba_webpack.asset_manager" class="Maba\Bundle\WebpackBundle\Service\AssetManager">
+        <service id="maba_webpack.asset_manager" class="Maba\Bundle\WebpackBundle\Service\AssetManager" public="true">
             <argument type="service" id="maba_webpack.manifest_storage"/>
             <argument type="service" id="maba_webpack.asset_name_generator"/>
             <argument type="service" id="maba_webpack.entry_file_manager"/>
         </service>
 
-        <service id="maba_webpack.asset_locator" class="Maba\Bundle\WebpackBundle\Service\AssetLocator">
+        <service id="maba_webpack.asset_locator" class="Maba\Bundle\WebpackBundle\Service\AssetLocator" public="true">
             <argument type="service" id="maba_webpack.alias_manager"/>
         </service>
 

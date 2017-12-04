@@ -33,13 +33,13 @@ module.exports = function (options) {
 CONTENTS;
 
         $I->bootKernelWith('commons_chunk');
-        $I->runCommand('maba_webpack.command.setup');
+        $I->runCommand('maba:webpack:setup');
         $I->seeFileFound(__DIR__ . '/Fixtures/package.json');
         $I->seeFileFound(__DIR__ . '/Fixtures/app/config/webpack.config.js');
         $I->moveFile(__DIR__ . '/Fixtures/app/config/webpack.config.js', __DIR__ . '/Fixtures/app/config/default.js');
         $I->writeToFile(__DIR__ . '/Fixtures/app/config/webpack.config.js', $configContents);
 
-        $I->runCommand('maba_webpack.command.compile');
+        $I->runCommand('maba:webpack:compile');
         $I->seeCommandStatusCode(0);
         $I->seeInCommandDisplay('webpack');
         $I->dontSeeInCommandDisplay('error');
