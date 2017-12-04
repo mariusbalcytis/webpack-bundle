@@ -24,7 +24,7 @@ class AssetResolver
      */
     public function resolveAsset($asset)
     {
-        $assetParts = array();
+        $assetParts = [];
 
         $position = strrpos($asset, '!');
         if ($position !== false) {

@@ -24,7 +24,7 @@ class TwigDirectoryAssetProvider implements AssetProviderInterface
 
     public function getAssets($previousContext = null)
     {
-        $resources = array();
+        $resources = [];
         foreach ($this->directoryProvider->getDirectories() as $directory) {
             foreach ($this->createFinder($directory) as $file) {
                 $resources[] = $file->getRealPath();
@@ -32,7 +32,7 @@ class TwigDirectoryAssetProvider implements AssetProviderInterface
         }
 
         $result = new AssetResult();
-        $context = array();
+        $context = [];
         foreach ($resources as $fileName) {
             $assetResult = $this->twigAssetProvider->getAssets(
                 $fileName,
@@ -53,7 +53,7 @@ class TwigDirectoryAssetProvider implements AssetProviderInterface
     private function createFinder($resource)
     {
         if (!is_dir($resource)) {
-            return array();
+            return [];
         }
 
         $finder = new Finder();

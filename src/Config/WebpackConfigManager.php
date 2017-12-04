@@ -47,8 +47,8 @@ class WebpackConfigManager
         $assetResult = $this->assetCollector->getAssets(
             $previousConfig !== null ? $previousConfig->getCacheContext() : null
         );
-        $entryPoints = array();
-        $assetGroups = array();
+        $entryPoints = [];
+        $assetGroups = [];
         foreach ($assetResult->getAssets() as $asset) {
             $assetName = $this->assetNameGenerator->generateName($asset->getResource());
             try {

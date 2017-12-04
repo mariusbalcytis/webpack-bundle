@@ -138,7 +138,7 @@ EOT
 
         $this->runProcess($process, $output);
 
-        $filesForGit = array('package.json', 'app/config/webpack.config.js');
+        $filesForGit = ['package.json', 'app/config/webpack.config.js'];
         if ($yarnInstalled) {
             $filesForGit[] = 'yarn.lock';
         }
@@ -147,8 +147,8 @@ EOT
 
     private function addStylesConfiguration(OutputInterface $output)
     {
-        $output->getFormatter()->setStyle('code', new OutputFormatterStyle('white', 'black', array('bold')));
-        $output->getFormatter()->setStyle('bold', new OutputFormatterStyle(null, null, array('bold')));
+        $output->getFormatter()->setStyle('code', new OutputFormatterStyle('white', 'black', ['bold']));
+        $output->getFormatter()->setStyle('bold', new OutputFormatterStyle(null, null, ['bold']));
     }
 
     private function ask(InputInterface $input, OutputInterface $output, Question $question)

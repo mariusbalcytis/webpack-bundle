@@ -80,7 +80,7 @@ class WebpackTokenParser extends TokenParser
     {
         $endTag = 'end_' . $this->getTag();
         $body = $this->parser->subparse(function (Token $token) use ($endTag) {
-            return $token->test(array($endTag));
+            return $token->test([$endTag]);
         }, true);
         $stream->expect(Token::BLOCK_END_TYPE);
 
@@ -89,7 +89,7 @@ class WebpackTokenParser extends TokenParser
 
     private function createNodesForInputs(ParsedTag $parsedTag, Node $body, $lineNo)
     {
-        $nodes = array();
+        $nodes = [];
         foreach ($parsedTag->getInputs() as $input) {
             $valueExpression = $this->createFunctionExpression($input, $parsedTag, $lineNo);
             $nodes[] = $this->createAssignAndCheckNode($valueExpression, $body, $lineNo);
@@ -103,10 +103,10 @@ class WebpackTokenParser extends TokenParser
         $functionName = $parsedTag->isNamed() ? $this->namedAssetFunctionName : $this->functionName;
 
         /** @noinspection PhpParamsInspection */
-        $arguments = array(
+        $arguments = [
             new ConstantExpression($input, $lineNo),
             new ConstantExpression($parsedTag->getType(), $lineNo),
-        );
+        ];
 
         if ($parsedTag->getGroup() !== null) {
             /* @noinspection PhpParamsInspection */
@@ -134,12 +134,12 @@ class WebpackTokenParser extends TokenParser
         );
 
         // if (asset_url) { ... }
-        $ifBlock = new IfNode(new Node(array(
+        $ifBlock = new IfNode(new Node([
             new AssignNameExpression('asset_url', $lineNo),
             $body,
-        )), null, $lineNo, $this->getTag());
+        ]), null, $lineNo, $this->getTag());
 
-        return new Node(array($assignExpression, $ifBlock));
+        return new Node([$assignExpression, $ifBlock]);
     }
 
     public function getTag()

@@ -46,10 +46,10 @@ class WebpackProcessBuilder
     {
         $arguments = array_merge(
             $this->webpackExecutable,
-            array('--config', $config->getConfigPath()),
+            ['--config', $config->getConfigPath()],
             $this->webpackArguments
         );
-        $environment = array();
+        $environment = [];
 
         if ($this->dashboardMode === self::DASHBOARD_MODE_ENABLED_ALWAYS && $this->isTtyAvailable()) {
             $this->addDashboard($arguments, $environment);
@@ -65,15 +65,15 @@ class WebpackProcessBuilder
     {
         $arguments = array_merge(
             $this->devServerExecutable,
-            array('--config', $config->getConfigPath()),
+            ['--config', $config->getConfigPath()],
             $this->devServerArguments
         );
-        $environment = array('WEBPACK_MODE' => 'watch');
+        $environment = ['WEBPACK_MODE' => 'watch'];
 
-        $dashboardEnabled = in_array($this->dashboardMode, array(
+        $dashboardEnabled = in_array($this->dashboardMode, [
             self::DASHBOARD_MODE_ENABLED_ALWAYS,
             self::DASHBOARD_MODE_ENABLED_ON_DEV_SERVER,
-        ), true);
+        ], true);
 
         if ($dashboardEnabled && $this->isTtyAvailable()) {
             $this->addDashboard($arguments, $environment);
@@ -94,10 +94,10 @@ class WebpackProcessBuilder
     {
         $arguments = array_merge(
             $this->dashboardExecutable,
-            array('--'),
+            ['--'],
             $arguments
         );
-        $environment = array('WEBPACK_DASHBOARD' => 'enabled') + $environment;
+        $environment = ['WEBPACK_DASHBOARD' => 'enabled'] + $environment;
     }
 
     private function buildProcess($arguments, $environment)

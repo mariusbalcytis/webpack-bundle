@@ -71,7 +71,7 @@ class TwigAssetProvider
 
         $assetResult = new AssetResult();
         $assetResult->setAssets($assets);
-        $assetResult->setContext(array('modified_at' => filemtime($fileName), 'assets' => $assets));
+        $assetResult->setContext(['modified_at' => filemtime($fileName), 'assets' => $assets]);
         return $assetResult;
     }
 
@@ -82,7 +82,7 @@ class TwigAssetProvider
             return $this->parseFunctionNode($node, sprintf('File %s, line %s', $resource, $node->getTemplateLine()));
         }
 
-        $assets = array();
+        $assets = [];
         foreach ($node as $child) {
             if ($child instanceof Node) {
                 $assets = array_merge($assets, $this->loadNode($child, $resource));
@@ -132,7 +132,7 @@ class TwigAssetProvider
             $asset->setGroup($this->getArgumentValue($groupArgument, $context));
         }
 
-        return array($asset);
+        return [$asset];
     }
 
     private function getArgumentValue(Node $argument, $context)

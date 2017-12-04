@@ -24,7 +24,7 @@ class BundlesDirectoryProvider implements DirectoryProviderInterface
 
     public function getDirectories()
     {
-        $directories = array();
+        $directories = [];
         foreach ($this->bundles as $bundleName) {
             $bundle = $this->kernel->getBundle($bundleName);
             $directory = $bundle->getPath() . $this->relativeDirectory;

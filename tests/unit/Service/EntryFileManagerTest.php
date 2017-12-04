@@ -24,84 +24,84 @@ class EntryFileManagerTest extends Test
 
     public function dataProvider()
     {
-        return array(
-            'parses simple extension' => array(
+        return [
+            'parses simple extension' => [
                 'css',
                 'style.css',
-                array(),
-                array('js'),
-                array(),
-            ),
-            'parses extension with loaders, aliases and paths' => array(
+                [],
+                ['js'],
+                [],
+            ],
+            'parses extension with loaders, aliases and paths' => [
                 'css',
                 '-!loader?q=a.js&w=r.less!anotherloader!@alias/path/file-name with spaces.css',
-                array(),
-                array('js'),
-                array(),
-            ),
-            'returns null if type disabled' => array(
+                [],
+                ['js'],
+                [],
+            ],
+            'returns null if type disabled' => [
                 null,
                 'file.js',
-                array(),
-                array('js'),
-                array(),
-            ),
-            'enabled overrides disabled' => array(
+                [],
+                ['js'],
+                [],
+            ],
+            'enabled overrides disabled' => [
                 'js',
                 'file.js',
-                array('js'),
-                array('js'),
-                array(),
-            ),
-            'looks at enabled even if no disabled provided' => array(
+                ['js'],
+                ['js'],
+                [],
+            ],
+            'looks at enabled even if no disabled provided' => [
                 'js',
                 'file.js',
-                array('js'),
-                array(),
-                array(),
-            ),
-            'returns null if type not enabled' => array(
+                ['js'],
+                [],
+                [],
+            ],
+            'returns null if type not enabled' => [
                 null,
                 'file.js',
-                array('css'),
-                array(),
-                array(),
-            ),
-            'no enabled nor disabled means disabled for all types' => array(
+                ['css'],
+                [],
+                [],
+            ],
+            'no enabled nor disabled means disabled for all types' => [
                 null,
                 'file.js',
-                array(),
-                array(),
-                array(),
-            ),
-            'looks at type map' => array(
+                [],
+                [],
+                [],
+            ],
+            'looks at type map' => [
                 'css',
                 'file.less',
-                array(),
-                array('js'),
-                array('css' => array('less')),
-            ),
-            'looks at enabled before typemap' => array(
+                [],
+                ['js'],
+                ['css' => ['less']],
+            ],
+            'looks at enabled before typemap' => [
                 'css',
                 'file.less',
-                array('less'),
-                array(),
-                array('css' => array('less')),
-            ),
-            'looks at enabled only before typemap' => array(
+                ['less'],
+                [],
+                ['css' => ['less']],
+            ],
+            'looks at enabled only before typemap' => [
                 null,
                 'file.less',
-                array('css'),
-                array(),
-                array('css' => array('less')),
-            ),
-            'looks at first found in typemap' => array(
+                ['css'],
+                [],
+                ['css' => ['less']],
+            ],
+            'looks at first found in typemap' => [
                 'css',
                 'file.less',
-                array(),
-                array('js'),
-                array('js' => array('coffee'), 'css' => array('scss', 'sass', 'less'), 'other' => array('less')),
-            ),
-        );
+                [],
+                ['js'],
+                ['js' => ['coffee'], 'css' => ['scss', 'sass', 'less'], 'other' => ['less']],
+            ],
+        ];
     }
 }

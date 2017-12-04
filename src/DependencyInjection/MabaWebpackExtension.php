@@ -61,9 +61,9 @@ class MabaWebpackExtension extends Extension
             strpos($config['config']['path'], '%kernel.project_dir%') !== false
             && !$container->hasParameter('kernel.project_dir')
         ) {
-            $config['config']['path'] = strtr($config['config']['path'], array(
+            $config['config']['path'] = strtr($config['config']['path'], [
                 '%kernel.project_dir%' => '%kernel.root_dir%/..',
-            ));
+            ]);
         }
 
         $container->setParameter('maba_webpack.webpack_config_path', $config['config']['path']);
@@ -73,9 +73,9 @@ class MabaWebpackExtension extends Extension
 
     private function configureAliases(ContainerBuilder $container, $config)
     {
-        $defaultAliases = array(
+        $defaultAliases = [
             'app' => '%kernel.root_dir%/Resources/assets',
-        );
+        ];
         if ($container->hasParameter('kernel.project_dir')) {
             $defaultAliases['root'] = '%kernel.project_dir%';
             $defaultAliases['templates'] = '%kernel.project_dir%/templates';
@@ -103,11 +103,11 @@ class MabaWebpackExtension extends Extension
 
     private function configureDashboard(ContainerBuilder $container, $config)
     {
-        $dashboardModeMap = array(
+        $dashboardModeMap = [
             'always' => WebpackProcessBuilder::DASHBOARD_MODE_ENABLED_ALWAYS,
             'dev_server' => WebpackProcessBuilder::DASHBOARD_MODE_ENABLED_ON_DEV_SERVER,
             false => WebpackProcessBuilder::DASHBOARD_MODE_DISABLED,
-        );
+        ];
         $container->setParameter('maba_webpack.dashboard.mode', $dashboardModeMap[$config['dashboard']['enabled']]);
         $container->setParameter('maba_webpack.dashboard.executable', $config['dashboard']['executable']);
     }
@@ -116,8 +116,8 @@ class MabaWebpackExtension extends Extension
     {
         if (!$config['entry_file']['enabled']) {
             // both empty disables the functionality
-            $container->setParameter('maba_webpack.entry_file.disabled_extensions', array());
-            $container->setParameter('maba_webpack.entry_file.enabled_extensions', array());
+            $container->setParameter('maba_webpack.entry_file.disabled_extensions', []);
+            $container->setParameter('maba_webpack.entry_file.enabled_extensions', []);
         } else {
             $container->setParameter(
                 'maba_webpack.entry_file.disabled_extensions',

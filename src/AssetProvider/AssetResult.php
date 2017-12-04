@@ -10,7 +10,7 @@ class AssetResult
     /**
      * @var AssetItem[]
      */
-    private $assets = array();
+    private $assets = [];
 
     /**
      * @var mixed

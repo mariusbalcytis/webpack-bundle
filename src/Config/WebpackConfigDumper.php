@@ -36,14 +36,14 @@ class WebpackConfigDumper
         $configContents = sprintf(
             $configTemplate,
             json_encode($this->includeConfigPath),
-            json_encode(array(
+            json_encode([
                 'entry' => (object)$config->getEntryPoints(),
                 'groups' => (object)$config->getAssetGroups(),
                 'alias' => (object)$config->getAliases(),
                 'manifest_path' => $this->manifestPath,
                 'environment' => $this->environment,
                 'parameters' => (object)$this->parameters,
-            ))
+            ])
         );
 
         file_put_contents($this->path, $configContents);

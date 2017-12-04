@@ -20,17 +20,17 @@ class WebpackExtension extends Extension
 
     public function getFunctions()
     {
-        return array(
-            new SimpleFunction(self::FUNCTION_NAME, array($this, 'getAssetUrl')),
-            new SimpleFunction(self::NAMED_ASSET_FUNCTION_NAME, array($this, 'getNamedAssetUrl')),
-        );
+        return [
+            new SimpleFunction(self::FUNCTION_NAME, [$this, 'getAssetUrl']),
+            new SimpleFunction(self::NAMED_ASSET_FUNCTION_NAME, [$this, 'getNamedAssetUrl']),
+        ];
     }
 
     public function getTokenParsers()
     {
-        return array(
+        return [
             new WebpackTokenParser(self::FUNCTION_NAME, self::NAMED_ASSET_FUNCTION_NAME),
-        );
+        ];
     }
 
     /**

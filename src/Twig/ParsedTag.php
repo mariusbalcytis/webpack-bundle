@@ -9,7 +9,7 @@ class ParsedTag
 {
     private $stream;
 
-    private $inputs = array();
+    private $inputs = [];
     private $group = null;
     private $type = null;
     private $named = false;

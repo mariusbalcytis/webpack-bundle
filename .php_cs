@@ -21,7 +21,7 @@ return PhpCsFixer\Config::create()
         'phpdoc_separation' => false,
 
         // additional rules
-        'array_syntax' => array('syntax' => 'long'),
+        'array_syntax' => array('syntax' => 'short'),
         'general_phpdoc_annotation_remove' => array('annotations' => array('@author', '@inheritdoc')),
         'heredoc_to_nowdoc' => true,
         'linebreak_after_opening_tag' => true,

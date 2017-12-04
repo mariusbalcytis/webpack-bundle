@@ -70,13 +70,13 @@ class WebpackCompiler
         $logger = $this->logger;
         $processCallback = function ($type, $buffer) use ($that, $callback, $logger) {
             $that->saveManifest(false);
-            $logger->info('Processing callback from process', array($type, $buffer));
+            $logger->info('Processing callback from process', [$type, $buffer]);
             if ($callback !== null) {
                 $callback($type, $buffer);
             }
         };
 
-        $this->logger->info('Starting process', array($process->getCommandLine()));
+        $this->logger->info('Starting process', [$process->getCommandLine()]);
         $process->start($processCallback);
 
         try {
@@ -91,7 +91,7 @@ class WebpackCompiler
     {
         while (true) {
             sleep(1);
-            $this->logger->debug('Dumping webpack configuration', array($process->getPid()));
+            $this->logger->debug('Dumping webpack configuration', [$process->getPid()]);
 
             try {
                 $config = $this->webpackConfigManager->dump($previousConfig);
@@ -145,7 +145,7 @@ class WebpackCompiler
     private function removeManifestFile()
     {
         if (file_exists($this->manifestPath)) {
-            $this->logger->info('Deleting manifest file', array($this->manifestPath));
+            $this->logger->info('Deleting manifest file', [$this->manifestPath]);
             unlink($this->manifestPath);
         }
     }

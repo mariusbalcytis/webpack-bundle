@@ -14,7 +14,7 @@ class AssetCollector
     /**
      * @var AssetProviderInterface[]
      */
-    private $assetProviders = array();
+    private $assetProviders = [];
     private $errorHandler;
 
     public function __construct(
@@ -37,7 +37,7 @@ class AssetCollector
      */
     public function getAssets($previousContext = null)
     {
-        $context = array();
+        $context = [];
         $groupedAssets = new ArrayObject();
         foreach ($this->assetProviders as $i => $assetProvider) {
             $assetResult = $assetProvider->getAssets(isset($previousContext[$i]) ? $previousContext[$i] : null);

@@ -60,7 +60,7 @@ class Configuration implements ConfigurationInterface
         );
         $suppressErrorsNode
             ->validate()
-            ->ifNotInArray(array(true, false, 'ignore_unknowns'))
+            ->ifNotInArray([true, false, 'ignore_unknowns'])
             ->thenInvalid('suppress_errors must be either a boolean or "ignore_unknowns"')
         ;
     }
@@ -69,7 +69,7 @@ class Configuration implements ConfigurationInterface
     {
         $config = $rootChildren->arrayNode('config')->addDefaultsIfNotSet()->children();
         $config->scalarNode('path')->defaultValue('%kernel.project_dir%/config/webpack.config.js');
-        $config->arrayNode('parameters')->treatNullLike(array())->useAttributeAsKey('name')->prototype('variable');
+        $config->arrayNode('parameters')->treatNullLike([])->useAttributeAsKey('name')->prototype('variable');
         $config->scalarNode('manifest_file_path')->defaultValue('%kernel.cache_dir%/webpack_manifest.php');
     }
 
@@ -77,7 +77,7 @@ class Configuration implements ConfigurationInterface
     {
         $aliases = $rootChildren->arrayNode('aliases')->addDefaultsIfNotSet()->children();
         $aliases->scalarNode('path_in_bundle')->defaultValue('Resources/assets');
-        $aliases->arrayNode('additional')->treatNullLike(array())->useAttributeAsKey('name')->prototype('scalar');
+        $aliases->arrayNode('additional')->treatNullLike([])->useAttributeAsKey('name')->prototype('scalar');
     }
 
     private function configureBin(NodeBuilder $rootChildren)
@@ -90,22 +90,22 @@ class Configuration implements ConfigurationInterface
         $webpack = $bin->arrayNode('webpack')->addDefaultsIfNotSet()->children();
         $webpack
             ->arrayNode('executable')
-            ->defaultValue(array('node_modules/.bin/webpack'))
+            ->defaultValue(['node_modules/.bin/webpack'])
             ->prototype('scalar')
         ;
-        $webpack->arrayNode('arguments')->defaultValue(array())->prototype('scalar');
+        $webpack->arrayNode('arguments')->defaultValue([])->prototype('scalar');
 
         $devServer = $bin->arrayNode('dev_server')->addDefaultsIfNotSet()->children();
         $devServer
             ->arrayNode('executable')
-            ->defaultValue(array('node_modules/.bin/webpack-dev-server'))
+            ->defaultValue(['node_modules/.bin/webpack-dev-server'])
             ->prototype('scalar')
         ;
-        $devServer->arrayNode('arguments')->defaultValue(array(
+        $devServer->arrayNode('arguments')->defaultValue([
             '--hot',
             '--history-api-fallback',
             '--inline',
-        ))->prototype('scalar');
+        ])->prototype('scalar');
     }
 
     private function configureDashboard(NodeBuilder $rootChildren)
@@ -115,13 +115,13 @@ class Configuration implements ConfigurationInterface
         $enabledNode = $dashboardNode->scalarNode('enabled')->defaultValue('dev_server');
         $enabledNode
             ->validate()
-            ->ifNotInArray(array('dev_server', 'always', false))
+            ->ifNotInArray(['dev_server', 'always', false])
             ->thenInvalid('enabled must be one of "dev_server", "always" or a boolean false')
         ;
 
         $dashboardNode
             ->arrayNode('executable')
-            ->defaultValue(array('node_modules/.bin/webpack-dashboard'))
+            ->defaultValue(['node_modules/.bin/webpack-dashboard'])
             ->prototype('scalar')
         ;
     }
@@ -132,13 +132,13 @@ class Configuration implements ConfigurationInterface
         $entryFile->booleanNode('enabled')->defaultTrue();
         $entryFile
             ->arrayNode('disabled_extensions')
-            ->defaultValue(array('js', 'jsx', 'ts', 'tsx', 'coffee', 'es6', 'ls'))
+            ->defaultValue(['js', 'jsx', 'ts', 'tsx', 'coffee', 'es6', 'ls'])
             ->prototype('scalar')
             ->info('For these extensions default webpack functionality will be used')
         ;
         $entryFile
             ->arrayNode('enabled_extensions')
-            ->defaultValue(array())
+            ->defaultValue([])
             ->prototype('scalar')
             ->info(
                 'For these extensions file itself will be provided (not JS file). '
@@ -147,9 +147,9 @@ class Configuration implements ConfigurationInterface
         ;
         $entryFile
             ->arrayNode('type_map')
-            ->defaultValue(array(
-                'css' => array('less', 'scss', 'sass', 'styl'),
-            ))
+            ->defaultValue([
+                'css' => ['less', 'scss', 'sass', 'styl'],
+            ])
             ->prototype('array')
             ->info(
                 'What output file type to use for what input file types. Used only for entry files. '

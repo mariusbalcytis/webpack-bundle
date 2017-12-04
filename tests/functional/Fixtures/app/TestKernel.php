@@ -9,7 +9,7 @@ class TestKernel extends Kernel
 
     public function registerBundles()
     {
-        $bundles = array(
+        $bundles = [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
@@ -17,7 +17,7 @@ class TestKernel extends Kernel
             new Fixtures\Maba\Bundle\WebpackTestBundle\MabaWebpackTestBundle(),
             new Fixtures\Maba\Bundle\WebpackAnotherTestBundle\MabaWebpackAnotherTestBundle(),
             new Fixtures\Maba\Bundle\TestCommonsChunkBundle\MabaTestCommonsChunkBundle(),
-        );
+        ];
         return $bundles;
     }
 

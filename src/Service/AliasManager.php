@@ -43,7 +43,7 @@ class AliasManager
             return $this->aliases;
         }
 
-        $aliases = array();
+        $aliases = [];
         foreach ($this->registerBundles as $bundleName) {
             $aliases['@' . $bundleName] = rtrim($this->fileLocator->locate('@' . $bundleName), '/');
             try {

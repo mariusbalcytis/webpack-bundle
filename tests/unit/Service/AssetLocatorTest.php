@@ -50,31 +50,31 @@ class AssetLocatorTest extends Test
     public function locateAssetProvider()
     {
         $dir = realpath(__DIR__ . '/../Fixtures');
-        return array(
-            'works with full path' => array($dir . '/assetA.txt', $dir . '/assetA.txt'),
-            'works with alias' => array($dir . '/assetA.txt', '@aliasName/assetA.txt', '@aliasName', $dir),
-            'works with alias and subdirectories' => array(
+        return [
+            'works with full path' => [$dir . '/assetA.txt', $dir . '/assetA.txt'],
+            'works with alias' => [$dir . '/assetA.txt', '@aliasName/assetA.txt', '@aliasName', $dir],
+            'works with alias and subdirectories' => [
                 $dir . '/subdirectory/assetB.txt',
                 '@aliasName/subdirectory/assetB.txt',
                 '@aliasName',
                 $dir,
-            ),
-            'throws exception if file not found' => array(
+            ],
+            'throws exception if file not found' => [
                 new AssetNotFoundException(),
                 $dir . '/non-existent-file',
-            ),
-            'throws exception if file not found via alias' => array(
+            ],
+            'throws exception if file not found via alias' => [
                 new AssetNotFoundException(),
                 '@aliasName/subdirectory/does-not-exists',
                 '@aliasName',
                 $dir,
-            ),
-            'throws exception if alias not found' => array(
+            ],
+            'throws exception if alias not found' => [
                 new AssetNotFoundException(),
                 '@aliasName/assetA.txt',
                 '@aliasName',
                 new RuntimeException(),
-            ),
-        );
+            ],
+        ];
     }
 }
