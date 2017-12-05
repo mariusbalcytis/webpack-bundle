@@ -9,8 +9,6 @@ env:
 
 matrix:
   include:
-    - php: 5.4
-      env: COMPOSER_ARGS=""
     - php: 5.5
       env: COMPOSER_ARGS=""
     - php: 5.6
@@ -22,8 +20,6 @@ matrix:
     - php: 7.2
       env: COMPOSER_ARGS=""
 
-    - php: 5.4
-      env: COMPOSER_ARGS="--prefer-lowest"
     - php: 5.5
       env: COMPOSER_ARGS="--prefer-lowest"
     - php: 5.6

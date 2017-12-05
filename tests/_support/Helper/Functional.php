@@ -71,11 +71,17 @@ class Functional extends Symfony
         if (file_exists(__DIR__ . '/../../functional/Fixtures/package.json')) {
             unlink(__DIR__ . '/../../functional/Fixtures/package.json');
         }
+        if (file_exists(__DIR__ . '/../../functional/Fixtures/package-lock.json')) {
+            unlink(__DIR__ . '/../../functional/Fixtures/package-lock.json');
+        }
         if (file_exists(__DIR__ . '/../../functional/Fixtures/yarn.lock')) {
             unlink(__DIR__ . '/../../functional/Fixtures/yarn.lock');
         }
         if (file_exists(__DIR__ . '/../../functional/Fixtures/root_v1/package.json')) {
             unlink(__DIR__ . '/../../functional/Fixtures/root_v1/package.json');
+        }
+        if (file_exists(__DIR__ . '/../../functional/Fixtures/root_v1/package-lock.json')) {
+            unlink(__DIR__ . '/../../functional/Fixtures/root_v1/package-lock.json');
         }
         if (file_exists(__DIR__ . '/../../functional/Fixtures/root_v1/yarn.lock')) {
             unlink(__DIR__ . '/../../functional/Fixtures/root_v1/yarn.lock');
