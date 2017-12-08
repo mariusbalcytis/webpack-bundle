@@ -41,17 +41,42 @@
             <argument type="service">
                 <service class="stdClass">
                     <factory service="file_locator" method="locate"/>
-                    <argument>@MabaWebpackBundle/Resources/defaultConfig/v2/package.json</argument>
+                    <argument>@MabaWebpackBundle/Resources/defaultConfig/latest/package.json</argument>
                 </service>
             </argument>
             <argument type="service">
                 <service class="stdClass">
                     <factory service="file_locator" method="locate"/>
-                    <argument>@MabaWebpackBundle/Resources/defaultConfig/v2/webpack.config.js</argument>
+                    <argument>@MabaWebpackBundle/Resources/defaultConfig/latest/webpack.config.js</argument>
                 </service>
             </argument>
             <argument>%maba_webpack.bin.working_directory%</argument>
             <argument>%maba_webpack.webpack_config_path%</argument>
+            <argument type="service">
+                <service class="Maba\Bundle\WebpackBundle\Command\InstallAssetsHelper">
+                    <argument type="service">
+                        <service class="Symfony\Component\Console\Helper\QuestionHelper"/>
+                    </argument>
+                    <argument>%maba_webpack.bin.working_directory%</argument>
+                </service>
+            </argument>
+        </service>
+        <service id="maba_webpack.command.install_node_modules"
+                 class="Maba\Bundle\WebpackBundle\Command\InstallNodeModulesCommand">
+            <tag name="console.command" command="maba:webpack:install-node-modules"/>
+
+            <argument type="service">
+                <service class="Maba\Bundle\WebpackBundle\Command\InstallAssetsHelper">
+                    <argument type="service">
+                        <service class="Symfony\Component\Console\Helper\QuestionHelper"/>
+                    </argument>
+                    <argument>%maba_webpack.bin.working_directory%</argument>
+
+                    <call method="setInstallWithoutAsking">
+                        <argument>true</argument>
+                    </call>
+                </service>
+            </argument>
         </service>
     </services>
 </container>

@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Process\Process;
 
 class SetupCommand extends Command
 {
@@ -20,6 +19,7 @@ class SetupCommand extends Command
     private $pathToWebpackConfigV2;
     private $rootDirectory;
     private $configPath;
+    private $installAssetsHelper;
 
     public function __construct(
         $pathToPackageV1,
@@ -27,7 +27,8 @@ class SetupCommand extends Command
         $pathToPackageV2,
         $pathToWebpackConfigV2,
         $rootDirectory,
-        $configPath
+        $configPath,
+        InstallAssetsHelper $installAssetsHelper
     ) {
         parent::__construct('maba:webpack:setup');
 
@@ -37,6 +38,7 @@ class SetupCommand extends Command
         $this->pathToWebpackConfigV2 = $pathToWebpackConfigV2;
         $this->rootDirectory = realpath($rootDirectory);
         $this->configPath = $configPath;
+        $this->installAssetsHelper = $installAssetsHelper;
     }
 
     protected function configure()
@@ -50,11 +52,7 @@ class SetupCommand extends Command
             )
             ->setDescription('Initial setup for maba webpack bundle')
             ->setHelp(<<<'EOT'
-The <info>%command.name%</info> command copies a default <info>webpack.config.js</info> and <info>package.json</info> files and runs <info>npm install</info>. 
-
-After executing this command, you should commit the following files to your repository.
-
-    <info>git add package.json app/config/webpack.config.js</info>
+The <info>%command.name%</info> command copies a default <info>webpack.config.js</info> and <info>package.json</info> files and installs node modules.
 EOT
             );
     }
@@ -115,36 +113,6 @@ EOT
         }
     }
 
-    private function installNodeModules(InputInterface $input, OutputInterface $output)
-    {
-        $process = new Process('yarn --version');
-        $yarnInstalled = $process->run() === 0;
-        $process = new Process('npm --version');
-        $npmInstalled = $process->run() === 0;
-
-        if (!$yarnInstalled && !$npmInstalled) {
-            $this->outputDependenciesError($output);
-            return;
-        }
-
-        if (!$yarnInstalled) {
-            $this->outputYarnSuggestion($output);
-        }
-
-        $process = new Process($yarnInstalled ? 'yarn install' : 'npm install', $this->rootDirectory);
-        if (!$this->askIfInstallNeeded($input, $output, $process)) {
-            return;
-        }
-
-        $this->runProcess($process, $output);
-
-        $filesForGit = ['package.json', 'app/config/webpack.config.js'];
-        if ($yarnInstalled) {
-            $filesForGit[] = 'yarn.lock';
-        }
-        $this->outputAdditionalActions($output, $filesForGit);
-    }
-
     private function addStylesConfiguration(OutputInterface $output)
     {
         $output->getFormatter()->setStyle('code', new OutputFormatterStyle('white', 'black', ['bold']));
@@ -158,66 +126,21 @@ EOT
         return $helper->ask($input, $output, $question);
     }
 
-    private function outputDependenciesError(OutputInterface $output)
+    private function installNodeModules(InputInterface $input, OutputInterface $output)
     {
-        $notice = <<<'NOTICE'
-            
-<error>Dependencies needed</error>
-Neither <bold>yarn</bold> nor <bold>npm</bold> was found on the system.
-I'd really suggest to install <bold>yarn</bold> - it's faster and more reliable.
-See https://yarnpkg.com/ for more information.
-You can re-run this command after installing or run <code>yarn install</code> in root directory.
-
-NOTICE;
-        $output->writeln($notice);
-    }
-
-    private function outputYarnSuggestion(OutputInterface $output)
-    {
-        $notice = <<<'NOTICE'
-            
-<error>Consider installing yarn</error>
-<bold>npm</bold> was found on the system, but <bold>yarn</bold> was not.
-I'd really suggest to install it - it's faster and more reliable.
-See https://yarnpkg.com/ for more information.
-
-NOTICE;
-        $output->writeln($notice);
-    }
-
-    private function askIfInstallNeeded(InputInterface $input, OutputInterface $output, Process $process)
-    {
-        $question = new ConfirmationQuestion(sprintf(
-            '<question>Should I install node_modules now?</question> (<code>%s</code>) [Yn] ',
-            $process->getCommandLine()
-        ), true);
-
-        if (!$this->ask($input, $output, $question)) {
-            $output->writeln(sprintf(
-                'Please run <code>%s</code> in root directory before compiling webpack assets',
-                $process->getCommandLine()
-            ));
-            return false;
+        $mode = $this->installAssetsHelper->decideInstalledManager($output);
+        if ($mode !== null) {
+            $this->installAssetsHelper->installNodeModules($mode, $input, $output);
         }
 
-        return true;
-    }
-
-    private function runProcess(Process $process, OutputInterface $output)
-    {
-        $process->setTimeout(600);
-        $process->run(function ($type, $buffer) use ($output) {
-            $output->write($buffer);
-        });
-
-        if (!$process->isSuccessful()) {
-            $error = <<<'ERROR'
-            
-<error>Error running %s (exit code %s)! Please look at the log for errors and re-run command.</error>
-
-ERROR;
-            $output->writeln(sprintf($error, $process->getCommandLine(), $process->getExitCode()));
+        $filesForGit = ['package.json', 'app/config/webpack.config.js'];
+        if ($mode === InstallAssetsHelper::MODE_YARN) {
+            $filesForGit[] = 'yarn.lock';
+        } elseif ($mode === InstallAssetsHelper::MODE_NPM) {
+            $filesForGit[] = 'package-lock.json';
         }
+
+        $this->outputAdditionalActions($output, $filesForGit);
     }
 
     private function outputAdditionalActions(OutputInterface $output, array $filesForGit)
