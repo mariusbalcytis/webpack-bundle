@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\RuntimeException as ProcessRuntimeException;
 
 class InstallAssetsHelper
 {
@@ -16,11 +17,13 @@ class InstallAssetsHelper
     private $questionHelper;
     private $rootDirectory;
     private $installWithoutAsking = false;
+    private $disableTty;
 
-    public function __construct(QuestionHelper $questionHelper, $rootDirectory)
+    public function __construct(QuestionHelper $questionHelper, $rootDirectory, $disableTty)
     {
         $this->questionHelper = $questionHelper;
         $this->rootDirectory = $rootDirectory;
+        $this->disableTty = $disableTty;
     }
 
     /**
@@ -73,6 +76,8 @@ class InstallAssetsHelper
         if (!$this->askIfInstallNeeded($input, $output, $process)) {
             return;
         }
+
+        $this->configureTty($process);
 
         $this->runProcess($process, $output);
     }
@@ -136,6 +141,19 @@ NOTICE;
         }
 
         return true;
+    }
+
+    private function configureTty(Process $process)
+    {
+        if ($this->disableTty) {
+            return;
+        }
+
+        try {
+            $process->setTty(true);
+        } catch (ProcessRuntimeException $exception) {
+            // thrown if TTY is not available - just ignore
+        }
     }
 
     private function runProcess(Process $process, OutputInterface $output)

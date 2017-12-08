@@ -58,6 +58,7 @@
                         <service class="Symfony\Component\Console\Helper\QuestionHelper"/>
                     </argument>
                     <argument>%maba_webpack.bin.working_directory%</argument>
+                    <argument>%maba_webpack.bin.disable_tty%</argument>
                 </service>
             </argument>
         </service>
@@ -71,6 +72,7 @@
                         <service class="Symfony\Component\Console\Helper\QuestionHelper"/>
                     </argument>
                     <argument>%maba_webpack.bin.working_directory%</argument>
+                    <argument>%maba_webpack.bin.disable_tty%</argument>
 
                     <call method="setInstallWithoutAsking">
                         <argument>true</argument>
