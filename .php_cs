@@ -19,6 +19,8 @@ return PhpCsFixer\Config::create()
         'no_singleline_whitespace_before_semicolons' => false,
         'phpdoc_align' => false,
         'phpdoc_separation' => false,
+        'yoda_style' => false,
+        'blank_line_before_statement' => null,
 
         // additional rules
         'array_syntax' => array('syntax' => 'short'),
