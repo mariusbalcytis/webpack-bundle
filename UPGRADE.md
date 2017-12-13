@@ -2,7 +2,7 @@
 
 ## Directory structure changes
 
-Default location of `webpack.config.js` changed to be compatible with new Symfony 4 structure. It's not stored
+Default location of `webpack.config.js` changed to be compatible with new Symfony 4 structure. It's now stored
 in `config` folder of your project directory.
 
 To keep previous behaviour, provide this configuration:
