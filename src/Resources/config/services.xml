@@ -29,9 +29,11 @@
         <parameter key="maba_webpack.entry_file.enabled_extensions"/>
         <parameter key="maba_webpack.entry_file.type_map"/>
         <parameter key="maba_webpack.config.manifest_file_path"/>
+        <parameter key="maba_webpack.config.typescript"/>
 
         <!-- Not configurable from config.yml -->
         <parameter key="maba_webpack.webpack_entry_config_path">%kernel.cache_dir%/webpack.config.js</parameter>
+        <parameter key="maba_webpack.webpack_ts_entry_config_path">%kernel.cache_dir%/webpack.config.js</parameter>
         <parameter key="maba_webpack.json_manifest_file_path">%kernel.cache_dir%/webpack_manifest.json</parameter>
     </parameters>
 
@@ -114,10 +116,12 @@
         <service id="maba_webpack.config_dumper" class="Maba\Bundle\WebpackBundle\Config\WebpackConfigDumper"
                  public="false">
             <argument>%maba_webpack.webpack_entry_config_path%</argument>
+            <argument>%maba_webpack.webpack_ts_entry_config_path%</argument>
             <argument>%maba_webpack.webpack_config_path%</argument>
             <argument>%maba_webpack.json_manifest_file_path%</argument>
             <argument>%kernel.environment%</argument>
             <argument>%maba_webpack.webpack_config_parameters%</argument>
+            <argument>%maba_webpack.config.typescript%</argument>
         </service>
 
         <service id="maba_webpack.webpack_config_manager"

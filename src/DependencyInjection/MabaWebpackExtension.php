@@ -69,6 +69,7 @@ class MabaWebpackExtension extends Extension
         $container->setParameter('maba_webpack.webpack_config_path', $config['config']['path']);
         $container->setParameter('maba_webpack.webpack_config_parameters', $config['config']['parameters']);
         $container->setParameter('maba_webpack.config.manifest_file_path', $config['config']['manifest_file_path']);
+        $container->setParameter('maba_webpack.config.typescript', $config['config']['typescript']);
     }
 
     private function configureAliases(ContainerBuilder $container, $config)
