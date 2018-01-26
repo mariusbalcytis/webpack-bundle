@@ -39,10 +39,11 @@ class WebpackConfigDumper
     public function dump(WebpackConfig $config)
     {
         $configTemplate = 'module.exports = require(%s)(%s);';
-        $configTemplateTS = 'export default require(%s)(%s);';
+        $configTemplateTS = 'import __fn from %s; export default __fn(%s);';
+        $chosenPath = $this->typescript ? $this->tsPath : $this->path;
         $configContents = sprintf(
             $this->typescript ? $configTemplateTS : $configTemplate,
-            json_encode($this->includeConfigPath),
+            json_encode($this->typescript ? preg_replace('/\.tsx?$/i', '', $this->includeConfigPath) : $this->includeConfigPath),
             json_encode([
                 'entry' => (object)$config->getEntryPoints(),
                 'groups' => (object)$config->getAssetGroups(),
@@ -53,8 +54,8 @@ class WebpackConfigDumper
             ])
         );
 
-        file_put_contents($this->typescript ? $this->tsPath : $this->path, $configContents);
+        file_put_contents($chosenPath, $configContents);
 
-        return $this->path;
+        return $chosenPath;
     }
 }

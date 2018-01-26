@@ -33,7 +33,7 @@
 
         <!-- Not configurable from config.yml -->
         <parameter key="maba_webpack.webpack_entry_config_path">%kernel.cache_dir%/webpack.config.js</parameter>
-        <parameter key="maba_webpack.webpack_ts_entry_config_path">%kernel.cache_dir%/webpack.config.js</parameter>
+        <parameter key="maba_webpack.webpack_ts_entry_config_path">%kernel.cache_dir%/webpack.config.ts</parameter>
         <parameter key="maba_webpack.json_manifest_file_path">%kernel.cache_dir%/webpack_manifest.json</parameter>
     </parameters>
 
