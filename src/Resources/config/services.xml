@@ -44,6 +44,7 @@
 
         <service id="maba_webpack.asset_locator" class="Maba\Bundle\WebpackBundle\Service\AssetLocator" public="true">
             <argument type="service" id="maba_webpack.alias_manager"/>
+            <argument>%maba_webpack.aliases.prefix%</argument>
         </service>
 
 
@@ -66,6 +67,7 @@
             <argument>%maba_webpack.enabled_bundles%</argument>
             <argument>%maba_webpack.aliases.path_in_bundle%</argument>
             <argument>%maba_webpack.aliases.additional%</argument>
+            <argument>%maba_webpack.aliases.prefix%</argument>
         </service>
 
         <service id="maba_webpack.entry_file_manager" class="Maba\Bundle\WebpackBundle\Service\EntryFileManager"

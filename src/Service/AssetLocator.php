@@ -8,10 +8,18 @@ use RuntimeException;
 class AssetLocator
 {
     private $aliasManager;
+    private $prefix;
 
-    public function __construct(AliasManager $aliasManager)
-    {
+    /**
+     * @param AliasManager $aliasManager
+     * @param string $prefix
+     */
+    public function __construct(
+        AliasManager $aliasManager,
+        $prefix
+    ) {
         $this->aliasManager = $aliasManager;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -25,7 +33,7 @@ class AssetLocator
      */
     public function locateAsset($asset)
     {
-        if (substr($asset, 0, 1) === '@') {
+        if (substr($asset, 0, strlen($this->prefix)) === $this->prefix) {
             $locatedAsset = $this->resolveAlias($asset);
         } else {
             $locatedAsset = $asset;
