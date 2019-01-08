@@ -33,14 +33,14 @@ class AssetLocator
      */
     public function locateAsset($asset)
     {
-        if (substr($asset, 0, strlen($this->prefix)) === $this->prefix) {
+        if (\substr($asset, 0, \strlen($this->prefix)) === $this->prefix) {
             $locatedAsset = $this->resolveAlias($asset);
         } else {
             $locatedAsset = $asset;
         }
 
-        if (!file_exists($locatedAsset)) {
-            throw new AssetNotFoundException(sprintf('Asset not found (%s, resolved to %s)', $asset, $locatedAsset));
+        if (!\file_exists($locatedAsset)) {
+            throw new AssetNotFoundException(\sprintf('Asset not found (%s, resolved to %s)', $asset, $locatedAsset));
         }
 
         return $locatedAsset;
@@ -48,20 +48,20 @@ class AssetLocator
 
     private function resolveAlias($asset)
     {
-        $position = mb_strpos($asset, '/');
+        $position = \mb_strpos($asset, '/');
         if ($position === false) {
-            $position = mb_strlen($asset);
+            $position = \mb_strlen($asset);
         }
-        $alias = mb_substr($asset, 0, $position);
+        $alias = \mb_substr($asset, 0, $position);
         try {
             $aliasPath = $this->aliasManager->getAliasPath($alias);
         } catch (RuntimeException $exception) {
             throw new AssetNotFoundException(
-                sprintf('Cannot locate asset (%s) due to invalid alias (%s)', $asset, $alias),
+                \sprintf('Cannot locate asset (%s) due to invalid alias (%s)', $asset, $alias),
                 0,
                 $exception
             );
         }
-        return $aliasPath . mb_substr($asset, $position);
+        return $aliasPath . \mb_substr($asset, $position);
     }
 }

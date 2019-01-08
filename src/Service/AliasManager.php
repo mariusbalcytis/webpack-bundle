@@ -15,7 +15,7 @@ class AliasManager
     private $additionalAliases;
 
     /**
-     * @var null|array
+     * @var array|null
      */
     private $aliases = null;
     private $prefix;
