@@ -21,23 +21,30 @@ class AssetLocatorTest extends Test
      */
     public function testLocateAsset($expected, $asset, $expectedAlias = null, $aliasPath = null)
     {
-        /** @var MockObject|AliasManager $aliasManager */
-        $aliasManager = $this->getMockBuilder('Maba\Bundle\WebpackBundle\Service\AliasManager')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-        if ($expectedAlias !== null) {
-            $expectation = $aliasManager->expects($this->once())->method('getAliasPath')->with($expectedAlias);
-            if ($aliasPath instanceof Exception) {
-                $expectation->willThrowException($aliasPath);
-            } else {
-                $expectation->willReturn($aliasPath);
-            }
-        } else {
-            $aliasManager->expects($this->never())->method('getAliasPath');
-        }
+        $aliasManager = $this->getAliasManagerMock($expectedAlias, $aliasPath);
 
-        $assetLocator = new AssetLocator($aliasManager);
+        $assetLocator = new AssetLocator($aliasManager, '@');
+
+        if ($expected instanceof Exception) {
+            $this->setExpectedException(get_class($expected));
+            $assetLocator->locateAsset($asset);
+        } else {
+            $this->assertSame($expected, $assetLocator->locateAsset($asset));
+        }
+    }
+
+    /**
+     * @param string|Exception $expected
+     * @param string $asset
+     * @param string|null $expectedAlias
+     * @param string|null|Exception $aliasPath
+     * @dataProvider dataProviderTestLocateAssetWithCustomPrefix
+     */
+    public function testLocateAssetWithCustomPrefix($expected, $asset, $expectedAlias = null, $aliasPath = null)
+    {
+        $aliasManager = $this->getAliasManagerMock($expectedAlias, $aliasPath);
+
+        $assetLocator = new AssetLocator($aliasManager, 'PREFIX_');
 
         if ($expected instanceof Exception) {
             $this->setExpectedException(get_class($expected));
@@ -76,5 +83,55 @@ class AssetLocatorTest extends Test
                 new RuntimeException(),
             ],
         ];
+    }
+
+    public function dataProviderTestLocateAssetWithCustomPrefix()
+    {
+        $dir = realpath(__DIR__ . '/../Fixtures');
+        return [
+            'works with custom alias' => [
+                $dir . '/assetA.txt',
+                'PREFIX_aliasName/assetA.txt',
+                'PREFIX_aliasName',
+                $dir,
+            ],
+            'works with custom alias and subdirectories' => [
+                $dir . '/subdirectory/assetB.txt',
+                'PREFIX_aliasName/subdirectory/assetB.txt',
+                'PREFIX_aliasName',
+                $dir,
+            ],
+            'throws exception if file not found via alias with invalid prefix' => [
+                new AssetNotFoundException(),
+                '%aliasName/subdirectory/does-not-exists',
+                null,
+                $dir,
+            ],
+        ];
+    }
+
+    /**
+     * @param string|null $expectedAlias
+     * @param string|null $aliasPath
+     * @return MockObject|AliasManager $aliasManager
+     */
+    private function getAliasManagerMock($expectedAlias, $aliasPath)
+    {
+        $aliasManager = $this->getMockBuilder('Maba\Bundle\WebpackBundle\Service\AliasManager')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        if ($expectedAlias !== null) {
+            $expectation = $aliasManager->expects($this->once())->method('getAliasPath')->with($expectedAlias);
+            if ($aliasPath instanceof Exception) {
+                $expectation->willThrowException($aliasPath);
+            } else {
+                $expectation->willReturn($aliasPath);
+            }
+        } else {
+            $aliasManager->expects($this->never())->method('getAliasPath');
+        }
+
+        return $aliasManager;
     }
 }

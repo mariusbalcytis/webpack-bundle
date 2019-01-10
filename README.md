@@ -243,7 +243,8 @@ See [css-loader](https://github.com/webpack/css-loader) for more information.
 Aliases
 ----
 
-Aliases are prefixed with `@` and point to some specific path.
+Aliases by default are prefixed with `@` and point to some specific path.
+You can change this prefix by configuring `aliases.prefix` parameter.
 
 Aliases work the same in both twig templates (parameter to `webpack_asset` function) and Javascript files
 (parameter to `require` or similar Webpack provided function).
@@ -275,6 +276,21 @@ Inside your JavaScript files:
 ```js
 var $ = require('@npm/jquery');
 ```
+
+In case you want to use different prefix:
+```yaml
+maba_webpack:
+    aliases:
+        prefix: '%'
+        additional:
+            npm: %kernel.root_dir%/node_modules
+```
+Now inside your JavaScript files:
+
+```js
+var $ = require('%npm/jquery');
+```
+
 
 Be sure to install dependencies (either npm, bower or any other) on path not directly accessible from web.
 This is not needed by webpack (it compiles them - they can be anywhere on the system) and could cause a security
@@ -311,13 +327,14 @@ maba_webpack:
                                                     # will include something like
                                                     # src/Acme/Bundles/AcmeHelloBundle/Resources/assets/a.js
                                                     # see "Aliases" for more information
-        additional:           []            # provide any other aliases, prefix (@) is always added automatically
+        prefix:               '@'           # configure default prefix to be added to aliases.
+        additional:           []            # provide any other aliases, prefix is always added automatically
     bin:
         webpack:
             executable: # how maba:webpack:compile executes webpack
                         # should be array, for example ['/usr/bin/node', 'node_modules/webpack/bin/webpack.js']
                 - node_modules/.bin/webpack
-            arguments:            []    # additional parameters to pass to webpack
+            arguments:        []        # additional parameters to pass to webpack
                                         # --config with configuration path is always passed
         dev_server:
             executable: # how maba:webpack:dev-server executes webpack-dev-server

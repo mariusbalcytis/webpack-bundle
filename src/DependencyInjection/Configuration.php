@@ -77,6 +77,7 @@ class Configuration implements ConfigurationInterface
     {
         $aliases = $rootChildren->arrayNode('aliases')->addDefaultsIfNotSet()->children();
         $aliases->scalarNode('path_in_bundle')->defaultValue('Resources/assets');
+        $aliases->scalarNode('prefix')->defaultValue('@')->cannotBeEmpty();
         $aliases->arrayNode('additional')->treatNullLike([])->useAttributeAsKey('name')->prototype('scalar');
     }
 

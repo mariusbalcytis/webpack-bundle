@@ -89,6 +89,7 @@ class MabaWebpackExtension extends Extension
         $additionalAliases = $config['aliases']['additional'] + $defaultAliases;
         $container->setParameter('maba_webpack.aliases.additional', $additionalAliases);
         $container->setParameter('maba_webpack.aliases.path_in_bundle', $config['aliases']['path_in_bundle']);
+        $container->setParameter('maba_webpack.aliases.prefix', $config['aliases']['prefix']);
     }
 
     private function configureBin(ContainerBuilder $container, $config)

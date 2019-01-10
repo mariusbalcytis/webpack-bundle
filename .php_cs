@@ -13,6 +13,7 @@ return PhpCsFixer\Config::create()
 
         // override some Symfony rules
         'blank_line_before_return' => false,
+        'native_function_invocation' => false,
         'cast_spaces' => false,
         'concat_space' => array('spacing' => 'one'),
         'is_null' => array('use_yoda_style' => false),

@@ -15,26 +15,30 @@ class AliasManager
     private $additionalAliases;
 
     /**
-     * @var null|array
+     * @var array|null
      */
     private $aliases = null;
+    private $prefix;
 
     /**
      * @param FileLocatorInterface $fileLocator
      * @param array $registerBundles
      * @param string $pathInBundle
      * @param array $additionalAliases
+     * @param string $prefix
      */
     public function __construct(
         FileLocatorInterface $fileLocator,
         array $registerBundles,
         $pathInBundle,
-        array $additionalAliases
+        array $additionalAliases,
+        $prefix
     ) {
         $this->fileLocator = $fileLocator;
         $this->registerBundles = $registerBundles;
         $this->pathInBundle = $pathInBundle;
         $this->additionalAliases = $additionalAliases;
+        $this->prefix = $prefix;
     }
 
     public function getAliases()
@@ -45,10 +49,10 @@ class AliasManager
 
         $aliases = [];
         foreach ($this->registerBundles as $bundleName) {
-            $aliases['@' . $bundleName] = rtrim($this->fileLocator->locate('@' . $bundleName), '/');
+            $aliases[$this->buildAlias($bundleName)] = rtrim($this->fileLocator->locate($this->buildAlias($bundleName)), '/');
             try {
                 $shortName = $this->getShortNameForBundle($bundleName);
-                $aliases['@' . $shortName] = $this->fileLocator->locate('@' . $bundleName . '/' . $this->pathInBundle);
+                $aliases[$this->buildAlias($shortName)] = $this->fileLocator->locate($this->buildAlias($bundleName) . '/' . $this->pathInBundle);
             } catch (InvalidArgumentException $exception) {
                 // ignore if directory not found, as all bundles are registered by default
             }
@@ -59,10 +63,10 @@ class AliasManager
             $realPath = realpath($path);
             if ($realPath === false) {
                 // just skip - allow non-existing aliases, like default ones
-                unset($aliases['@' . $alias]);
+                unset($aliases[$this->buildAlias($alias)]);
                 continue;
             }
-            $aliases['@' . $alias] = $realPath;
+            $aliases[$this->buildAlias($alias)] = $realPath;
         }
 
         $this->aliases = $aliases;
@@ -78,6 +82,11 @@ class AliasManager
         }
 
         return $aliases[$alias];
+    }
+
+    private function buildAlias($name)
+    {
+        return $this->prefix . $name;
     }
 
     private function getShortNameForBundle($bundleName)
