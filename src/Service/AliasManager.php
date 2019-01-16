@@ -49,10 +49,10 @@ class AliasManager
 
         $aliases = [];
         foreach ($this->registerBundles as $bundleName) {
-            $aliases[$this->buildAlias($bundleName)] = rtrim($this->fileLocator->locate($this->buildAlias($bundleName)), '/');
+            $aliases[$this->buildAlias($bundleName)] = rtrim($this->fileLocator->locate('@', $bundleName), '/');
             try {
                 $shortName = $this->getShortNameForBundle($bundleName);
-                $aliases[$this->buildAlias($shortName)] = $this->fileLocator->locate($this->buildAlias($bundleName) . '/' . $this->pathInBundle);
+                $aliases[$this->buildAlias($shortName)] = $this->fileLocator->locate('@', $bundleName . '/' . $this->pathInBundle);
             } catch (InvalidArgumentException $exception) {
                 // ignore if directory not found, as all bundles are registered by default
             }
