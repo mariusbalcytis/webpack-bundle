@@ -321,6 +321,7 @@ maba_webpack:
                                             # see inside your webpack.config.js for more info
         # set location of cached manifests. Useful for deploy, when you don't want to include your cache directory
         manifest_file_path:        '%kernel.cache_dir%/webpack_manifest.php'
+        typescript:           false     # is config file in typescript
 
     aliases:                            # allows to set aliases inside require() in your JS files
         path_in_bundle:       /Resources/assets     # this means that require('@acme_hello/a.js')
@@ -401,6 +402,26 @@ maba_webpack:
                 - node
                 - "--max-old-space-size=4096"   # 4GB
                 - node_modules/webpack/bin/webpack.js
+```
+
+## Configuration for config in Typescript
+
+If you want to write your
+[webpack config in Typescript](https://webpack.js.org/configuration/configuration-languages/#typescript), you need to 
+set `maba_webpack.config.typescript` to true. If you want to use a specific `tsconfig.json` file for `ts-node` to run, 
+set the path before webpack binary:
+
+```yml
+maba_webpack:
+    bin:
+        webpack:
+            executable:
+                - 'TS_NODE_PROJECT="%kernel.root_dir%/config/tsconfig.json"'
+                - 'node_modules/.bin/webpack'
+        dev-server:
+            executable:
+                - 'TS_NODE_PROJECT="%kernel.root_dir%/config/tsconfig.json"'
+                - 'node_modules/.bin/webpack-dev-server'
 ```
 
 Using commons chunk

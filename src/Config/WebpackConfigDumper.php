@@ -5,25 +5,31 @@ namespace Maba\Bundle\WebpackBundle\Config;
 class WebpackConfigDumper
 {
     private $path;
+    private $tsPath;
     private $includeConfigPath;
     private $manifestPath;
     private $environment;
     private $parameters;
+    private $typescript;
 
     /**
      * @param string $path full path where config should be dumped
+     * @param string $tsPath full path where config should be dumped in typescript
      * @param string $includeConfigPath path of config to be included inside dumped config
      * @param string $manifestPath
      * @param string $environment
      * @param array $parameters
+     * @param bool $typescript is config in typescript
      */
-    public function __construct($path, $includeConfigPath, $manifestPath, $environment, array $parameters)
+    public function __construct($path, $tsPath, $includeConfigPath, $manifestPath, $environment, array $parameters, $typescript)
     {
         $this->path = $path;
+        $this->tsPath = $tsPath;
         $this->includeConfigPath = $includeConfigPath;
         $this->manifestPath = $manifestPath;
         $this->environment = $environment;
         $this->parameters = $parameters;
+        $this->typescript = $typescript;
     }
 
     /**
@@ -33,9 +39,11 @@ class WebpackConfigDumper
     public function dump(WebpackConfig $config)
     {
         $configTemplate = 'module.exports = require(%s)(%s);';
+        $configTemplateTS = 'import __fn from %s; export default __fn(%s);';
+        $chosenPath = $this->typescript ? $this->tsPath : $this->path;
         $configContents = sprintf(
-            $configTemplate,
-            json_encode($this->includeConfigPath),
+            $this->typescript ? $configTemplateTS : $configTemplate,
+            json_encode($this->typescript ? preg_replace('/\.tsx?$/i', '', $this->includeConfigPath) : $this->includeConfigPath),
             json_encode([
                 'entry' => (object)$config->getEntryPoints(),
                 'groups' => (object)$config->getAssetGroups(),
@@ -46,8 +54,8 @@ class WebpackConfigDumper
             ])
         );
 
-        file_put_contents($this->path, $configContents);
+        file_put_contents($chosenPath, $configContents);
 
-        return $this->path;
+        return $chosenPath;
     }
 }

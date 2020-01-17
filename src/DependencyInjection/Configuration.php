@@ -71,6 +71,7 @@ class Configuration implements ConfigurationInterface
         $config->scalarNode('path')->defaultValue('%kernel.project_dir%/config/webpack.config.js');
         $config->arrayNode('parameters')->treatNullLike([])->useAttributeAsKey('name')->prototype('variable');
         $config->scalarNode('manifest_file_path')->defaultValue('%kernel.cache_dir%/webpack_manifest.php');
+        $config->booleanNode('typescript')->defaultValue(false);
     }
 
     private function configureAliases(NodeBuilder $rootChildren)
