@@ -20,6 +20,10 @@ matrix:
       env: COMPOSER_ARGS="" WITH_CS="true"
     - php: 7.2
       env: COMPOSER_ARGS=""
+    - php: 7.3
+      env: COMPOSER_ARGS=""
+    - php: 7.4
+      env: COMPOSER_ARGS=""
 
     - php: 5.5
       env: COMPOSER_ARGS="--prefer-lowest"
@@ -30,6 +34,10 @@ matrix:
     - php: 7.1
       env: COMPOSER_ARGS="--prefer-lowest"
     - php: 7.2
+      env: COMPOSER_ARGS="--prefer-lowest"
+    - php: 7.3
+      env: COMPOSER_ARGS="--prefer-lowest"
+    - php: 7.4
       env: COMPOSER_ARGS="--prefer-lowest"
 
 cache:
