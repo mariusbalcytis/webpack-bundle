@@ -46,11 +46,14 @@ class AssetManager
 
         $manifestEntry = $this->getManifestEntry($assetName, sprintf('%s (key %s)', $asset, $assetName));
 
-        if ($type === null) {
-            $type = $this->guessFileType($assetName, $asset, $manifestEntry);
+        if (isset($manifestEntry[$type])) {
+            if (is_array($manifestEntry[$type])) {
+                return reset($manifestEntry[$type]);
+            }
+            return $manifestEntry[$type];
         }
 
-        return isset($manifestEntry[$type]) ? $manifestEntry[$type] : null;
+        return null;
     }
 
     /**
